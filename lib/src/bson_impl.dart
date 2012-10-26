@@ -4,9 +4,6 @@ class BSON {
   static const BSON_INT32_MAX = 0x7FFFFFFF;
   static const BSON_INT32_MIN = -0x80000000;
 
-  //static const BSON_INT64_MAX = Math.pow(2, 63) - 1;
-  //static const BSON_INT64_MIN = -Math.pow(2, 63);
-
   // JS MAX PRECISE VALUES
   static const JS_INT_MAX = 0x20000000000000;  // Any integer up to 2^53 can be precisely represented by a double.
   static const JS_INT_MIN = -0x20000000000000;  // Any integer down to -2^53 can be precisely represented by a double.
@@ -78,9 +75,9 @@ class BSON {
   /**
    * Code BSON Type
    *  
-   * @classconstant BSON_DATA_DBPOINTER
+   * @classconstant BSON_DATA_DBREF
    **/
-  static const BSON_DATA_DBPOINTER = 12;
+  static const BSON_DATA_DBREF = 12;
   
   /**
    * Code BSON Type
@@ -179,9 +176,10 @@ class BSON {
     BsonBinary buffer = new BsonBinary(bsonObject.byteLength()+offset);
     
     buffer.offset = offset;
-    bsonObjectFrom(object).packValue(buffer);
+    bsonObject.packValue(buffer);
     
     return buffer;    
+    
   }
   
   
@@ -195,5 +193,7 @@ class BSON {
     bsonMap.unpackValue(buffer);
     
     return bsonMap.value;
+    
   }
+  
 }

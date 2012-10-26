@@ -7,7 +7,7 @@ class _ElementPair{
 
 abstract class BsonObject {
   
-  int get typeByte => throw const Exception("must be implemented");
+  int get typeByte { throw const Exception("must be implemented"); }
   int byteLength() => 0;
   
   packElement(String name, var buffer){
@@ -19,7 +19,7 @@ abstract class BsonObject {
     packValue(buffer);
   }
   
-  packValue(var buffer) => throw const Exception("must be implemented");
+  packValue(var buffer) { throw const Exception("must be implemented"); }
   _ElementPair unpackElement(buffer){
     _ElementPair result = new _ElementPair();
     result.name = buffer.readCString();    
@@ -28,7 +28,7 @@ abstract class BsonObject {
     return result;
   }
   
-  unpackValue(var buffer) => throw const Exception("must be implemented");
+  unpackValue(var buffer) { throw const Exception("must be implemented"); }
   
   get value=>null;
   
@@ -96,7 +96,7 @@ BsonObject bsonObjectFromTypeByte(int typeByte){
       return new ObjectId();
     case BSON.BSON_DATA_NULL:
       return new BsonNull();
-    case BSON.BSON_DATA_DBPOINTER:
+    case BSON.BSON_DATA_DBREF:
       return new DbRef(null,null);      
     case BSON.BSON_DATA_BOOLEAN:
       return new BsonBoolean(false);
