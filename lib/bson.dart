@@ -2,23 +2,26 @@ library bson;
 import 'dart:utf';
 import 'dart:uri';
 import 'dart:math';
+
 part 'src/bson_type.dart';
-part 'src/bson_objectid.dart';
-part 'src/timestamp.dart';
-part 'src/binary.dart';
-part 'src/statics.dart';
-part 'src/min_max_keys.dart';
-part 'src/bson_int.dart';
-part 'src/bson_string.dart';
-part 'src/bson_map.dart';
-part 'src/bson_array.dart';
 part 'src/bson_impl.dart';
-part 'src/bson_double.dart';
-part 'src/bson_dbpointer.dart';
-part 'src/bson_null.dart';
-part 'src/bson_boolean.dart';
-part 'src/bson_date.dart';
-part 'src/bson_regexp.dart';
+
+part 'src/statics.dart';
 part 'src/bson_platform.dart';
 
-
+//datatypes
+part 'src/types/binary.dart';
+part 'src/types/array.dart';
+part 'src/types/boolean.dart';
+part 'src/types/date.dart';
+part 'src/types/double.dart';
+part 'src/types/int.dart';
+part 'src/types/map.dart';
+part 'src/types/null.dart';
+part 'src/types/regexp.dart';
+part 'src/types/string.dart';
+part 'src/types/timestamp.dart';
+part 'src/types/objectid.dart';
+part 'src/types/minkey.dart';
+part 'src/types/maxkey.dart';
+part 'src/types/dbref.dart';
