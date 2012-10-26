@@ -4,14 +4,6 @@ class BSON {
   static const BSON_INT32_MAX = 0x7FFFFFFF;
   static const BSON_INT32_MIN = -0x80000000;
 
-  // JS MAX PRECISE VALUES
-  static const JS_INT_MAX = 0x20000000000000;  // Any integer up to 2^53 can be precisely represented by a double.
-  static const JS_INT_MIN = -0x20000000000000;  // Any integer down to -2^53 can be precisely represented by a double.
-
-  // Internal long versions
-  static const JS_INT_MAX_LONG = 0x20000000000000;  // Any integer up to 2^53 can be precisely represented by a double.
-  static const JS_INT_MIN_LONG = -0x20000000000000;  // Any integer down to -2^53 can be precisely represented by a double.
-
   /**
    * Number BSON Type
    *  
