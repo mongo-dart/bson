@@ -8,7 +8,7 @@ class DbRef extends BsonObject{
     bsonCollection = new BsonString(collection);    
   }  
   get value=>this;
-  int get typeByte => BSON.BSON_DATA_DBREF;  
+  int get typeByte => _BSON_DATA_DBREF;  
   byteLength()=>bsonCollection.byteLength()+id.byteLength();
   unpackValue(BsonBinary buffer){    
     bsonCollection = new BsonString(null);

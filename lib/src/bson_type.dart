@@ -1,9 +1,70 @@
 part of bson;
+
+/** Number BSON Type **/
+const _BSON_DATA_NUMBER = 1;
+
+/** String BSON Type **/
+const _BSON_DATA_STRING = 2;
+
+/** Object BSON Type **/
+const _BSON_DATA_OBJECT = 3;
+
+/** Array BSON Type **/
+const _BSON_DATA_ARRAY = 4;
+
+/** BsonBinary BSON Type **/
+const _BSON_DATA_BINARY = 5;
+
+/** ObjectID BSON Type **/
+const _BSON_DATA_OID = 7;
+
+/** Boolean BSON Type **/
+const _BSON_DATA_BOOLEAN = 8;
+
+/** Date BSON Type **/
+const _BSON_DATA_DATE = 9;
+
+/** null BSON Type **/
+const _BSON_DATA_NULL = 10;
+
+/** RegExp BSON Type **/
+const _BSON_DATA_REGEXP = 11;
+
+/** Code BSON Type**/
+const _BSON_DATA_DBREF = 12;
+
+/** 32 bit Integer BSON Type**/
+const _BSON_DATA_INT = 16;
+
+/** @classconstant BSON_DATA_LONG  **/
+const _BSON_DATA_LONG = 18;
+
+/** Code BSON Type **/
+const _BSON_DATA_CODE = 13;
+
+/** The following types are implemented partially **/
+//const _BSON_DATA_TIMESTAMP = 17; Timestamp BSON Type
+//static const BSON_DATA_MIN_KEY = 0xff; MinKey BSON Type
+//static const BSON_DATA_MAX_KEY = 0x7f; MaxKey BSON Type
+
+/** The following data types are not yet implemted **/
+//const BSON_DATA_SYMBOL = 14;
+//const BSON_DATA_CODE_W_SCOPE = 15;
+//const BSON_BINARY_SUBTYPE_DEFAULT = 0;
+//const BSON_BINARY_SUBTYPE_FUNCTION = 1;
+//const BSON_BINARY_SUBTYPE_BYTE_ARRAY = 2;
+//const BSON_BINARY_SUBTYPE_UUID = 3;
+//const BSON_BINARY_SUBTYPE_MD5 = 4;
+//const BSON_BINARY_SUBTYPE_USER_DEFINED = 128;
+
+
+
 class _ElementPair{
   String name;
   var value;
   _ElementPair([this.name,this.value]);
 }
+
 
 abstract class BsonObject {
   
@@ -20,6 +81,7 @@ abstract class BsonObject {
   }
   
   packValue(var buffer) { throw const Exception("must be implemented"); }
+  
   _ElementPair unpackElement(buffer){
     _ElementPair result = new _ElementPair();
     result.name = buffer.readCString();    
@@ -53,7 +115,6 @@ BsonObject bsonObjectFrom(var value){
   if (value is num){
     return new BsonDouble(value);
   } 
-
   if (value is String){
     return new BsonString(value);
   }        
@@ -80,33 +141,33 @@ BsonObject bsonObjectFrom(var value){
 
 BsonObject bsonObjectFromTypeByte(int typeByte){
   switch(typeByte){
-    case BSON.BSON_DATA_INT:
+    case _BSON_DATA_INT:
       return new BsonInt(null);
-    case BSON.BSON_DATA_LONG:
+    case _BSON_DATA_LONG:
       return new BsonLong(null);
-    case BSON.BSON_DATA_NUMBER:
+    case _BSON_DATA_NUMBER:
       return new BsonDouble(null);
-    case BSON.BSON_DATA_STRING:
+    case _BSON_DATA_STRING:
       return new BsonString(null);
-    case BSON.BSON_DATA_ARRAY:
+    case _BSON_DATA_ARRAY:
       return new BsonArray([]);
-    case BSON.BSON_DATA_OBJECT:
+    case _BSON_DATA_OBJECT:
       return new BsonMap({});
-    case BSON.BSON_DATA_OID:
+    case _BSON_DATA_OID:
       return new ObjectId();
-    case BSON.BSON_DATA_NULL:
+    case _BSON_DATA_NULL:
       return new BsonNull();
-    case BSON.BSON_DATA_DBREF:
+    case _BSON_DATA_DBREF:
       return new DbRef(null,null);      
-    case BSON.BSON_DATA_BOOLEAN:
+    case _BSON_DATA_BOOLEAN:
       return new BsonBoolean(false);
-    case BSON.BSON_DATA_BINARY:
+    case _BSON_DATA_BINARY:
       return new BsonBinary(0);
-    case BSON.BSON_DATA_DATE:
+    case _BSON_DATA_DATE:
       return new BsonDate(null);
-    case BSON.BSON_DATA_CODE:
+    case _BSON_DATA_CODE:
       return new BsonCode(null);
-    case BSON.BSON_DATA_REGEXP:
+    case _BSON_DATA_REGEXP:
       return new BsonRegexp(null);      
     default:
       throw new Exception("Not implemented for BSON TYPE $typeByte");           
