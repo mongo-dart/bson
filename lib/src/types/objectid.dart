@@ -3,7 +3,7 @@ class ObjectId extends BsonObject{
   BsonBinary id;
   
   ObjectId([bool clientMode = false]){
-    int seconds = new Timestamp(null,0).seconds;    
+    int seconds = new BsonTimestamp(null,0).seconds;    
     id = createId(seconds, clientMode);
   }
   
