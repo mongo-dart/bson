@@ -4,17 +4,22 @@ class _ElementPair{
   var value;
   _ElementPair([this.name,this.value]);
 }
-class BsonObject {  
-  int get typeByte{ throw const Exception("must be implemented");}
+
+abstract class BsonObject {
+  
+  int get typeByte => throw const Exception("must be implemented");
   int byteLength() => 0;
+  
   packElement(String name, var buffer){
+    
     buffer.writeByte(typeByte);
     if (name !== null){
       new BsonCString(name).packValue(buffer);
     }
     packValue(buffer);
-  } 
-  packValue(var buffer){ throw const Exception("must be implemented");}
+  }
+  
+  packValue(var buffer) => throw const Exception("must be implemented");
   _ElementPair unpackElement(buffer){
     _ElementPair result = new _ElementPair();
     result.name = buffer.readCString();    
@@ -22,9 +27,13 @@ class BsonObject {
     result.value = value;
     return result;
   }
-  unpackValue(var buffer){ throw const Exception("must be implemented");}
+  
+  unpackValue(var buffer) => throw const Exception("must be implemented");
+  
   get value=>null;
+  
 }
+
 int elementSize(String name, value) {
   int size = 1;
   if (name !== null){
@@ -33,6 +42,7 @@ int elementSize(String name, value) {
   size += bsonObjectFrom(value).byteLength();
   return size;
 }
+
 BsonObject bsonObjectFrom(var value){
   if (value is BsonObject){
     return value;
