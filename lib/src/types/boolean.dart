@@ -4,7 +4,7 @@ class BsonBoolean extends BsonObject{
   BsonBoolean(this.data);
   get value=>data;
   byteLength()=>1;
-  int get typeByte => BSON.BSON_DATA_BOOLEAN;
+  int get typeByte => _BSON_DATA_BOOLEAN;
   packValue(BsonBinary buffer){
      buffer.writeByte(data?1:0);
   }

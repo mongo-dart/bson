@@ -1,4 +1,5 @@
 part of bson;
+
 class BsonString extends BsonObject{
   String data;
   List<int> _utfData;  
@@ -11,7 +12,7 @@ class BsonString extends BsonObject{
   BsonString(this.data);
   get value=>data;
   byteLength()=>utfData.length+1+4;
-  int get typeByte => BSON.BSON_DATA_STRING;  
+  int get typeByte => _BSON_DATA_STRING;  
   packValue(BsonBinary buffer){
      buffer.writeInt(utfData.length+1);
      buffer.byteList.setRange(buffer.offset,utfData.length,utfData);
@@ -24,12 +25,14 @@ class BsonString extends BsonObject{
      buffer.offset += size+1;
   }
 }
+
 class BsonCode extends BsonString{
   get value=>this;
-  int get typeByte => BSON.BSON_DATA_CODE;
+  int get typeByte => _BSON_DATA_CODE;
   BsonCode(String dataValue):super(dataValue);
   String toString()=>"BsonCode('$data')";  
 }
+
 class BsonCString extends BsonString{
   bool useKeyCash;
   int get typeByte{
@@ -38,7 +41,7 @@ class BsonCString extends BsonString{
   BsonCString(String data, [this.useKeyCash = true]): super(data);
   List<int> get utfData{
     if (useKeyCash){
-      return Statics.getKeyUtf8(data);
+      return _Statics.getKeyUtf8(data);
     }
     else {
       return super.utfData;
