@@ -1,7 +1,9 @@
 name: bson
 description: Bson library for Dart programming language
 version: 0.0.3-dev
-author: Vadim Tsushko <vadimtsushko@gmail.com>
+author: 
+- Vadim Tsushko <vadimtsushko@gmail.com>
+- Ad van der Veer <advanderveer@gmail.com>
 homepage: https://github.com/vadimtsushko/bson_dart
 dependencies:
   unittest:

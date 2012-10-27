@@ -1,4 +1,5 @@
 part of bson;
+
 class BSON {
 
   BsonBinary serialize(var object, [int offset = 0]) {
