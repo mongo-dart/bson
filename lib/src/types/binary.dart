@@ -130,7 +130,7 @@ class BsonBinary extends BsonObject{
   }
   encodeInt(int position,int value, int numOfBytes, bool forceBigEndian, bool signed) {
     int bits = numOfBytes << 3; 
-    int max = Statics.MaxBits(bits);
+    int max = _Statics.MaxBits(bits);
 
     if (value >= max || value < -(max / 2)) {
       throw new Exception("encodeInt::overflow");      

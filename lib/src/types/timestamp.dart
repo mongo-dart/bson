@@ -7,7 +7,7 @@ class BsonTimestamp extends BsonObject{
       seconds = (new Date.now().millisecondsSinceEpoch ~/ 1000).toInt();
     }
     if (increment === null){
-      increment = Statics.nextIncrement;
+      increment = _Statics.nextIncrement;
     }          
   }
   String toString()=>"BsonTimestamp(seconds: $seconds, increment: $increment)";

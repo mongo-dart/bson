@@ -1,5 +1,5 @@
 part of bson;
-class Statics{
+class _Statics{
   static Stopwatch _stopwatch;  
   static startStopwatch() => _stopwatch = new Stopwatch()..start();
   static stopStopwatch() => _stopwatch.stop();

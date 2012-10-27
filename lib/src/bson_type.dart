@@ -99,7 +99,7 @@ abstract class BsonObject {
 int elementSize(String name, value) {
   int size = 1;
   if (name !== null){
-    size += Statics.getKeyUtf8(name).length + 1;
+    size += _Statics.getKeyUtf8(name).length + 1;
   } 
   size += bsonObjectFrom(value).byteLength();
   return size;
