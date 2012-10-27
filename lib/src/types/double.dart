@@ -4,7 +4,7 @@ class BsonDouble extends BsonObject{
   BsonDouble(this.data);
   get value=>data;
   byteLength()=>8;
-  int get typeByte => BSON_DATA_NUMBER;
+  int get typeByte => _BSON_DATA_NUMBER;
   packValue(BsonBinary buffer){
      buffer.writeDouble(data);
   }
