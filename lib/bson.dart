@@ -22,6 +22,4 @@ part 'src/types/regexp.dart';
 part 'src/types/string.dart';
 part 'src/types/timestamp.dart';
 part 'src/types/objectid.dart';
-part 'src/types/minkey.dart';
-part 'src/types/maxkey.dart';
 part 'src/types/dbref.dart';

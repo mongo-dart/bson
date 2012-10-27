@@ -68,7 +68,7 @@ class BsonBinary extends BsonObject{
     byteArray = makeByteArray(byteList);    
   }
   BsonBinary.fromHexString(this._hexString);
-  int get typeByte => BSON.BSON_DATA_BINARY;  
+  int get typeByte => _BSON_DATA_BINARY;  
   makeHexString(){
     StringBuffer stringBuffer = new StringBuffer();
     for (final byte in byteList)
@@ -130,7 +130,7 @@ class BsonBinary extends BsonObject{
   }
   encodeInt(int position,int value, int numOfBytes, bool forceBigEndian, bool signed) {
     int bits = numOfBytes << 3; 
-    int max = Statics.MaxBits(bits);
+    int max = _Statics.MaxBits(bits);
 
     if (value >= max || value < -(max / 2)) {
       throw new Exception("encodeInt::overflow");      

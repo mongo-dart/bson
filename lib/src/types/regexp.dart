@@ -16,7 +16,7 @@ class BsonRegexp extends BsonObject{
     bsonOptions = new BsonCString(options,false);
   }  
   get value=>this;
-  int get typeByte => BSON.BSON_DATA_REGEXP;  
+  int get typeByte => _BSON_DATA_REGEXP;  
   byteLength()=>bsonPattern.byteLength()+bsonOptions.byteLength();
   unpackValue(BsonBinary buffer){
     pattern = buffer.readCString();

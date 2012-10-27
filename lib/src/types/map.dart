@@ -16,7 +16,7 @@ class BsonMap extends BsonObject{
   BsonMap(this.data);
   get value=>data;
   byteLength()=>dataSize()+1+4;
-  int get typeByte => BSON.BSON_DATA_OBJECT;  
+  int get typeByte => _BSON_DATA_OBJECT;  
   packValue(BsonBinary buffer){
     buffer.writeInt(byteLength());
     data.forEach((var key, var value)
