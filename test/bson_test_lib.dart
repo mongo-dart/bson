@@ -158,7 +158,7 @@ run(){
     test("testBsonBinary",testBsonBinary);
     test("testBsonBinaryWithNegativeOne",testBsonBinaryWithNegativeOne);
     test("testMakeByteList",testMakeByteList);
-    solo_test("test64Int",test64Int);
+    test("test64Int",test64Int);
   });
   group("BsonTypesTest:", (){
     test("typeTest",typeTest);
