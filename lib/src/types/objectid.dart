@@ -1,17 +1,17 @@
 part of bson;
-class ObjectId extends BsonObject{  
+class ObjectId extends BsonObject{
   BsonBinary id;
-  
-  ObjectId([bool clientMode = false]){
-    int seconds = new BsonTimestamp(null,0).seconds;    
+
+  ObjectId({bool clientMode: false}){
+    int seconds = new Timestamp(null,0).seconds;
     id = createId(seconds, clientMode);
   }
-  
+
   ObjectId.fromSeconds(int seconds, [bool clientMode = false]){
     id = createId(seconds, clientMode);
   }
   ObjectId.fromBsonBinary(this.id);
-  
+
   BsonBinary createId(int seconds, bool clientMode) {
       getOctet(int value) {
       String res = value.toRadixString(16);
@@ -25,24 +25,24 @@ class ObjectId extends BsonObject{
       return new BsonBinary.fromHexString(s);
     } else {
       return new BsonBinary(12)
-      ..writeInt(seconds,4,forceBigEndian:true)    
-      ..writeInt(_Statics.MachineId,3)
-      ..writeInt(_Statics.Pid,2)
-      ..writeInt(_Statics.nextIncrement,3,forceBigEndian:true);
-    }    
-  }  
-  
-  
+      ..writeInt(seconds,forceBigEndian:true)
+      ..writeInt(_Statics.MachineId,numOfBytes:3)
+      ..writeInt(_Statics.Pid,numOfBytes:2)
+      ..writeInt(_Statics.nextIncrement,numOfBytes:3,forceBigEndian:true);
+    }
+  }
+
+
   factory ObjectId.fromHexString(String hexString) {
     return new ObjectId.fromBsonBinary(new BsonBinary.fromHexString(hexString));
-  }    
+  }
 
-  
-  int hashCode() => id.hexString.hashCode();
+
+  int get hashCode => id.hexString.hashCode;
   bool operator ==(other) => other is ObjectId && toHexString() == other.toHexString();
   String toString() => "ObjectId(${id.hexString})";
   String toHexString() => id.hexString;
-  int get typeByte => _BSON_DATA_OID;
+  int get typeByte => BSON.BSON_DATA_OID;
   get value => this;
   int byteLength() => 12;
   unpackValue(BsonBinary buffer){
@@ -51,14 +51,14 @@ class ObjectId extends BsonObject{
   }
   packValue(BsonBinary buffer){
     if (id.byteList == null) {
-      id.makeByteList();  
+      id.makeByteList();
     }
-    buffer.byteList.setRange(buffer.offset,12,id.byteList);
+    buffer.byteList.setRange(buffer.offset,buffer.offset+12,id.byteList);
     buffer.offset += 12;
   }
-  
-  String toJson() {    
+
+  String toJson() {
     return '\{"\$oid":"${toHexString()}"\}';
   }
-  
+
 }

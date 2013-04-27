@@ -1,5 +1,4 @@
 part of bson;
-
 /** Number BSON Type **/
 const _BSON_DATA_NUMBER = 1;
 
@@ -30,7 +29,7 @@ const _BSON_DATA_NULL = 10;
 /** RegExp BSON Type **/
 const _BSON_DATA_REGEXP = 11;
 
-/** Code BSON Type**/
+/** DbRef BSON Type**/
 const _BSON_DATA_DBREF = 12;
 
 /** 32 bit Integer BSON Type**/
@@ -57,120 +56,110 @@ const _BSON_DATA_CODE = 13;
 //const BSON_BINARY_SUBTYPE_MD5 = 4;
 //const BSON_BINARY_SUBTYPE_USER_DEFINED = 128;
 
-
-
 class _ElementPair{
   String name;
   var value;
   _ElementPair([this.name,this.value]);
 }
-
-
-abstract class BsonObject {
-  
-  int get typeByte { throw const Exception("must be implemented"); }
+class BsonObject {
+  int get typeByte{ throw "must be implemented";}
   int byteLength() => 0;
-  
   packElement(String name, var buffer){
-    
     buffer.writeByte(typeByte);
-    if (name !== null){
+    if (name != null){
       new BsonCString(name).packValue(buffer);
     }
     packValue(buffer);
   }
-  
-  packValue(var buffer) { throw const Exception("must be implemented"); }
-  
+  packValue(var buffer){ throw "must be implemented";}
   _ElementPair unpackElement(buffer){
     _ElementPair result = new _ElementPair();
-    result.name = buffer.readCString();    
+    result.name = buffer.readCString();
     unpackValue(buffer);
     result.value = value;
     return result;
   }
-  
-  unpackValue(var buffer) { throw const Exception("must be implemented"); }
-  
+  unpackValue(var buffer){ throw "must be implemented";}
   get value=>null;
-  
 }
-
 int elementSize(String name, value) {
   int size = 1;
-  if (name !== null){
+  if (name != null){
     size += _Statics.getKeyUtf8(name).length + 1;
-  } 
+  }
   size += bsonObjectFrom(value).byteLength();
   return size;
 }
-
 BsonObject bsonObjectFrom(var value){
   if (value is BsonObject){
     return value;
   }
   if (value is int){
     return new BsonInt(value);
-  }    
+  }
   if (value is num){
     return new BsonDouble(value);
-  } 
+  }
+
   if (value is String){
     return new BsonString(value);
-  }        
+  }
   if (value is Map){
     return new BsonMap(value);
-  }        
+  }
   if (value is List){
     return new BsonArray(value);
-  }        
-  if (value === null){
+  }
+  if (value == null){
     return new BsonNull();
   }
-  if (value is Date){
+  if (value is DateTime){
     return new BsonDate(value);
-  }  
-  if (value === true || value === false){
+  }
+  if (value == true || value == false){
     return new BsonBoolean(value);
   }
   if (value is BsonRegexp){
     return value;
-  }  
-  throw new Exception("Not implemented for $value");           
-}  
+  }
+  return new BsonMap(value.toJson());
+//  throw new Exception("Not implemented for $value");
+}
 
 BsonObject bsonObjectFromTypeByte(int typeByte){
   switch(typeByte){
-    case _BSON_DATA_INT:
+    case BSON.BSON_DATA_INT:
       return new BsonInt(null);
-    case _BSON_DATA_LONG:
+    case BSON.BSON_DATA_LONG:
       return new BsonLong(null);
-    case _BSON_DATA_NUMBER:
+    case BSON.BSON_DATA_NUMBER:
       return new BsonDouble(null);
-    case _BSON_DATA_STRING:
+    case BSON.BSON_DATA_STRING:
       return new BsonString(null);
-    case _BSON_DATA_ARRAY:
+    case BSON.BSON_DATA_ARRAY:
       return new BsonArray([]);
-    case _BSON_DATA_OBJECT:
+    case BSON.BSON_DATA_OBJECT:
       return new BsonMap({});
-    case _BSON_DATA_OID:
+    case BSON.BSON_DATA_OID:
       return new ObjectId();
-    case _BSON_DATA_NULL:
+    case BSON.BSON_DATA_NULL:
       return new BsonNull();
-    case _BSON_DATA_DBREF:
-      return new DbRef(null,null);      
-    case _BSON_DATA_BOOLEAN:
+    case BSON.BSON_DATA_DBPOINTER:
+      return new DbRef(null,null);
+    case BSON.BSON_DATA_BOOLEAN:
       return new BsonBoolean(false);
-    case _BSON_DATA_BINARY:
+    case BSON.BSON_DATA_BINARY:
       return new BsonBinary(0);
-    case _BSON_DATA_DATE:
+    case BSON.BSON_DATA_DATE:
       return new BsonDate(null);
-    case _BSON_DATA_CODE:
+    case BSON.BSON_DATA_CODE:
       return new BsonCode(null);
-    case _BSON_DATA_REGEXP:
-      return new BsonRegexp(null);      
+    case BSON.BSON_DATA_REGEXP:
+      return new BsonRegexp(null);
+    case BSON.BSON_DATA_TIMESTAMP:
+      return new Timestamp(0,0);
     default:
-      throw new Exception("Not implemented for BSON TYPE $typeByte");           
-  }  
+      throw new Exception("Not implemented for BSON TYPE $typeByte");
+  }
 }
 

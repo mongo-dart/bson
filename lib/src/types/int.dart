@@ -4,7 +4,7 @@ class BsonInt extends BsonObject{
   BsonInt(this.data);
   get value=>data;
   byteLength()=>4;
-  int get typeByte => _BSON_DATA_INT;
+  int get typeByte => BSON.BSON_DATA_INT;
   packValue(BsonBinary buffer){
      buffer.writeInt(data);
   }
@@ -18,7 +18,7 @@ class BsonLong extends BsonObject{
   BsonLong(this.data);
   get value=>data;
   byteLength()=>8;
-  int get typeByte => _BSON_DATA_LONG;
+  int get typeByte => BSON.BSON_DATA_LONG;
   packValue(BsonBinary buffer){
     buffer.writeInt64(data);
   }
