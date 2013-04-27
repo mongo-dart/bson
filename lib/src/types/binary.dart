@@ -105,17 +105,17 @@ class BsonBinary extends BsonObject{
       pos++;
     }
   }
-  setIntExtended(int value, int numOfBytes){
-    List<int> byteListTmp = new Uint8List(8);
+  setIntExtended(int value, int numOfBytes, Endianness endianness){
+    List<int> byteListTmp = new Uint8List(4);
     var byteArrayTmp = _getByteData(byteListTmp);
     if (numOfBytes == 3){
-      byteArrayTmp.setInt32(0,value,Endianness.LITTLE_ENDIAN);
+      byteArrayTmp.setInt32(0,value,endianness);
     }
-    else if (numOfBytes > 4 && numOfBytes < 8){
-      byteArrayTmp.setInt64(0,value,Endianness.LITTLE_ENDIAN);
-    }
+//    else if (numOfBytes > 4 && numOfBytes < 8){
+//      byteArrayTmp.setInt64(0,value,Endianness.LITTLE_ENDIAN);
+//    }
     else {
-        throw new Exception("Unsupported num of bits: ${numOfBytes*8}");
+        throw new Exception("Unsupported num of bytes: ${numOfBytes}");
     }
     byteList.setRange(offset,offset+numOfBytes,byteListTmp);
   }
@@ -129,39 +129,37 @@ class BsonBinary extends BsonObject{
       swap(i,numOfBytes-1-i);
     }
   }
-  encodeInt(int position,int value, int numOfBytes, bool forceBigEndian, bool signed) {
+  encodeInt(int position,int value, int numOfBytes, Endianness endianness, bool signed) {
     int bits = numOfBytes << 3;
-    int max = _Statics.MaxBits(bits);
-
-    if (value >= max || value < -(max / 2)) {
-      throw new Exception("encodeInt::overflow");
-    }
+//  Thah check constantly breaks on JavaScript.
+//TODO Revisit later
+//    int max = _Statics.MaxBits(bits);
+//    if (value >= max || value < -(max / 2)) { 
+//      throw new Exception("encodeInt::overflow");
+//    }
     switch(bits) {
       case 32:
-        byteArray.setInt32(position,value,Endianness.LITTLE_ENDIAN);
+        byteArray.setInt32(position,value,endianness);
         break;
       case 16:
-        byteArray.setInt16(position,value,Endianness.LITTLE_ENDIAN);
+        byteArray.setInt16(position,value,endianness);
         break;
       case 8:
         byteArray.setInt8(position,value);
         break;
-      case 24:
-        setIntExtended(value,numOfBytes);
-        break;
+//      case 24:
+//        setIntExtended(value, numOfBytes, endianness);
+//        break;
       default:
         throw new Exception("Unsupported num of bits: $bits");
     }
-    if (forceBigEndian){
-      reverse(numOfBytes);
-    }
   }
-  writeInt(int value, {int numOfBytes:4, bool forceBigEndian:false, bool signed:false}){
-    encodeInt(offset,value, numOfBytes,forceBigEndian,signed);
+  writeInt(int value, {int numOfBytes:4, endianness: Endianness.LITTLE_ENDIAN, bool signed:false}){
+    encodeInt(offset,value, numOfBytes,endianness,signed);
     offset += numOfBytes;
   }
   writeByte(int value){
-    encodeInt(offset,value, 1,false,false);
+    encodeInt(offset,value, 1,Endianness.LITTLE_ENDIAN,false);
     offset += 1;
   }
   int writeDouble(double value){

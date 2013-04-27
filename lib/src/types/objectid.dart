@@ -21,14 +21,13 @@ class ObjectId extends BsonObject{
       return res;
     }
     if (clientMode) {
-      String s = '${getOctet(seconds)}${getOctet(_Statics.MachineId+_Statics.Pid)}${getOctet(_Statics.nextIncrement)}';
+      String s = '${getOctet(seconds)}${getOctet(_Statics.RandomId)}${getOctet(_Statics.nextIncrement)}';
       return new BsonBinary.fromHexString(s);
     } else {
       return new BsonBinary(12)
-      ..writeInt(seconds,forceBigEndian:true)
-      ..writeInt(_Statics.MachineId,numOfBytes:3)
-      ..writeInt(_Statics.Pid,numOfBytes:2)
-      ..writeInt(_Statics.nextIncrement,numOfBytes:3,forceBigEndian:true);
+      ..writeInt(seconds,endianness: Endianness.BIG_ENDIAN)
+      ..writeInt(_Statics.RandomId)
+      ..writeInt(_Statics.nextIncrement,endianness: Endianness.BIG_ENDIAN);
     }
   }
 
