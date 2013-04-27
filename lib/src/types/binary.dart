@@ -68,7 +68,7 @@ class BsonBinary extends BsonObject{
     byteArray = _getByteData(byteList);
   }
   BsonBinary.fromHexString(this._hexString);
-  int get typeByte => BSON.BSON_DATA_BINARY;
+  int get typeByte => _BSON_DATA_BINARY;
   ByteData _getByteData(from) => new ByteData.view(from.buffer);
   makeHexString(){
     StringBuffer stringBuffer = new StringBuffer();

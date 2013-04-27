@@ -41,8 +41,10 @@ const _BSON_DATA_LONG = 18;
 /** Code BSON Type **/
 const _BSON_DATA_CODE = 13;
 
+/** Timestamp BSON Type **/
+const _BSON_DATA_TIMESTAMP = 17; 
+
 /** The following types are implemented partially **/
-//const _BSON_DATA_TIMESTAMP = 17; Timestamp BSON Type
 //static const BSON_DATA_MIN_KEY = 0xff; MinKey BSON Type
 //static const BSON_DATA_MAX_KEY = 0x7f; MaxKey BSON Type
 
@@ -128,35 +130,35 @@ BsonObject bsonObjectFrom(var value){
 
 BsonObject bsonObjectFromTypeByte(int typeByte){
   switch(typeByte){
-    case BSON.BSON_DATA_INT:
+    case _BSON_DATA_INT:
       return new BsonInt(null);
-    case BSON.BSON_DATA_LONG:
+    case _BSON_DATA_LONG:
       return new BsonLong(null);
-    case BSON.BSON_DATA_NUMBER:
+    case _BSON_DATA_NUMBER:
       return new BsonDouble(null);
-    case BSON.BSON_DATA_STRING:
+    case _BSON_DATA_STRING:
       return new BsonString(null);
-    case BSON.BSON_DATA_ARRAY:
+    case _BSON_DATA_ARRAY:
       return new BsonArray([]);
-    case BSON.BSON_DATA_OBJECT:
+    case _BSON_DATA_OBJECT:
       return new BsonMap({});
-    case BSON.BSON_DATA_OID:
+    case _BSON_DATA_OID:
       return new ObjectId();
-    case BSON.BSON_DATA_NULL:
+    case _BSON_DATA_NULL:
       return new BsonNull();
-    case BSON.BSON_DATA_DBPOINTER:
+    case _BSON_DATA_DBREF:
       return new DbRef(null,null);
-    case BSON.BSON_DATA_BOOLEAN:
+    case _BSON_DATA_BOOLEAN:
       return new BsonBoolean(false);
-    case BSON.BSON_DATA_BINARY:
+    case _BSON_DATA_BINARY:
       return new BsonBinary(0);
-    case BSON.BSON_DATA_DATE:
+    case _BSON_DATA_DATE:
       return new BsonDate(null);
-    case BSON.BSON_DATA_CODE:
+    case _BSON_DATA_CODE:
       return new BsonCode(null);
-    case BSON.BSON_DATA_REGEXP:
+    case _BSON_DATA_REGEXP:
       return new BsonRegexp(null);
-    case BSON.BSON_DATA_TIMESTAMP:
+    case _BSON_DATA_TIMESTAMP:
       return new Timestamp(0,0);
     default:
       throw new Exception("Not implemented for BSON TYPE $typeByte");

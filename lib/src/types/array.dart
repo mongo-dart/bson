@@ -15,7 +15,7 @@ class BsonArray extends BsonObject{
   BsonArray(this.data);
   get value=>data;
   byteLength()=>dataSize()+1+4;
-  int get typeByte => BSON.BSON_DATA_ARRAY;
+  int get typeByte => _BSON_DATA_ARRAY;
   packValue(BsonBinary buffer){
     buffer.writeInt(byteLength());
       for(var i = 0; i < data.length; i++) {

@@ -11,7 +11,7 @@ class BsonString extends BsonObject{
   BsonString(this.data);
   get value=>data;
   byteLength()=>utfData.length+1+4;
-  int get typeByte => BSON.BSON_DATA_STRING;
+  int get typeByte => _BSON_DATA_STRING;
   packValue(BsonBinary buffer){
      buffer.writeInt(utfData.length+1);
      buffer.byteList.setRange(buffer.offset,buffer.offset+utfData.length,utfData);
@@ -26,7 +26,7 @@ class BsonString extends BsonObject{
 }
 class BsonCode extends BsonString{
   get value=>this;
-  int get typeByte => BSON.BSON_DATA_CODE;
+  int get typeByte => _BSON_DATA_CODE;
   BsonCode(String dataValue):super(dataValue);
   String toString()=>"BsonCode('$data')";
 }
