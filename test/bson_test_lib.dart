@@ -1,6 +1,6 @@
 library bson_test_lib;
 import 'package:unittest/unittest.dart';
-import 'dart:typeddata';  
+import 'dart:typed_data';  
 import 'package:bson/bson.dart';
 
 testUint8ListNegativeWrite(){

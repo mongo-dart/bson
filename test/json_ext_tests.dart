@@ -1,6 +1,6 @@
 library JSON_EXT_ext_tests;
 import 'package:unittest/unittest.dart';
-import 'dart:typeddata';
+import 'dart:typed_data';
 import 'package:bson/bson.dart';
 import 'package:bson/src/json_ext.dart';
 main(){
