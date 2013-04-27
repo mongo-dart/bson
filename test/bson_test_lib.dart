@@ -55,7 +55,11 @@ typeTest(){
   expect(bsonObjectFrom(new DateTime.now()) is BsonDate, isTrue);
   expect(bsonObjectFrom([2,3,4]) is BsonArray, isTrue);
 }
-
+test64Int() {
+  BsonBinary b = new BsonBinary(8);
+  b.writeInt64(-1);
+  expect(b.hexString,'ffffffffffffffff');
+}
 testObjectId(){
   var id1 = new ObjectId();
   expect(id1,isNotNull);
@@ -154,6 +158,7 @@ run(){
     test("testBsonBinary",testBsonBinary);
     test("testBsonBinaryWithNegativeOne",testBsonBinaryWithNegativeOne);
     test("testMakeByteList",testMakeByteList);
+    solo_test("test64Int",test64Int);
   });
   group("BsonTypesTest:", (){
     test("typeTest",typeTest);
