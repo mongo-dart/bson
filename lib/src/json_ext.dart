@@ -44,7 +44,7 @@ class JSON_EXT {
   /**
    * Parses [json] and build the corresponding parsed JSON value.
    *
-   * Parsed JSON values are of the types [num], [String], [bool], [Null],
+   * Parsed JSON values are of the types [num], [String], [bool], [null],
    * [List]s of parsed JSON values or [Map]s from [String] to parsed
    * JSON values.
    *
@@ -57,7 +57,7 @@ class JSON_EXT {
   /**
    * Serializes [object] into a JSON string.
    *
-   * Directly serializable types are [num], [String], [bool], [Null], [List]
+   * Directly serializable types are [num], [String], [bool], [null], [List]
    * and [Map].
    * For [List], the elements must all be serializable.
    * For [Map], the keys must be [String] and the values must be serializable.
@@ -574,7 +574,7 @@ class _JsonStringifier {
   }
 
   /**
-   * Serializes a [num], [String], [bool], [Null], [List] or [Map] value.
+   * Serializes a [num], [String], [bool], [null], [List] or [Map] value.
    *
    * Returns true if the value is one of these types, and false if not.
    * If a value is both a [List] and a [Map], it's serialized as a [List].
