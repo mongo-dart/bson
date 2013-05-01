@@ -2,7 +2,7 @@ library bson_test_lib;
 import 'package:unittest/unittest.dart';
 import 'dart:typed_data';  
 import 'package:bson/bson.dart';
-
+import 'package:bson/src/fixnum/fixnum.dart';
 testUint8ListNegativeWrite(){
   Uint8List bl = new Uint8List(4);
   var ba = new ByteData.view(bl.buffer);
@@ -59,6 +59,16 @@ test64Int() {
   BsonBinary b = new BsonBinary(8);
   b.writeInt64(-1);
   expect(b.hexString,'ffffffffffffffff');
+}
+testDateTime() {
+  var date = new DateTime(2012,10,6,10,15,20);
+  var bson = new BSON();
+  var sourceMap = {'d':date};
+  var d = date.millisecondsSinceEpoch;
+  BsonBinary buffer = bson.serialize(sourceMap);
+  buffer.rewind();
+  Map targetMap = bson.deserialize(buffer);
+  expect(targetMap['d'],sourceMap['d']);
 }
 testObjectId(){
   var id1 = new ObjectId();
@@ -159,6 +169,7 @@ run(){
     test("testBsonBinaryWithNegativeOne",testBsonBinaryWithNegativeOne);
     test("testMakeByteList",testMakeByteList);
     test("test64Int",test64Int);
+    test("testDateTime", testDateTime);
   });
   group("BsonTypesTest:", (){
     test("typeTest",typeTest);

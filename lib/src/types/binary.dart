@@ -1,5 +1,6 @@
 part of bson;
 class BsonBinary extends BsonObject{
+  static final bool  UseFixnum = _isIntWorkaroundNeeded();
   static final BUFFER_SIZE = 256;
   static final SUBTYPE_DEFAULT = 0;
   static final SUBTYPE_FUNCTION = 1;
@@ -130,28 +131,18 @@ class BsonBinary extends BsonObject{
     }
   }
   encodeInt(int position,int value, int numOfBytes, Endianness endianness, bool signed) {
-    int bits = numOfBytes << 3;
-//  Thah check constantly breaks on JavaScript.
-//TODO Revisit later
-//    int max = _Statics.MaxBits(bits);
-//    if (value >= max || value < -(max / 2)) { 
-//      throw new Exception("encodeInt::overflow");
-//    }
-    switch(bits) {
-      case 32:
+    switch(numOfBytes) {
+      case 4:
         byteArray.setInt32(position,value,endianness);
         break;
-      case 16:
+      case 2:
         byteArray.setInt16(position,value,endianness);
         break;
-      case 8:
+      case 1:
         byteArray.setInt8(position,value);
         break;
-//      case 24:
-//        setIntExtended(value, numOfBytes, endianness);
-//        break;
       default:
-        throw new Exception("Unsupported num of bits: $bits");
+        throw new Exception("Unsupported num of bytes: $numOfBytes");
     }
   }
   writeInt(int value, {int numOfBytes:4, endianness: Endianness.LITTLE_ENDIAN, bool signed:false}){
@@ -167,7 +158,14 @@ class BsonBinary extends BsonObject{
     offset+=8;
   }
   int writeInt64(int value){
-    byteArray.setInt64(offset, value,Endianness.LITTLE_ENDIAN);
+    if (UseFixnum) {
+      int64 d64 = new int64.fromInt(value);
+      BsonBinary b2 = new BsonBinary(8);
+      byteList.setRange(offset,offset+8,d64.toBytes());
+    }
+    else {
+      byteArray.setInt64(offset, value,Endianness.LITTLE_ENDIAN);
+    }
     offset+=8;
   }
   int readByte(){
@@ -179,6 +177,13 @@ class BsonBinary extends BsonObject{
   }
   int readInt64(){
     offset+=8;
+    if (UseFixnum) {
+      offset -= 8;
+      int i1 = readInt32();
+      int i2 = readInt32();
+      var i64 = new int64.fromInts(i2, i1);
+      return i64.toInt();
+    }
     return byteArray.getInt64(offset-8,Endianness.LITTLE_ENDIAN);
   }
   num readDouble(){
@@ -225,3 +230,9 @@ class BsonBinary extends BsonObject{
   get value => this;
   String toString()=>"BsonBinary($hexString)";
 }
+
+bool _isIntWorkaroundNeeded() {
+  int n=9007199254740992;
+  int newInt = n + 1;   return newInt.toString() == n.toString();
+}    
+

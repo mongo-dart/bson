@@ -4,6 +4,7 @@ import 'dart:uri';
 import 'dart:math';
 import 'dart:collection';
 import 'dart:typed_data';
+import 'src/fixnum/fixnum.dart';
 part 'src/bson_type.dart';
 part 'src/types/objectid.dart';
 part 'src/types/timestamp.dart';
