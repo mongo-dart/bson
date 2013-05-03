@@ -21,6 +21,8 @@ class BsonRegexp extends BsonObject{
   unpackValue(BsonBinary buffer){
     pattern = buffer.readCString();
     options = buffer.readCString();
+    bsonPattern = new BsonCString(pattern,false);
+    bsonOptions = new BsonCString(options,false);
   }
   createOptionsString(){
     if (options != '') {
