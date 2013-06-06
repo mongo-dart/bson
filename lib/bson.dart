@@ -1,6 +1,5 @@
 library bson;
 import 'dart:utf';
-import 'dart:uri';
 import 'dart:math';
 import 'dart:collection';
 import 'dart:typed_data';
