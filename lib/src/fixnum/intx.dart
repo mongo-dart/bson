@@ -48,7 +48,7 @@ abstract class intx implements Comparable {
   bool isOdd();
   bool isZero();
 
-  int hashCode;
+  int get hashCode;
 
   intx abs();
 
