@@ -81,6 +81,16 @@ testObjectId(){
   expect("0000000a",leading8chars, reason: 'Timestamp part of ObjectId must be encoded BigEndian');
 }
 
+testObjectIdDateTime(){
+  // Equivalent to getTimestamp in mongoShell... this library has it's own "timestamp" concept that differs.
+  // Expect equivalent too: 1372093057000 / Mon Jun 24 2013 11:57:37 GMT-0500 (Central Daylight Time) from 51c87a81a58a563d1304f4ed 
+  var objectId = new ObjectId.fromHexString("51c87a81a58a563d1304f4ed");  
+  var expected = new DateTime.fromMillisecondsSinceEpoch(1372093057000);
+  var actual = objectId.dateTime;
+  
+  expect(expected, actual);
+}
+
 testSerializeDeserialize(){
   var bson = new BSON();
   var map = {'_id':5, 'a':4};
@@ -176,6 +186,7 @@ run(){
   });
   group("ObjectId:", (){
     test("testObjectId",testObjectId);
+    test("testObjectIdDateTime",testObjectIdDateTime);    
     test("testBsonIdFromHexString",testBsonIdFromHexString);
     test("testBsonIdClientMode",testBsonIdClientMode);
     test("testBsonDbPointer", testBsonDbPointer);
