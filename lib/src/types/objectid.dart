@@ -10,6 +10,7 @@ class ObjectId extends BsonObject{
   ObjectId.fromSeconds(int seconds, [bool clientMode = false]){
     id = createId(seconds, clientMode);
   }
+  
   ObjectId.fromBsonBinary(this.id);
 
   BsonBinary createId(int seconds, bool clientMode) {
@@ -31,11 +32,9 @@ class ObjectId extends BsonObject{
     }
   }
 
-
   factory ObjectId.fromHexString(String hexString) {
     return new ObjectId.fromBsonBinary(new BsonBinary.fromHexString(hexString));
   }
-
 
   int get hashCode => id.hexString.hashCode;
   bool operator ==(other) => other is ObjectId && toHexString() == other.toHexString();
@@ -44,10 +43,12 @@ class ObjectId extends BsonObject{
   int get typeByte => _BSON_DATA_OID;
   get value => this;
   int byteLength() => 12;
+  
   unpackValue(BsonBinary buffer){
      id.byteList.setRange(0,12,buffer.byteList,buffer.offset);
      buffer.offset += 12;
   }
+  
   packValue(BsonBinary buffer){
     if (id.byteList == null) {
       id.makeByteList();
@@ -60,4 +61,7 @@ class ObjectId extends BsonObject{
     return '\{"\$oid":"${toHexString()}"\}';
   }
 
+  // Equivalent to mongo shell's "getTimestamp".
+  DateTime get dateTime => new DateTime.fromMillisecondsSinceEpoch(int.parse(id.hexString.substring(0, 8), radix:16) * 1000);
+ 
 }
