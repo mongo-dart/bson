@@ -35,6 +35,8 @@ class ObjectId extends BsonObject{
   factory ObjectId.fromHexString(String hexString) {
     return new ObjectId.fromBsonBinary(new BsonBinary.fromHexString(hexString));
   }
+  
+  static ObjectId parse(String hexString) => new ObjectId.fromHexString(hexString);
 
   int get hashCode => id.hexString.hashCode;
   bool operator ==(other) => other is ObjectId && toHexString() == other.toHexString();
