@@ -146,7 +146,7 @@ BsonObject bsonObjectFromTypeByte(int typeByte){
     case _BSON_DATA_NULL:
       return new BsonNull();
     case _BSON_DATA_DBPOINTER:
-      return new DBPointer(null,null);
+      return new DbRef(null,null);
     case _BSON_DATA_BOOLEAN:
       return new BsonBoolean(false);
     case _BSON_DATA_BINARY:

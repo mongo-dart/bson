@@ -3,7 +3,6 @@ import 'dart:utf';
 import 'dart:math';
 import 'dart:typed_data';
 import 'src/fixnum/fixnum.dart';
-import 'package:meta/meta.dart';
 part 'src/bson_type.dart';
 part 'src/types/objectid.dart';
 part 'src/types/timestamp.dart';
