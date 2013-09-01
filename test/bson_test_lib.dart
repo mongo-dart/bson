@@ -2,7 +2,6 @@ library bson_test_lib;
 import 'package:unittest/unittest.dart';
 import 'dart:typed_data';  
 import 'package:bson/bson.dart';
-import 'package:bson/src/fixnum/fixnum.dart';
 testUint8ListNegativeWrite(){
   Uint8List bl = new Uint8List(4);
   var ba = new ByteData.view(bl.buffer);
@@ -160,7 +159,7 @@ testBsonIdClientMode() {
   expect(oid2.toHexString().length, 24);
 }
 testBsonDbPointer() {
-  var p1 = new DbRef('Test',new ObjectId());
+  var p1 = new DBPointer('Test',new ObjectId());
   var bson = new BSON();
   var b = bson.serialize({'p1': p1});
   b.rewind();

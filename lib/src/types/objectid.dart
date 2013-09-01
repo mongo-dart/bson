@@ -40,7 +40,7 @@ class ObjectId extends BsonObject{
 
   int get hashCode => id.hexString.hashCode;
   bool operator ==(other) => other is ObjectId && toHexString() == other.toHexString();
-  String toString() => 'ObjectId("${id.hexString}")';
+  String toString() => "ObjectId('${id.hexString}')";
   String toHexString() => id.hexString;
   int get typeByte => _BSON_DATA_OID;
   get value => this;
@@ -59,9 +59,7 @@ class ObjectId extends BsonObject{
     buffer.offset += 12;
   }
 
-  String toJson() {
-    return '\{"\$oid":"${toHexString()}"\}';
-  }
+  String toJson() => toString();
 
   // Equivalent to mongo shell's "getTimestamp".
   DateTime get dateTime => new DateTime.fromMillisecondsSinceEpoch(int.parse(id.hexString.substring(0, 8), radix:16) * 1000);

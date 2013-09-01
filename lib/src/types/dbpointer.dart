@@ -17,7 +17,8 @@ class DBPointer extends BsonObject{
     id = new ObjectId();
     id.unpackValue(buffer);
   }
-  toString()=>'DBPointer("$collection", $id)';
+  toString()=>"DBPointer('$collection', $id)";
+  toJson()=>toString();
   packValue(BsonBinary buffer){
      bsonCollection.packValue(buffer);
      id.packValue(buffer);
