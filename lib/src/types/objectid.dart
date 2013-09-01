@@ -40,7 +40,7 @@ class ObjectId extends BsonObject{
 
   int get hashCode => id.hexString.hashCode;
   bool operator ==(other) => other is ObjectId && toHexString() == other.toHexString();
-  String toString() => "ObjectId(${id.hexString})";
+  String toString() => 'ObjectId("${id.hexString}")';
   String toHexString() => id.hexString;
   int get typeByte => _BSON_DATA_OID;
   get value => this;

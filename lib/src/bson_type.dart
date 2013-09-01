@@ -29,8 +29,8 @@ const _BSON_DATA_NULL = 10;
 /** RegExp BSON Type **/
 const _BSON_DATA_REGEXP = 11;
 
-/** DbRef BSON Type**/
-const _BSON_DATA_DBREF = 12;
+/** DBPointer BSON Type**/
+const _BSON_DATA_DBPOINTER = 12;
 
 /** 32 bit Integer BSON Type**/
 const _BSON_DATA_INT = 16;
@@ -145,8 +145,8 @@ BsonObject bsonObjectFromTypeByte(int typeByte){
       return new ObjectId();
     case _BSON_DATA_NULL:
       return new BsonNull();
-    case _BSON_DATA_DBREF:
-      return new DbRef(null,null);
+    case _BSON_DATA_DBPOINTER:
+      return new DBPointer(null,null);
     case _BSON_DATA_BOOLEAN:
       return new BsonBoolean(false);
     case _BSON_DATA_BINARY:

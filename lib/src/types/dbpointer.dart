@@ -1,10 +1,9 @@
 part of bson;
-@deprecated
-class DbRef extends BsonObject{
+class DBPointer extends BsonObject{
   String collection;
   ObjectId id;
   BsonString bsonCollection;
-  DbRef(this.collection, this.id)
+  DBPointer(this.collection, this.id)
   {
     bsonCollection = new BsonString(collection);
   }
@@ -18,12 +17,12 @@ class DbRef extends BsonObject{
     id = new ObjectId();
     id.unpackValue(buffer);
   }
-  toString()=>'DbRef(collection: $collection, id: $id)';
+  toString()=>'DBPointer("$collection", $id)';
   packValue(BsonBinary buffer){
      bsonCollection.packValue(buffer);
      id.packValue(buffer);
   }
   get hashCode => '${collection}.${id.toHexString()}'.hashCode;
-  bool operator ==(other) => other is DbRef && collection == other.collection && id.toHexString() == other.id.toHexString();
+  bool operator ==(other) => other is DBPointer && collection == other.collection && id.toHexString() == other.id.toHexString();
 
 }
