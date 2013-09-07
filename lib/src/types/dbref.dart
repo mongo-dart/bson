@@ -18,7 +18,7 @@ class DbRef extends BsonObject{
     id.unpackValue(buffer);
   }
   toString()=>'DbRef(collection: $collection, id: $id)';
-  toJson()=>"DBPointer('$collection', $id)";
+  toJson()=>'DBPointer("$collection", $id)';
   packValue(BsonBinary buffer){
      bsonCollection.packValue(buffer);
      id.packValue(buffer);
