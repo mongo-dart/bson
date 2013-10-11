@@ -14,7 +14,7 @@ class ObjectId extends BsonObject{
   ObjectId.fromBsonBinary(this.id);
 
   BsonBinary createId(int seconds, bool clientMode) {
-      getOctet(int value) {
+    getOctet(int value) {
       String res = value.toRadixString(16);
       while (res.length < 8) {
         res = '0$res';

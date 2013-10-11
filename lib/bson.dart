@@ -1,5 +1,5 @@
 library bson;
-import 'dart:utf';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'src/fixnum/fixnum.dart';

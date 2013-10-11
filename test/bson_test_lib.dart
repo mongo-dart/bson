@@ -167,6 +167,7 @@ testBsonDbPointer() {
   var p2 = fromBson['p1'];
   expect(p2.collection, p1.collection);
   expect(p2.id.toHexString(), p1.id.toHexString());
+  print(p1.id);
 }
 
 

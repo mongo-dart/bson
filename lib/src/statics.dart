@@ -7,7 +7,7 @@ class _Statics{
     _stopwatch.stop();
     return new Duration(milliseconds: _stopwatch.elapsedMilliseconds);
   }
-  static int _current_increment = 0;
+  static int _current_increment = new Random().nextInt(0xFFFFFFFF);
   static int get nextIncrement
   {
     return _current_increment++;
@@ -38,7 +38,7 @@ class _Statics{
   static final Map<String,List<int>> keys = new Map<String,List<int>>();
   static getKeyUtf8(String key){
     if (!keys.containsKey(key)){
-      keys[key] = encodeUtf8(key);
+      keys[key] = UTF8.encode(key);
     }
     return keys[key];
   }

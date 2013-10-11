@@ -196,10 +196,10 @@ class BsonBinary extends BsonObject{
     while (byteList[offset++]!= 0){
        stringBytes.add(byteList[offset-1]);
     }
-    return decodeUtf8(stringBytes);
+    return UTF8.decode(stringBytes);
   }
   writeCString(String val){
-    final utfData = encodeUtf8(val);
+    final utfData = UTF8.encode(val);
     byteList.setRange(offset,offset+utfData.length,utfData);
     offset += utfData.length;
     writeByte(0);
