@@ -97,12 +97,11 @@ BsonObject bsonObjectFrom(var value){
     return value;
   }
   if (value is int){
-    return new BsonInt(value);
+    return value.bitLength > 31 ? new BsonLong(value) : new BsonInt(value)
   }
   if (value is num){
     return new BsonDouble(value);
   }
-
   if (value is String){
     return new BsonString(value);
   }
