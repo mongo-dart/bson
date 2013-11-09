@@ -1,10 +1,12 @@
 name: bson
-version: 0.1.14
+version: 0.1.15
 authors:
 - Vadim Tsushko <vadimtsushko@gmail.com>
 - Ad van der Veer <advanderveer@gmail.com>
 description: Bson library for Dart programming language. BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents.
 homepage: https://github.com/vadimtsushko/bson
+environment:
+  sdk: '>=0.8.10+6 <2.0.0'
 dev_dependencies:
-  browser: any
-  unittest: any
+  browser: ">=0.9.0 <0.10.0"
+  unittest: ">=0.9.0 <0.10.0"
