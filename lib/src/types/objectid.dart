@@ -1,5 +1,5 @@
 part of bson;
-final _objectIdMatcher = new CharMatcher.inRange('a','h') | new CharMatcher.digit(); 
+final _objectIdMatcher = new CharMatcher.inRange('a','f') | new CharMatcher.digit(); 
 class ObjectId extends BsonObject{
   BsonBinary id;
 
