@@ -1,4 +1,5 @@
 part of bson;
+final _objectIdMatcher = new CharMatcher.inRange('a','h') | new CharMatcher.digit(); 
 class ObjectId extends BsonObject{
   BsonBinary id;
 
@@ -33,6 +34,9 @@ class ObjectId extends BsonObject{
   }
 
   factory ObjectId.fromHexString(String hexString) {
+    if (hexString.length != 24 || !_objectIdMatcher.everyOf(hexString)) {
+      throw new ArgumentError('Expected hexadecimal string with length of 24, got $hexString');
+    }
     return new ObjectId.fromBsonBinary(new BsonBinary.fromHexString(hexString));
   }
   
