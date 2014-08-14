@@ -10,14 +10,15 @@ class Timestamp extends BsonObject{
       increment = _Statics.nextIncrement;
     }
   }
-  String toString()=>"Timestamp(seconds: $seconds, increment: $increment)";
+  get value=>this;
+  String toString()=>"Timestamp($seconds, $increment)";
   int byteLength() => 8;
   packValue(BsonBinary buffer){
+    buffer.writeInt(increment);
     buffer.writeInt(seconds);
-    buffer.writeInt(increment);    
   }
   unpackValue(BsonBinary buffer){
-     seconds = buffer.readInt32();
-     increment = buffer.readInt32();     
+    increment = buffer.readInt32();
+    seconds = buffer.readInt32();
   }
 }
