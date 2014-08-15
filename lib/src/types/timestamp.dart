@@ -11,6 +11,7 @@ class Timestamp extends BsonObject{
     }
   }
   get value=>this;
+  int get typeByte => _BSON_DATA_TIMESTAMP;
   String toString()=>"Timestamp($seconds, $increment)";
   int byteLength() => 8;
   packValue(BsonBinary buffer){
