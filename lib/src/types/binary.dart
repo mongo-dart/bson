@@ -145,7 +145,7 @@ class BsonBinary extends BsonObject{
         throw new Exception("Unsupported num of bytes: $numOfBytes");
     }
   }
-  writeInt(int value, {int numOfBytes:4, endianness: Endianness.LITTLE_ENDIAN, bool signed:false}){
+  void writeInt(int value, {int numOfBytes:4, endianness: Endianness.LITTLE_ENDIAN, bool signed:false}){
     encodeInt(offset,value, numOfBytes,endianness,signed);
     offset += numOfBytes;
   }
@@ -153,13 +153,13 @@ class BsonBinary extends BsonObject{
     encodeInt(offset,value, 1,Endianness.LITTLE_ENDIAN,false);
     offset += 1;
   }
-  int writeDouble(double value){
+  void writeDouble(double value){
     byteArray.setFloat64(offset, value,Endianness.LITTLE_ENDIAN);
     offset+=8;
   }
-  int writeInt64(int value){
+  void writeInt64(int value){
     if (UseFixnum) {
-      int64 d64 = new int64.fromInt(value);
+      Int64 d64 = new Int64(value);
       BsonBinary b2 = new BsonBinary(8);
       byteList.setRange(offset,offset+8,d64.toBytes());
     }
@@ -181,7 +181,7 @@ class BsonBinary extends BsonObject{
       offset -= 8;
       int i1 = readInt32();
       int i2 = readInt32();
-      var i64 = new int64.fromInts(i2, i1);
+      var i64 = new Int64.fromInts(i2, i1);
       return i64.toInt();
     }
     return byteArray.getInt64(offset-8,Endianness.LITTLE_ENDIAN);
