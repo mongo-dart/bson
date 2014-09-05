@@ -14,6 +14,9 @@ const _BSON_DATA_ARRAY = 4;
 /** BsonBinary BSON Type **/
 const _BSON_DATA_BINARY = 5;
 
+/** undefined BSON Type **/
+const _BSON_DATA_UNDEFINED = 6;
+
 /** ObjectID BSON Type **/
 const _BSON_DATA_OID = 7;
 
@@ -42,7 +45,7 @@ const _BSON_DATA_LONG = 18;
 const _BSON_DATA_CODE = 13;
 
 /** Timestamp BSON Type **/
-const _BSON_DATA_TIMESTAMP = 17; 
+const _BSON_DATA_TIMESTAMP = 17;
 
 /** The following types are implemented partially **/
 //static const BSON_DATA_MIN_KEY = 0xff; MinKey BSON Type
@@ -140,6 +143,8 @@ BsonObject bsonObjectFromTypeByte(int typeByte){
       return new BsonArray([]);
     case _BSON_DATA_OBJECT:
       return new BsonMap({});
+    case _BSON_DATA_UNDEFINED:
+      return new BsonNull();
     case _BSON_DATA_OID:
       return new ObjectId();
     case _BSON_DATA_NULL:
