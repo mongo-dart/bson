@@ -1,5 +1,5 @@
 name: bson
-version: 0.1.22
+version: 0.1.23
 authors:
 - Vadim Tsushko <vadimtsushko@gmail.com>
 - Ad van der Veer <advanderveer@gmail.com>
@@ -8,7 +8,7 @@ homepage: https://github.com/vadimtsushko/bson
 environment:
   sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
-  fixnum: '>=0.9.0'
+  fixnum: '>=0.9.0 <2.0.0'
   more: '>=1.3.2 <2.0.0'
 dev_dependencies:
   browser: '>=0.9.0 <0.10.0'
