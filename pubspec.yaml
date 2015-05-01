@@ -12,4 +12,5 @@ dependencies:
   more: '>=1.3.2 <2.0.0'
 dev_dependencies:
   browser: '>=0.9.0 <0.10.0'
-  unittest: '>=0.9.0 <0.10.0'
+  test: "^0.12.0-rc.1"
+  dart_coveralls: ">=0.1.11"
