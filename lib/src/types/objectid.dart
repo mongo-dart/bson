@@ -63,7 +63,7 @@ class ObjectId extends BsonObject{
     buffer.offset += 12;
   }
 
-  String toJson() => toString();
+  String toJson() => id.hexString;
 
   // Equivalent to mongo shell's "getTimestamp".
   DateTime get dateTime => new DateTime.fromMillisecondsSinceEpoch(int.parse(id.hexString.substring(0, 8), radix:16) * 1000);
