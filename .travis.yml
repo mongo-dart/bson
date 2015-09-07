@@ -1,1 +1,8 @@
-language: dart
+dart:
+  - stable
+  - dev
+sudo: false
+cache:
+  directories:
+  - $HOME/.pub-cache
+script: pub run test -p vm
