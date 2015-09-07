@@ -1,5 +1,5 @@
 bson
 =========
-[![Build Status](https://drone.io/github.com/vadimtsushko/bson/status.png)](https://drone.io/github.com/vadimtsushko/bson/latest)
+[![Build Status](https://travis-ci.org/vadimtsushko/bson.svg?branch=master)](https://travis-ci.org/vadimtsushko/bson.svg?branch=master)
 
 Bson library for Dart programming language
