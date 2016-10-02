@@ -123,9 +123,6 @@ BsonObject bsonObjectFrom(var value){
   if (value == true || value == false){
     return new BsonBoolean(value);
   }
-  if (value is BsonRegexp){
-    return value;
-  }
   throw new Exception("Not implemented for $value");
 }
 
