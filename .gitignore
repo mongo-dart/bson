@@ -3,3 +3,4 @@ packages
 *.json
 /.idea/
 /.pub/
+.packages
