@@ -233,7 +233,7 @@ run() {
       expect(b.hexString, 'ffffffffffffffff');
     });
     test("testDateTime", () {
-      var date = new DateTime(2012, 10, 6, 10, 15, 20);
+      var date = new DateTime(2012, 10, 6, 10, 15, 20).toUtc();
       var bson = new BSON();
       var sourceMap = {'d': date};
       var d = date.millisecondsSinceEpoch;
