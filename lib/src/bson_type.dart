@@ -76,7 +76,7 @@ class BsonObject {
     }
     packValue(buffer);
   }
-  packValue(var buffer){ throw "must be implemented";}
+  packValue(BsonBinary buffer){ throw "must be implemented";}
   _ElementPair unpackElement(buffer){
     _ElementPair result = new _ElementPair();
     result.name = buffer.readCString();
@@ -84,7 +84,7 @@ class BsonObject {
     result.value = value;
     return result;
   }
-  unpackValue(var buffer){ throw "must be implemented";}
+  unpackValue(BsonBinary buffer){ throw "must be implemented";}
   get value=>null;
 }
 int elementSize(String name, value) {
