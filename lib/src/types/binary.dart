@@ -64,7 +64,7 @@ class BsonBinary extends BsonObject{
   BsonBinary(int length): byteList = new Uint8List(length), offset=0, subType=0{
     byteArray = _getByteData(byteList);
   }
-  BsonBinary.from(List from): byteList = new Uint8List(from.length),offset=0, subType=0 {
+  BsonBinary.from(Iterable<int> from): byteList = new Uint8List(from.length),offset=0, subType=0 {
     byteList.setRange(0, from.length, from);
     byteArray = _getByteData(byteList);
   }
@@ -160,7 +160,6 @@ class BsonBinary extends BsonObject{
   void writeInt64(int value){
     if (UseFixnum) {
       Int64 d64 = new Int64(value);
-      BsonBinary b2 = new BsonBinary(8);
       byteList.setRange(offset,offset+8,d64.toBytes());
     }
     else {
