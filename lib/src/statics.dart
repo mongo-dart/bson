@@ -24,7 +24,6 @@ class _Statics{
 
   static List<int> _maxBits;
   static int MaxBits(int bits){
-    int res;
     if (_maxBits == null){
       _maxBits = new List<int>(65);
       _maxBits[0] = 0;
