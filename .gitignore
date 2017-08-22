@@ -1,6 +1,5 @@
-packages
+.packages
 /*.lock
 *.json
 /.idea/
 /.pub/
-.packages

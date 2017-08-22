@@ -1,5 +1,3 @@
-library bson_test_lib;
-
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
@@ -58,7 +56,6 @@ testDateTime() {
   var date = new DateTime(2012, 10, 6, 10, 15, 20);
   var bson = new BSON();
   var sourceMap = {'d': date};
-  var d = date.millisecondsSinceEpoch;
   BsonBinary buffer = bson.serialize(sourceMap);
   buffer.rewind();
   Map targetMap = bson.deserialize(buffer);
@@ -102,7 +99,7 @@ testSerializeDeserialize() {
 
   root = bson.deserialize(buffer);
   expect(15, root['a'][0]);
-  doc1 = {'_id': 5, 'a': [2, 3, 5]};
+  var doc2 = {'_id': 5, 'a': [2, 3, 5]};
   buffer = bson.serialize(doc1);
   expect(
       '2b000000105f696400050000000461001a0000001030000200000010310003000000103200050000000000',
@@ -114,7 +111,8 @@ testSerializeDeserialize() {
   expect(5, buffer.offset);
   buffer.offset = 0;
   root = bson.deserialize(buffer);
-  expect(doc1['a'][2], root['a'][2]);
+  List doc2_a =doc2['a'];
+  expect(doc2_a[2], root['a'][2]);
 }
 testMakeByteList() {
   for (int n = 0; n < 125; n++) {
@@ -151,7 +149,6 @@ testBsonIdFromHexString() {
   expect(oid3.id.byteList, orderedEquals(oid1.id.byteList));
 }
 testBsonIdClientMode() {
-  var oid1 = new ObjectId(clientMode: true);
   var oid2 = new ObjectId(clientMode: true);
   expect(oid2.toHexString().length, 24);
 }
@@ -236,7 +233,6 @@ run() {
       var date = new DateTime(2012, 10, 6, 10, 15, 20).toUtc();
       var bson = new BSON();
       var sourceMap = {'d': date};
-      var d = date.millisecondsSinceEpoch;
       BsonBinary buffer = bson.serialize(sourceMap);
       buffer.rewind();
       Map targetMap = bson.deserialize(buffer);
@@ -283,7 +279,6 @@ run() {
       expect(oid3.id.byteList, orderedEquals(oid1.id.byteList));
     });
     test("testBsonIdClientMode", () {
-      var oid1 = new ObjectId(clientMode: true);
       var oid2 = new ObjectId(clientMode: true);
       expect(oid2.toHexString().length, 24);
     });
@@ -332,8 +327,8 @@ run() {
 
       root = bson.deserialize(buffer);
       expect(15, root['a'][0]);
-      doc1 = {'_id': 5, 'a': [2, 3, 5]};
-      buffer = bson.serialize(doc1);
+      var doc2 = {'_id': 5, 'a': [2, 3, 5]};
+      buffer = bson.serialize(doc2);
       expect(
           '2b000000105f696400050000000461001a0000001030000200000010310003000000103200050000000000',
           buffer.hexString);
@@ -344,7 +339,8 @@ run() {
       expect(5, buffer.offset);
       buffer.offset = 0;
       root = bson.deserialize(buffer);
-      expect(doc1['a'][2], root['a'][2]);
+      List doc2_a = doc2['a'];
+      expect(doc2_a[2], root['a'][2]);
     });
   });
 }
