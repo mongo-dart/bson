@@ -3,4 +3,4 @@
 *.json
 /.idea/
 /.pub/
-
+.dart_tool

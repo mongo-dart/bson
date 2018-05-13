@@ -1,6 +1,6 @@
 part of bson;
 class BsonMap extends BsonObject{
-  Map data;
+  Map<String, dynamic> data;
   Map utfKeys;
   int _dataSize;
   int dataSize(){
