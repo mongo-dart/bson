@@ -2,6 +2,7 @@ library bson;
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:collection';
 import 'package:more/char_matcher.dart';
 import 'package:fixnum/fixnum.dart';
 part 'src/bson_type.dart';
