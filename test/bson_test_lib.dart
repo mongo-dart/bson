@@ -223,6 +223,10 @@ run() {
       var oid2 = new ObjectId.fromHexString(oid1.toHexString());
       oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
+
+      var b1 = new BsonBinary.from([1,2,3,4]);
+      b1.makeByteList(); // make sure makeByteList could work independently, Github issue #25.
+      expect(b1.byteList, equals([1,2,3,4]));
     });
     test("test64Int", () {
       BsonBinary b = new BsonBinary(8);

@@ -83,6 +83,9 @@ class BsonBinary extends BsonObject{
     _hexString = stringBuffer.toString().toLowerCase();
   }
   makeByteList() {
+    if (_hexString == null){
+      makeHexString();
+    }
     if (_hexString.length.remainder(2) != 0) {
       throw 'Not valid hex representation: $_hexString (odd length)';
     }
