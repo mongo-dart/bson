@@ -37,7 +37,7 @@ class _Statics{
   static final Map<String,List<int>> keys = new Map<String,List<int>>();
   static getKeyUtf8(String key){
     if (!keys.containsKey(key)){
-      keys[key] = UTF8.encode(key);
+      keys[key] = utf8.encode(key);
     }
     return keys[key];
   }
