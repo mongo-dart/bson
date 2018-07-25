@@ -109,7 +109,7 @@ class BsonBinary extends BsonObject{
       pos++;
     }
   }
-  setIntExtended(int value, int numOfBytes, Endianness endianness){
+  setIntExtended(int value, int numOfBytes, Endian endianness){
     List<int> byteListTmp = new Uint8List(4);
     var byteArrayTmp = _getByteData(byteListTmp);
     if (numOfBytes == 3){
@@ -133,7 +133,7 @@ class BsonBinary extends BsonObject{
       swap(i,numOfBytes-1-i);
     }
   }
-  encodeInt(int position,int value, int numOfBytes, Endianness endianness, bool signed) {
+  encodeInt(int position,int value, int numOfBytes, Endian endianness, bool signed) {
     switch(numOfBytes) {
       case 4:
         byteArray.setInt32(position,value,endianness);
@@ -148,16 +148,16 @@ class BsonBinary extends BsonObject{
         throw new Exception("Unsupported num of bytes: $numOfBytes");
     }
   }
-  void writeInt(int value, {int numOfBytes:4, endianness: Endianness.LITTLE_ENDIAN, bool signed:false}){
+  void writeInt(int value, {int numOfBytes:4, endianness: Endian.little, bool signed:false}){
     encodeInt(offset,value, numOfBytes,endianness,signed);
     offset += numOfBytes;
   }
   writeByte(int value){
-    encodeInt(offset,value, 1,Endianness.LITTLE_ENDIAN,false);
+    encodeInt(offset,value, 1,Endian.little,false);
     offset += 1;
   }
   void writeDouble(double value){
-    byteArray.setFloat64(offset, value,Endianness.LITTLE_ENDIAN);
+    byteArray.setFloat64(offset, value,Endian.little);
     offset+=8;
   }
   void writeInt64(int value){
@@ -166,7 +166,7 @@ class BsonBinary extends BsonObject{
       byteList.setRange(offset,offset+8,d64.toBytes());
     }
     else {
-      byteArray.setInt64(offset, value,Endianness.LITTLE_ENDIAN);
+      byteArray.setInt64(offset, value,Endian.little);
     }
     offset+=8;
   }
@@ -175,7 +175,7 @@ class BsonBinary extends BsonObject{
   }
   int readInt32(){
     offset+=4;
-    return byteArray.getInt32(offset-4,Endianness.LITTLE_ENDIAN);
+    return byteArray.getInt32(offset-4,Endian.little);
   }
   int readInt64(){
     offset+=8;
@@ -186,11 +186,11 @@ class BsonBinary extends BsonObject{
       var i64 = new Int64.fromInts(i2, i1);
       return i64.toInt();
     }
-    return byteArray.getInt64(offset-8,Endianness.LITTLE_ENDIAN);
+    return byteArray.getInt64(offset-8,Endian.little);
   }
   num readDouble(){
     offset+=8;
-    return byteArray.getFloat64(offset-8,Endianness.LITTLE_ENDIAN);
+    return byteArray.getFloat64(offset-8,Endian.little);
   }
 
   String readCString(){
@@ -198,10 +198,10 @@ class BsonBinary extends BsonObject{
     while (byteList[offset++]!= 0){
        stringBytes.add(byteList[offset-1]);
     }
-    return UTF8.decode(stringBytes);
+    return utf8.decode(stringBytes);
   }
   writeCString(String val){
-    final utfData = UTF8.encode(val);
+    final utfData = utf8.encode(val);
     byteList.setRange(offset,offset+utfData.length,utfData);
     offset += utfData.length;
     writeByte(0);

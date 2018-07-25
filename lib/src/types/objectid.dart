@@ -27,9 +27,9 @@ class ObjectId extends BsonObject{
       return new BsonBinary.fromHexString(s);
     } else {
       return new BsonBinary(12)
-      ..writeInt(seconds,endianness: Endianness.BIG_ENDIAN)
+      ..writeInt(seconds,endianness: Endian.big )
       ..writeInt(_Statics.RandomId)
-      ..writeInt(_Statics.nextIncrement,endianness: Endianness.BIG_ENDIAN);
+      ..writeInt(_Statics.nextIncrement,endianness: Endian.big );
     }
   }
 

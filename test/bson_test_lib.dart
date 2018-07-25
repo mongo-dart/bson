@@ -27,11 +27,11 @@ testBsonBinary() {
   expect('0000000004030201', b.hexString);
   b = new BsonBinary(8);
   b.writeInt(0);
-  b.writeInt(0x01020304, numOfBytes: 4, endianness: Endianness.BIG_ENDIAN);
+  b.writeInt(0x01020304, numOfBytes: 4, endianness: Endian.big );
   expect(b.hexString, '0000000001020304');
   b = new BsonBinary(8);
   b.writeInt(0);
-  b.writeInt(1, endianness: Endianness.BIG_ENDIAN);
+  b.writeInt(1, endianness: Endian.big );
   expect(b.hexString, '0000000000000001');
   b = new BsonBinary(4);
   b.writeInt(-1);
@@ -126,7 +126,7 @@ testMakeByteList() {
   }
   var b = new BsonBinary.fromHexString('0301');
   b.makeByteList();
-  expect(b.byteArray.getInt16(0, Endianness.LITTLE_ENDIAN), 259);
+  expect(b.byteArray.getInt16(0, Endian.little ), 259);
   b = new BsonBinary.fromHexString('0301ad0c1ad34f1d');
   b.makeByteList();
   expect(b.hexString, '0301ad0c1ad34f1d');
@@ -185,11 +185,11 @@ run() {
       expect('0000000004030201', b.hexString);
       b = new BsonBinary(8);
       b.writeInt(0);
-      b.writeInt(0x01020304, numOfBytes: 4, endianness: Endianness.BIG_ENDIAN);
+      b.writeInt(0x01020304, numOfBytes: 4, endianness: Endian.big );
       expect(b.hexString, '0000000001020304');
       b = new BsonBinary(8);
       b.writeInt(0);
-      b.writeInt(1, endianness: Endianness.BIG_ENDIAN);
+      b.writeInt(1, endianness: Endian.big );
       expect(b.hexString, '0000000000000001');
       b = new BsonBinary(4);
       b.writeInt(-1);
@@ -215,7 +215,7 @@ run() {
       }
       var b = new BsonBinary.fromHexString('0301');
       b.makeByteList();
-      expect(b.byteArray.getInt16(0, Endianness.LITTLE_ENDIAN), 259);
+      expect(b.byteArray.getInt16(0, Endian.little ), 259);
       b = new BsonBinary.fromHexString('0301ad0c1ad34f1d');
       b.makeByteList();
       expect(b.hexString, '0301ad0c1ad34f1d');
@@ -307,8 +307,8 @@ run() {
       var id = new ObjectId();
       var date = new DateTime.utc(2015, 1, 1);
       var obj = {'_id': id, 'intFld': 20, 'dateFld': date};
-      String jsObj = JSON.encode(obj, toEncodable: _toEncodable);
-      var outObj = JSON.decode(jsObj);
+      String jsObj = json.encode(obj, toEncodable: _toEncodable);
+      var outObj = json.decode(jsObj);
       expect(outObj['intFld'], 20);
       expect(outObj['_id'], id.toHexString());
       expect(outObj['dateFld'], date.toString());
