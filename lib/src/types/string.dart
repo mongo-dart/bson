@@ -4,7 +4,7 @@ class BsonString extends BsonObject{
   List<int> _utfData;
   List<int> get utfData{
     if (_utfData == null){
-      _utfData = UTF8.encode(data);
+      _utfData = utf8.encode(data);
     }
     return _utfData;
   }
@@ -20,7 +20,7 @@ class BsonString extends BsonObject{
   }
   unpackValue(BsonBinary buffer){
      int size = buffer.readInt32()-1;
-     data = UTF8.decode(buffer.byteList.getRange(buffer.offset, buffer.offset+size).toList());
+     data = utf8.decode(buffer.byteList.getRange(buffer.offset, buffer.offset+size).toList());
      buffer.offset += size+1;
   }
 }
