@@ -124,7 +124,7 @@ BsonObject bsonObjectFrom(var value) {
     return new BsonString(value);
   }
   if (value is Map) {
-    return new BsonMap(value);
+    return new BsonMap(Map<String, dynamic>.from(value));
   }
   if (value is List) {
     return new BsonArray(value);
