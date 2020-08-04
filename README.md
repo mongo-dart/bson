@@ -1,4 +1,5 @@
-bson
+# bson
+
 =========
 [![Build Status](https://travis-ci.org/mongo-dart/bson.svg?branch=master)](https://travis-ci.org/mongo-dart/bson)
 

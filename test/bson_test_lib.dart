@@ -9,11 +9,13 @@ testUint8ListNegativeWrite() {
   ba.setInt32(0, -1);
   expect(bl[0], 255);
 }
+
 testBsonBinaryWithNegativeOne() {
   BsonBinary b = new BsonBinary(4);
   b.writeInt(-1);
   expect(b.hexString, 'ffffffff');
 }
+
 testBsonBinary() {
   BsonBinary b = new BsonBinary(8);
   b.writeInt(0);
@@ -47,11 +49,13 @@ typeTest() {
   expect(bsonObjectFrom(new DateTime.now()) is BsonDate, isTrue);
   expect(bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
 }
+
 test64Int() {
   BsonBinary b = new BsonBinary(8);
   b.writeInt64(-1);
   expect(b.hexString, 'ffffffffffffffff');
 }
+
 testDateTime() {
   var date = new DateTime(2012, 10, 6, 10, 15, 20);
   var bson = new BSON();
@@ -61,6 +65,7 @@ testDateTime() {
   Map targetMap = bson.deserialize(buffer);
   expect(targetMap['d'], sourceMap['d']);
 }
+
 testObjectId() {
   var id1 = new ObjectId();
   expect(id1, isNotNull);
@@ -92,14 +97,19 @@ testSerializeDeserialize() {
   expect(root['a'], 4);
   expect(root['_id'], 5);
 //  expect(map,recursivelyMatches(root));
-  var doc1 = {'a': [15]};
+  var doc1 = {
+    'a': [15]
+  };
   buffer = bson.serialize(doc1);
   expect('140000000461000c0000001030000f0000000000', buffer.hexString);
   buffer.offset = 0;
 
   root = bson.deserialize(buffer);
   expect(15, root['a'][0]);
-  var doc2 = {'_id': 5, 'a': [2, 3, 5]};
+  var doc2 = {
+    '_id': 5,
+    'a': [2, 3, 5]
+  };
   buffer = bson.serialize(doc1);
   expect(
       '2b000000105f696400050000000461001a0000001030000200000010310003000000103200050000000000',
@@ -111,9 +121,10 @@ testSerializeDeserialize() {
   expect(5, buffer.offset);
   buffer.offset = 0;
   root = bson.deserialize(buffer);
-  List doc2_a =doc2['a'];
+  List doc2_a = doc2['a'];
   expect(doc2_a[2], root['a'][2]);
 }
+
 testMakeByteList() {
   for (int n = 0; n < 125; n++) {
     var hex = n.toRadixString(16);
@@ -148,10 +159,12 @@ testBsonIdFromHexString() {
   var oid3 = new BSON().deserialize(b2)['id'];
   expect(oid3.id.byteList, orderedEquals(oid1.id.byteList));
 }
+
 testBsonIdClientMode() {
   var oid2 = new ObjectId(clientMode: true);
   expect(oid2.toHexString().length, 24);
 }
+
 testBsonDbPointer() {
   var p1 = new DBPointer('Test', new ObjectId());
   var bson = new BSON();
@@ -320,14 +333,19 @@ run() {
       Map root = bson.deserialize(buffer);
       expect(root['a'], 4);
       expect(root['_id'], 5);
-      var doc1 = {'a': [15]};
+      var doc1 = {
+        'a': [15]
+      };
       buffer = bson.serialize(doc1);
       expect('140000000461000c0000001030000f0000000000', buffer.hexString);
       buffer.offset = 0;
 
       root = bson.deserialize(buffer);
       expect(15, root['a'][0]);
-      var doc2 = {'_id': 5, 'a': [2, 3, 5]};
+      var doc2 = {
+        '_id': 5,
+        'a': [2, 3, 5]
+      };
       buffer = bson.serialize(doc2);
       expect(
           '2b000000105f696400050000000461001a0000001030000200000010310003000000103200050000000000',

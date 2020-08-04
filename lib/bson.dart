@@ -1,4 +1,5 @@
 library bson;
+
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
@@ -22,4 +23,3 @@ part 'src/types/null.dart';
 part 'src/types/boolean.dart';
 part 'src/types/date.dart';
 part 'src/types/regexp.dart';
-
