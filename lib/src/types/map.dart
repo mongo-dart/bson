@@ -1,40 +1,62 @@
 part of bson;
 
 class BsonMap extends BsonObject {
+  BsonMap(this.data);
+  BsonMap.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
+
   Map<String, dynamic> data;
-  Map utfKeys;
-  int _dataSize;
+  int? _dataSize;
+
+  static Map<String, dynamic> extractData(BsonBinary buffer) {
+    var ret = <String, dynamic>{};
+    buffer.offset += 4;
+    var typeByte = buffer.readByte();
+    while (typeByte != 0) {
+      var key = buffer.readCString();
+      ret[key] = BsonObject.extractData(typeByte, buffer);
+      typeByte = buffer.readByte();
+    }
+    return ret;
+  }
+
+  //Map utfKeys;
   int dataSize() {
     if (_dataSize == null) {
       _dataSize = 0;
       data.forEach((String key, var value) {
-        _dataSize += elementSize(key, value);
+        _dataSize = _dataSize! + elementSize(key, value);
       });
     }
-    return _dataSize;
+    return _dataSize!;
   }
 
-  BsonMap(this.data);
-  get value => data;
-  byteLength() => dataSize() + 1 + 4;
+  @override
+  Map<String, dynamic> get value => data;
+  @override
+  int byteLength() => dataSize() + 1 + 4;
+  @override
   int get typeByte => _BSON_DATA_OBJECT;
-  packValue(BsonBinary buffer) {
+  @override
+  void packValue(BsonBinary buffer) {
     buffer.writeInt(byteLength());
     data.forEach((var key, var value) {
-      bsonObjectFrom(value).packElement(key, buffer);
+      BsonObject.bsonObjectFrom(value).packElement(key, buffer);
     });
     buffer.writeByte(0);
   }
 
-  unpackValue(BsonBinary buffer) {
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
+
+  /*  void unpackValue(BsonBinary buffer) {
     data = {};
     buffer.offset += 4;
-    int typeByte = buffer.readByte();
+    var typeByte = buffer.readByte();
     while (typeByte != 0) {
-      BsonObject bsonObject = bsonObjectFromTypeByte(typeByte);
+      var bsonObject = BsonObject.bsonObjectFromTypeByte(typeByte);
       var element = bsonObject.unpackElement(buffer);
       data[element.name] = element.value;
       typeByte = buffer.readByte();
     }
-  }
+  } */
 }

@@ -1,16 +1,21 @@
 part of bson;
 
 class BsonDouble extends BsonObject {
-  double data;
   BsonDouble(this.data);
-  get value => data;
-  byteLength() => 8;
-  int get typeByte => _BSON_DATA_NUMBER;
-  packValue(BsonBinary buffer) {
-    buffer.writeDouble(data);
-  }
+  BsonDouble.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
 
-  unpackValue(BsonBinary buffer) {
-    data = buffer.readDouble();
-  }
+  double data;
+
+  static double extractData(BsonBinary buffer) => buffer.readDouble();
+
+  @override
+  double get value => data;
+  @override
+  int byteLength() => 8;
+  @override
+  int get typeByte => _BSON_DATA_NUMBER;
+  @override
+  void packValue(BsonBinary buffer) => buffer.writeDouble(data);
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

@@ -1,61 +1,94 @@
 part of bson;
 
 class BsonRegexp extends BsonObject {
-  String pattern;
-  String options;
-  BsonCString bsonPattern;
-  BsonCString bsonOptions;
-
-  bool multiLine;
-  bool caseInsensitive;
-  bool verbose;
-  bool dotAll;
-  bool extended;
   BsonRegexp(this.pattern,
-      {this.multiLine: false,
-      this.caseInsensitive: false,
-      this.dotAll: false,
-      this.extended: false,
-      this.options: ''}) {
-    createOptionsString();
-    bsonPattern = new BsonCString(pattern, false);
-    bsonOptions = new BsonCString(options, false);
+      {bool? multiLine,
+      bool? caseInsensitive,
+      bool? dotAll,
+      bool? extended,
+      String? options})
+      : options = createOptionsString(
+            options: options,
+            multiLine: multiLine,
+            caseInsensitive: caseInsensitive,
+            dotAll: dotAll,
+            extended: extended) {
+    bsonPattern = BsonCString(pattern, false);
+    bsonOptions = BsonCString(this.options, false);
   }
-  get value => this;
+
+  BsonRegexp.fromBuffer(BsonBinary buffer) {
+    var data = extractData(buffer);
+    pattern = data.pattern;
+    options = data.options;
+    bsonPattern = BsonCString(pattern, false);
+    bsonOptions = BsonCString(options, false);
+  }
+
+  late String pattern;
+  late String options;
+  late BsonCString bsonPattern;
+  late BsonCString bsonOptions;
+
+  static _BsonRegexpData extractData(BsonBinary buffer) {
+    var _pattern = buffer.readCString();
+    var _options = buffer.readCString();
+    return _BsonRegexpData(_pattern, _options);
+  }
+
+  static String createOptionsString(
+      {String? options,
+      bool? multiLine,
+      bool? caseInsensitive,
+      bool? dotAll,
+      bool? extended}) {
+    if (options != null && options.isNotEmpty) {
+      return options;
+    }
+    var buffer = StringBuffer();
+    if (caseInsensitive ?? false) {
+      buffer.write('i');
+    }
+    if (multiLine ?? false) {
+      buffer.write('m');
+    }
+    if (dotAll ?? false) {
+      buffer.write('s');
+    }
+    if (extended ?? false) {
+      buffer.write('x');
+    }
+    return '$buffer';
+  }
+
+  @override
+  BsonRegexp get value => this;
+  @override
   int get typeByte => _BSON_DATA_REGEXP;
-  byteLength() => bsonPattern.byteLength() + bsonOptions.byteLength();
-  unpackValue(BsonBinary buffer) {
+  @override
+  int byteLength() => bsonPattern.byteLength() + bsonOptions.byteLength();
+  @override
+  void unpackValue(BsonBinary buffer) {
     pattern = buffer.readCString();
     options = buffer.readCString();
-    bsonPattern = new BsonCString(pattern, false);
-    bsonOptions = new BsonCString(options, false);
+    bsonPattern = BsonCString(pattern, false);
+    bsonOptions = BsonCString(options, false);
   }
 
-  createOptionsString() {
-    if (options != '') {
-      return;
-    }
-    var buffer = new StringBuffer();
-    if (caseInsensitive == true) {
-      buffer.write("i");
-    }
-    if (multiLine == true) {
-      buffer.write("m");
-    }
-    if (dotAll == true) {
-      buffer.write("s");
-    }
-    if (extended == true) {
-      buffer.write("x");
-    }
-    options = buffer.toString();
-  }
-
-  toString() => "BsonRegexp('$pattern',options:'$options')";
-  packValue(BsonBinary buffer) {
+  @override
+  String toString() => "BsonRegexp('$pattern',options:'$options')";
+  @override
+  void packValue(BsonBinary buffer) {
     bsonPattern.packValue(buffer);
     bsonOptions.packValue(buffer);
   }
 
-  toJson() => {'\$regex': pattern, '\$oid': options};
+  Map<String, Object> toJson() => {'\$regex': pattern, '\$oid': options};
+}
+
+class _BsonRegexpData {
+  _BsonRegexpData(this.pattern, this.options);
+
+  String pattern;
+  String options;
 }

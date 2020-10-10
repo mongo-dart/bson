@@ -1,13 +1,10 @@
 part of bson;
 
-final _objectIdMatcher =
-    new CharMatcher.inRange('a', 'f') | new CharMatcher.digit();
+final _objectIdMatcher = CharMatcher.inRange('a', 'f') | CharMatcher.digit();
 
 class ObjectId extends BsonObject {
-  BsonBinary id;
-
-  ObjectId({bool clientMode: false}) {
-    int seconds = new Timestamp(null, 0).seconds;
+  ObjectId({bool clientMode = false}) {
+    var seconds = Timestamp(null, 0).seconds;
     id = createId(seconds, clientMode);
   }
 
@@ -17,9 +14,31 @@ class ObjectId extends BsonObject {
 
   ObjectId.fromBsonBinary(this.id);
 
+  ObjectId.fromBuffer(BsonBinary buffer) : id = extractData(buffer);
+
+  late BsonBinary id;
+
+  factory ObjectId.fromHexString(String hexString) {
+    if (hexString.length != 24 || !_objectIdMatcher.everyOf(hexString)) {
+      throw ArgumentError(
+          'Expected hexadecimal string with length of 24, got $hexString');
+    }
+    return ObjectId.fromBsonBinary(BsonBinary.fromHexString(hexString));
+  }
+
+  static ObjectId parse(String hexString) => ObjectId.fromHexString(hexString);
+
+  static BsonBinary extractData(BsonBinary buffer) {
+    var _id = BsonBinary.from(
+        Uint8List(12)..setRange(0, 12, buffer.byteList, buffer.offset));
+    //id.byteList.setRange(0, 12, buffer.byteList, buffer.offset);
+    buffer.offset += 12;
+    return _id;
+  }
+
   BsonBinary createId(int seconds, bool clientMode) {
-    getOctet(int value) {
-      String res = value.toRadixString(16);
+    String getOctet(int value) {
+      var res = value.toRadixString(16);
       while (res.length < 8) {
         res = '0$res';
       }
@@ -27,46 +46,37 @@ class ObjectId extends BsonObject {
     }
 
     if (clientMode) {
-      String s =
+      var s =
           '${getOctet(seconds)}${getOctet(_Statics.RandomId)}${getOctet(_Statics.nextIncrement)}';
-      return new BsonBinary.fromHexString(s);
+      return BsonBinary.fromHexString(s);
     } else {
-      return new BsonBinary(12)
+      return BsonBinary(12)
         ..writeInt(seconds, endianness: Endian.big)
         ..writeInt(_Statics.RandomId)
         ..writeInt(_Statics.nextIncrement, endianness: Endian.big);
     }
   }
 
-  factory ObjectId.fromHexString(String hexString) {
-    if (hexString.length != 24 || !_objectIdMatcher.everyOf(hexString)) {
-      throw new ArgumentError(
-          'Expected hexadecimal string with length of 24, got $hexString');
-    }
-    return new ObjectId.fromBsonBinary(new BsonBinary.fromHexString(hexString));
-  }
-
-  static ObjectId parse(String hexString) =>
-      new ObjectId.fromHexString(hexString);
-
+  @override
   int get hashCode => id.hexString.hashCode;
+  @override
   bool operator ==(other) =>
       other is ObjectId && toHexString() == other.toHexString();
+  @override
   String toString() => 'ObjectId("${id.hexString}")';
   String toHexString() => id.hexString;
+  @override
   int get typeByte => _BSON_DATA_OID;
-  get value => this;
+  @override
+  ObjectId get value => this;
+  @override
   int byteLength() => 12;
 
-  unpackValue(BsonBinary buffer) {
-    id.byteList.setRange(0, 12, buffer.byteList, buffer.offset);
-    buffer.offset += 12;
-  }
+  @override
+  void unpackValue(BsonBinary buffer) => id = extractData(buffer);
 
-  packValue(BsonBinary buffer) {
-    if (id.byteList == null) {
-      id.makeByteList();
-    }
+  @override
+  void packValue(BsonBinary buffer) {
     buffer.byteList.setRange(buffer.offset, buffer.offset + 12, id.byteList);
     buffer.offset += 12;
   }
@@ -74,6 +84,6 @@ class ObjectId extends BsonObject {
   String toJson() => id.hexString;
 
   // Equivalent to mongo shell's "getTimestamp".
-  DateTime get dateTime => new DateTime.fromMillisecondsSinceEpoch(
+  DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(
       int.parse(id.hexString.substring(0, 8), radix: 16) * 1000);
 }

@@ -29,14 +29,9 @@ class BsonBinary extends BsonObject {
   static const int CHAR_f = 102;
 
   static final tokens = createTokens();
-  ByteData byteArray;
-  List<int> byteList;
-  int offset;
-  int subType;
-  String _hexString;
 
-  static List<int> createTokens() {
-    var result = new List<int>(255);
+  static List<int?> createTokens() {
+    var result = List<int?>.generate(255, (_) => null, growable: false);
     result[CHAR_0] = 0;
     result[CHAR_1] = 1;
     result[CHAR_2] = 2;
@@ -56,68 +51,102 @@ class BsonBinary extends BsonObject {
     return result;
   }
 
-  set hexString(String value) => _hexString = value;
-  String get hexString {
-    if (_hexString == null) {
-      makeHexString();
-    }
-    return _hexString;
+  BsonBinary(int length) : _byteList = Uint8List(length);
+  /* ,
+        offset = 0,
+        subType = 0 
+  {
+    _byteArray = _getByteData(byteList);
+  }*/
+
+  BsonBinary.from(Iterable<int> from)
+      : _byteList = Uint8List(from.length)..setRange(0, from.length, from);
+  /* ,
+        offset = 0,
+        subType = 0 
+  {
+    _byteList!.setRange(0, from.length, from);
+    _byteArray = _getByteData(_byteList!);
+  }*/
+  BsonBinary.fromHexString(this._hexString);
+  BsonBinary.fromBuffer(BsonBinary buffer) {
+    var data = extractData(buffer);
+    subType = data.subType;
+    _byteList = data.byteList;
   }
 
-  BsonBinary(int length)
-      : byteList = new Uint8List(length),
-        offset = 0,
-        subType = 0 {
-    byteArray = _getByteData(byteList);
+  Uint8List? _byteList;
+  String? _hexString;
+
+  ByteData? _byteArray;
+  int offset = 0;
+  int subType = 0;
+
+  static _BsonBinaryData extractData(BsonBinary buffer) {
+    var size = buffer.readInt32();
+    var _subType = buffer.readByte();
+    var locByteList = Uint8List(size);
+    locByteList.setRange(0, size, buffer.byteList, buffer.offset);
+    buffer.offset += size;
+    return _BsonBinaryData(locByteList, _subType);
   }
-  BsonBinary.from(Iterable<int> from)
-      : byteList = new Uint8List(from.length),
-        offset = 0,
-        subType = 0 {
-    byteList.setRange(0, from.length, from);
-    byteArray = _getByteData(byteList);
-  }
-  BsonBinary.fromHexString(this._hexString);
+
+  //set byteArray(ByteData value) => _byteArray = value;
+  ByteData get byteArray => _byteArray ??= _getByteData(byteList);
+  //set byteList(Uint8List value) => _byteList = value;
+  Uint8List get byteList => _byteList ??= makeByteList();
+  //set hexString(String value) => _hexString = value;
+  String get hexString => _hexString ??= makeHexString();
+
+  @override
   int get typeByte => _BSON_DATA_BINARY;
-  ByteData _getByteData(from) => new ByteData.view(from.buffer);
-  makeHexString() {
-    StringBuffer stringBuffer = new StringBuffer();
+
+  ByteData _getByteData(Uint8List from) => ByteData.view(from.buffer);
+
+  String makeHexString() {
+    var stringBuffer = StringBuffer();
     for (final byte in byteList) {
       if (byte < 16) {
-        stringBuffer.write("0");
+        stringBuffer.write('0');
       }
       stringBuffer.write(byte.toRadixString(16));
     }
-    _hexString = stringBuffer.toString().toLowerCase();
+    return '$stringBuffer'.toLowerCase();
   }
 
-  makeByteList() {
-    if (_hexString.length.remainder(2) != 0) {
+  Uint8List makeByteList() {
+    if (_hexString == null) {
+      throw 'Null hex representation';
+    }
+    var localHexString = _hexString!;
+    //if (_hexString.length.remainder(2) != 0) {
+    if (localHexString.length.isOdd) {
       throw 'Not valid hex representation: $_hexString (odd length)';
     }
-    byteList = new Uint8List((_hexString.length / 2).round().toInt());
-    byteArray = _getByteData(byteList);
-    int pos = 0;
-    int listPos = 0;
-    while (pos < _hexString.length) {
-      int char = _hexString.codeUnitAt(pos);
-      int n1 = tokens[char];
+    var localByteList = Uint8List((localHexString.length / 2).round().toInt());
+    //_byteArray = _getByteData(localByteList);
+    var pos = 0;
+    var listPos = 0;
+    while (pos < localHexString.length) {
+      var char = localHexString.codeUnitAt(pos);
+      var n1 = tokens[char];
       if (n1 == null) {
-        throw 'Invalid char ${_hexString[pos]} in $_hexString';
+        throw 'Invalid char ${localHexString[pos]} in $_hexString';
       }
       pos++;
-      char = _hexString.codeUnitAt(pos);
-      int n2 = tokens[char];
+      char = localHexString.codeUnitAt(pos);
+      var n2 = tokens[char];
       if (n2 == null) {
-        throw 'Invalid char ${_hexString[pos]} in $_hexString';
+        throw 'Invalid char ${localHexString[pos]} in $_hexString';
       }
-      byteList[listPos++] = (n1 << 4) + n2;
+      localByteList[listPos++] = (n1 << 4) + n2;
       pos++;
     }
+    return localByteList;
   }
 
-  setIntExtended(int value, int numOfBytes, Endian endianness) {
-    List<int> byteListTmp = new Uint8List(4);
+  void setIntExtended(int value, int numOfBytes, Endian endianness) {
+    var byteListTmp = Uint8List(4);
     var byteArrayTmp = _getByteData(byteListTmp);
     if (numOfBytes == 3) {
       byteArrayTmp.setInt32(0, value, endianness);
@@ -126,24 +155,24 @@ class BsonBinary extends BsonObject {
 //      byteArrayTmp.setInt64(0,value,Endianness.LITTLE_ENDIAN);
 //    }
     else {
-      throw new Exception("Unsupported num of bytes: ${numOfBytes}");
+      throw Exception('Unsupported num of bytes: ${numOfBytes}');
     }
     byteList.setRange(offset, offset + numOfBytes, byteListTmp);
   }
 
-  reverse(int numOfBytes) {
-    swap(int x, int y) {
-      int t = byteList[x + offset];
+  void reverse(int numOfBytes) {
+    void swap(int x, int y) {
+      var t = byteList[x + offset];
       byteList[x + offset] = byteList[y + offset];
       byteList[y + offset] = t;
     }
 
-    for (int i = 0; i <= (numOfBytes - 1) % 2; i++) {
+    for (var i = 0; i <= (numOfBytes - 1) % 2; i++) {
       swap(i, numOfBytes - 1 - i);
     }
   }
 
-  encodeInt(
+  void encodeInt(
       int position, int value, int numOfBytes, Endian endianness, bool signed) {
     switch (numOfBytes) {
       case 4:
@@ -156,17 +185,17 @@ class BsonBinary extends BsonObject {
         byteArray.setInt8(position, value);
         break;
       default:
-        throw new Exception("Unsupported num of bytes: $numOfBytes");
+        throw Exception('Unsupported num of bytes: $numOfBytes');
     }
   }
 
   void writeInt(int value,
-      {int numOfBytes: 4, endianness: Endian.little, bool signed: false}) {
+      {int numOfBytes = 4, endianness = Endian.little, bool signed = false}) {
     encodeInt(offset, value, numOfBytes, endianness, signed);
     offset += numOfBytes;
   }
 
-  writeByte(int value) {
+  void writeByte(int value) {
     encodeInt(offset, value, 1, Endian.little, false);
     offset += 1;
   }
@@ -178,7 +207,7 @@ class BsonBinary extends BsonObject {
 
   void writeInt64(int value) {
     if (UseFixnum) {
-      Int64 d64 = new Int64(value);
+      var d64 = Int64(value);
       byteList.setRange(offset, offset + 8, d64.toBytes());
     } else {
       byteArray.setInt64(offset, value, Endian.little);
@@ -186,9 +215,7 @@ class BsonBinary extends BsonObject {
     offset += 8;
   }
 
-  int readByte() {
-    return byteList[offset++];
-  }
+  int readByte() => byteList[offset++];
 
   int readInt32() {
     offset += 4;
@@ -199,44 +226,41 @@ class BsonBinary extends BsonObject {
     offset += 8;
     if (UseFixnum) {
       offset -= 8;
-      int i1 = readInt32();
-      int i2 = readInt32();
-      var i64 = new Int64.fromInts(i2, i1);
+      var i1 = readInt32();
+      var i2 = readInt32();
+      var i64 = Int64.fromInts(i2, i1);
       return i64.toInt();
     }
     return byteArray.getInt64(offset - 8, Endian.little);
   }
 
-  num readDouble() {
+  double readDouble() {
     offset += 8;
     return byteArray.getFloat64(offset - 8, Endian.little);
   }
 
   String readCString() {
-    List<int> stringBytes = [];
+    var stringBytes = <int>[];
     while (byteList[offset++] != 0) {
       stringBytes.add(byteList[offset - 1]);
     }
     return utf8.decode(stringBytes);
   }
 
-  writeCString(String val) {
+  void writeCString(String val) {
     final utfData = utf8.encode(val);
     byteList.setRange(offset, offset + utfData.length, utfData);
     offset += utfData.length;
     writeByte(0);
   }
 
+  @override
   int byteLength() => byteList.length + 4 + 1;
   bool atEnd() => offset == byteList.length;
-  rewind() {
-    offset = 0;
-  }
+  void rewind() => offset = 0;
 
-  packValue(BsonBinary buffer) {
-    if (byteList == null) {
-      makeByteList();
-    }
+  @override
+  void packValue(BsonBinary buffer) {
     buffer.writeInt(byteList.length);
     buffer.writeByte(subType);
     buffer.byteList
@@ -244,21 +268,30 @@ class BsonBinary extends BsonObject {
     buffer.offset += byteList.length;
   }
 
-  unpackValue(BsonBinary buffer) {
-    int size = buffer.readInt32();
+  @override
+  void unpackValue(BsonBinary buffer) {
+    var size = buffer.readInt32();
     subType = buffer.readByte();
-    byteList = new Uint8List(size);
-    byteArray = _getByteData(byteList);
+    _byteList = Uint8List(size);
     byteList.setRange(0, size, buffer.byteList, buffer.offset);
     buffer.offset += size;
   }
 
-  get value => this;
-  String toString() => "BsonBinary($hexString)";
+  @override
+  BsonBinary get value => this;
+  @override
+  String toString() => 'BsonBinary($hexString)';
 }
 
 bool _isIntWorkaroundNeeded() {
-  int n = 9007199254740992;
-  int newInt = n + 1;
+  var n = 9007199254740992;
+  var newInt = n + 1;
   return newInt.toString() == n.toString();
+}
+
+class _BsonBinaryData {
+  _BsonBinaryData(this.byteList, this.subType);
+
+  Uint8List byteList;
+  int subType;
 }

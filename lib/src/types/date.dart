@@ -1,17 +1,23 @@
 part of bson;
 
 class BsonDate extends BsonObject {
-  DateTime data;
   BsonDate(this.data);
-  get value => data;
-  byteLength() => 8;
-  int get typeByte => _BSON_DATA_DATE;
-  packValue(BsonBinary buffer) {
-    buffer.writeInt64(data.millisecondsSinceEpoch);
-  }
+  BsonDate.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
 
-  unpackValue(BsonBinary buffer) {
-    data = new DateTime.fromMillisecondsSinceEpoch(buffer.readInt64(),
-        isUtc: true);
-  }
+  DateTime data;
+
+  static DateTime extractData(BsonBinary buffer) =>
+      DateTime.fromMillisecondsSinceEpoch(buffer.readInt64(), isUtc: true);
+
+  @override
+  DateTime get value => data;
+  @override
+  int byteLength() => 8;
+  @override
+  int get typeByte => _BSON_DATA_DATE;
+  @override
+  void packValue(BsonBinary buffer) =>
+      buffer.writeInt64(data.millisecondsSinceEpoch);
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }
