@@ -105,6 +105,9 @@ class BsonDecimal128 extends BsonObject {
   int byteLength() => 16;
 
   unpackValue(BsonBinary buffer) {
+    if (bin.byteList == null) {
+      bin.makeByteList();
+    }
     bin.byteList.setRange(0, 16, buffer.byteList, buffer.offset);
     buffer.offset += 16;
   }
