@@ -1,6 +1,7 @@
 part of bson;
-class BsonBinary extends BsonObject{
-  static final bool  UseFixnum = _isIntWorkaroundNeeded();
+
+class BsonBinary extends BsonObject {
+  static final bool UseFixnum = _isIntWorkaroundNeeded();
   static final BUFFER_SIZE = 256;
   static final SUBTYPE_DEFAULT = 0;
   static final SUBTYPE_FUNCTION = 1;
@@ -34,7 +35,7 @@ class BsonBinary extends BsonObject{
   int subType;
   String _hexString;
 
-  static List<int> createTokens(){
+  static List<int> createTokens() {
     var result = new List<int>(255);
     result[CHAR_0] = 0;
     result[CHAR_1] = 1;
@@ -54,6 +55,7 @@ class BsonBinary extends BsonObject{
     result[CHAR_f] = 15;
     return result;
   }
+
   set hexString(String value) => _hexString = value;
   String get hexString {
     if (_hexString == null) {
@@ -61,27 +63,34 @@ class BsonBinary extends BsonObject{
     }
     return _hexString;
   }
-  BsonBinary(int length): byteList = new Uint8List(length), offset=0, subType=0{
+
+  BsonBinary(int length)
+      : byteList = new Uint8List(length),
+        offset = 0,
+        subType = 0 {
     byteArray = _getByteData(byteList);
   }
-  BsonBinary.from(Iterable<int> from): byteList = new Uint8List(from.length),offset=0, subType=0 {
+  BsonBinary.from(Iterable<int> from)
+      : byteList = new Uint8List(from.length),
+        offset = 0,
+        subType = 0 {
     byteList.setRange(0, from.length, from);
     byteArray = _getByteData(byteList);
   }
   BsonBinary.fromHexString(this._hexString);
   int get typeByte => _BSON_DATA_BINARY;
   ByteData _getByteData(from) => new ByteData.view(from.buffer);
-  makeHexString(){
+  makeHexString() {
     StringBuffer stringBuffer = new StringBuffer();
-    for (final byte in byteList)
-    {
-       if (byte < 16){
+    for (final byte in byteList) {
+      if (byte < 16) {
         stringBuffer.write("0");
-       }
-       stringBuffer.write(byte.toRadixString(16));
+      }
+      stringBuffer.write(byte.toRadixString(16));
     }
     _hexString = stringBuffer.toString().toLowerCase();
   }
+
   makeByteList() {
     if (_hexString.length.remainder(2) != 0) {
       throw 'Not valid hex representation: $_hexString (odd length)';
@@ -102,80 +111,98 @@ class BsonBinary extends BsonObject{
       if (n2 == null) {
         throw 'Invalid char ${_hexString[pos]} in $_hexString';
       }
-      byteList[listPos++] = (n1 << 4)  + n2;
+      byteList[listPos++] = (n1 << 4) + n2;
       pos++;
     }
   }
-  setIntExtended(int value, int numOfBytes, Endian endianness){
+
+  setIntExtended(int value, int numOfBytes, Endian endianness) {
     List<int> byteListTmp = new Uint8List(4);
     var byteArrayTmp = _getByteData(byteListTmp);
-    if (numOfBytes == 3){
-      byteArrayTmp.setInt32(0,value,endianness);
+    if (numOfBytes == 3) {
+      byteArrayTmp.setInt32(0, value, endianness);
     }
 //    else if (numOfBytes > 4 && numOfBytes < 8){
 //      byteArrayTmp.setInt64(0,value,Endianness.LITTLE_ENDIAN);
 //    }
     else {
-        throw new Exception("Unsupported num of bytes: ${numOfBytes}");
+      throw new Exception("Unsupported num of bytes: ${numOfBytes}");
     }
-    byteList.setRange(offset,offset+numOfBytes,byteListTmp);
+    byteList.setRange(offset, offset + numOfBytes, byteListTmp);
   }
-  reverse(int numOfBytes){
-    swap(int x, int y){
-      int t = byteList[x+offset];
-      byteList[x+offset] = byteList[y+offset];
-      byteList[y+offset] = t;
+
+  reverse(int numOfBytes) {
+    swap(int x, int y) {
+      int t = byteList[x + offset];
+      byteList[x + offset] = byteList[y + offset];
+      byteList[y + offset] = t;
     }
-    for(int i=0;i<=(numOfBytes-1)%2;i++){
-      swap(i,numOfBytes-1-i);
+
+    for (int i = 0; i <= (numOfBytes - 1) % 2; i++) {
+      swap(i, numOfBytes - 1 - i);
     }
   }
-  encodeInt(int position,int value, int numOfBytes, Endian endianness, bool signed) {
-    switch(numOfBytes) {
+
+  encodeInt(
+      int position, int value, int numOfBytes, Endian endianness, bool signed) {
+    switch (numOfBytes) {
       case 4:
-        byteArray.setInt32(position,value,endianness);
+        byteArray.setInt32(position, value, endianness);
         break;
       case 2:
-        byteArray.setInt16(position,value,endianness);
+        byteArray.setInt16(position, value, endianness);
         break;
       case 1:
-        byteArray.setInt8(position,value);
+        byteArray.setInt8(position, value);
         break;
       default:
         throw new Exception("Unsupported num of bytes: $numOfBytes");
     }
   }
-  void writeInt(int value, {int numOfBytes:4, endianness: Endian.little, bool signed:false}){
-    encodeInt(offset,value, numOfBytes,endianness,signed);
+
+  void writeInt(int value,
+      {int numOfBytes: 4, endianness: Endian.little, bool signed: false}) {
+    encodeInt(offset, value, numOfBytes, endianness, signed);
     offset += numOfBytes;
   }
-  writeByte(int value){
-    encodeInt(offset,value, 1,Endian.little,false);
+
+  writeByte(int value) {
+    encodeInt(offset, value, 1, Endian.little, false);
     offset += 1;
   }
-  void writeDouble(double value){
-    byteArray.setFloat64(offset, value,Endian.little);
-    offset+=8;
+
+  void writeDouble(double value) {
+    byteArray.setFloat64(offset, value, Endian.little);
+    offset += 8;
   }
-  void writeInt64(int value){
+
+  void writeInt64(int value) {
     if (UseFixnum) {
       Int64 d64 = new Int64(value);
-      byteList.setRange(offset,offset+8,d64.toBytes());
+      byteList.setRange(offset, offset + 8, d64.toBytes());
+    } else {
+      byteArray.setInt64(offset, value, Endian.little);
     }
-    else {
-      byteArray.setInt64(offset, value,Endian.little);
-    }
-    offset+=8;
+    offset += 8;
   }
-  int readByte(){
+
+  /// Write an Int64 field
+  void writeFixInt64(Int64 value) {
+    byteList.setRange(offset, offset + 8, value.toBytes());
+    offset += 8;
+  }
+
+  int readByte() {
     return byteList[offset++];
   }
-  int readInt32(){
-    offset+=4;
-    return byteArray.getInt32(offset-4,Endian.little);
+
+  int readInt32() {
+    offset += 4;
+    return byteArray.getInt32(offset - 4, Endian.little);
   }
-  int readInt64(){
-    offset+=8;
+
+  int readInt64() {
+    offset += 8;
     if (UseFixnum) {
       offset -= 8;
       int i1 = readInt32();
@@ -183,55 +210,68 @@ class BsonBinary extends BsonObject{
       var i64 = new Int64.fromInts(i2, i1);
       return i64.toInt();
     }
-    return byteArray.getInt64(offset-8,Endian.little);
-  }
-  num readDouble(){
-    offset+=8;
-    return byteArray.getFloat64(offset-8,Endian.little);
+    return byteArray.getInt64(offset - 8, Endian.little);
   }
 
-  String readCString(){
+  /// Read an Int64 value
+  Int64 readFixInt64() {
+    int i1 = readInt32();
+    int i2 = readInt32();
+    return Int64.fromInts(i2, i1);
+  }
+
+  num readDouble() {
+    offset += 8;
+    return byteArray.getFloat64(offset - 8, Endian.little);
+  }
+
+  String readCString() {
     List<int> stringBytes = [];
-    while (byteList[offset++]!= 0){
-       stringBytes.add(byteList[offset-1]);
+    while (byteList[offset++] != 0) {
+      stringBytes.add(byteList[offset - 1]);
     }
     return utf8.decode(stringBytes);
   }
-  writeCString(String val){
+
+  writeCString(String val) {
     final utfData = utf8.encode(val);
-    byteList.setRange(offset,offset+utfData.length,utfData);
+    byteList.setRange(offset, offset + utfData.length, utfData);
     offset += utfData.length;
     writeByte(0);
- }
+  }
 
-  int byteLength() => byteList.length+4+1;
+  int byteLength() => byteList.length + 4 + 1;
   bool atEnd() => offset == byteList.length;
-  rewind(){
+  rewind() {
     offset = 0;
   }
-  packValue(BsonBinary buffer){
+
+  packValue(BsonBinary buffer) {
     if (byteList == null) {
       makeByteList();
     }
     buffer.writeInt(byteList.length);
     buffer.writeByte(subType);
-    buffer.byteList.setRange(buffer.offset,buffer.offset+byteList.length,byteList);
+    buffer.byteList
+        .setRange(buffer.offset, buffer.offset + byteList.length, byteList);
     buffer.offset += byteList.length;
   }
-  unpackValue(BsonBinary buffer){
+
+  unpackValue(BsonBinary buffer) {
     int size = buffer.readInt32();
     subType = buffer.readByte();
     byteList = new Uint8List(size);
     byteArray = _getByteData(byteList);
-    byteList.setRange(0,size,buffer.byteList,buffer.offset);
+    byteList.setRange(0, size, buffer.byteList, buffer.offset);
     buffer.offset += size;
   }
+
   get value => this;
-  String toString()=>"BsonBinary($hexString)";
+  String toString() => "BsonBinary($hexString)";
 }
 
 bool _isIntWorkaroundNeeded() {
-  int n=9007199254740992;
-  int newInt = n + 1;   return newInt.toString() == n.toString();
-}    
-
+  int n = 9007199254740992;
+  int newInt = n + 1;
+  return newInt.toString() == n.toString();
+}

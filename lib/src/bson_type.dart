@@ -48,6 +48,9 @@ const _BSON_DATA_CODE = 13;
 /** Timestamp BSON Type **/
 const _BSON_DATA_TIMESTAMP = 17;
 
+// Decimal128 Type (0x13)
+const bsonDecimal128 = 19;
+
 /** The following types are implemented partially **/
 //static const BSON_DATA_MIN_KEY = 0xff; MinKey BSON Type
 //static const BSON_DATA_MAX_KEY = 0x7f; MaxKey BSON Type
@@ -138,6 +141,9 @@ BsonObject bsonObjectFrom(var value) {
   if (value == true || value == false) {
     return new BsonBoolean(value);
   }
+  if (value is Rational) {
+    return BsonDecimal128(value);
+  }
   throw new Exception("Not implemented for $value");
 }
 
@@ -175,6 +181,8 @@ BsonObject bsonObjectFromTypeByte(int typeByte) {
       return new BsonRegexp(null);
     case _BSON_DATA_TIMESTAMP:
       return new Timestamp(0, 0);
+    case bsonDecimal128:
+      return BsonDecimal128(null);
     default:
       throw new Exception("Not implemented for BSON TYPE $typeByte");
   }
