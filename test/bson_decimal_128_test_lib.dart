@@ -3,6 +3,8 @@ import 'package:rational/rational.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';
 
+Rational ten = Rational.fromInt(10);
+
 void runDecimal128() {
   group("Decimal 128:", () {
     group('Utils', () {
@@ -69,9 +71,9 @@ void runDecimal128() {
       });
       test("Compare", () {
         expect(
-            BsonDecimal128.convertBinaryToDecimal(
+            BsonDecimal128.convertBinaryToRational(
                 BsonBinary.fromHexString('00e0ec5e0b6400000000000000002630')),
-            BsonDecimal128.convertBinaryToDecimal(
+            BsonDecimal128.convertBinaryToRational(
                 BsonBinary.fromHexString('0b000000000000000000000000004030')));
       });
     });
@@ -121,6 +123,17 @@ void runDecimal128() {
                 .bin
                 .hexString,
             'ffffffff638e8d37c087adbe09edffff');
+      });
+      test('Invalid Significand - return zero', () {
+        var r = Rational.parse("99999999999999999999999999999900000000001");
+        expect(BsonDecimal128(r).bin.hexString,
+            '00000000000000000000000000004030');
+        r = Rational.parse("9.9999999999999999999999999999900000000001");
+        expect(BsonDecimal128(r).bin.hexString,
+            '0000000000000000000000000000f02f');
+        r = Rational.parse("0.0099999999999999999999999999999900000000001");
+        expect(BsonDecimal128(r).bin.hexString,
+            '00000000000000000000000000004030');
       });
     });
 

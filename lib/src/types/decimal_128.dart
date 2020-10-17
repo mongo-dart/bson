@@ -36,7 +36,8 @@ final Rational infinityValue =
 final Rational maxSignificand = Rational.fromInt(10).pow(34) - Rational.one;
 final Rational maxUInt64 = Rational.fromInt(2).pow(64);
 final Rational maxInt64 = Rational.fromInt(2).pow(63);
-final Rational ten = Rational.fromInt(10);
+final Rational _r10 = Rational.fromInt(10);
+final Rational _r1 = Rational.fromInt(1);
 
 final Int64 maxExponent = Int64(12287);
 
@@ -72,7 +73,7 @@ class BsonDecimal128 extends BsonObject {
       // NaN
       bin = BsonBinary.fromHexString('0000000000000000000000000000007c');
     } else {
-      bin = convertDecimalToBinary(rational);
+      bin = convertRationalToBinary(rational);
     }
   }
 
@@ -98,10 +99,10 @@ class BsonDecimal128 extends BsonObject {
   int get hashCode => bin.hexString.hashCode;
   bool operator ==(other) =>
       other is BsonDecimal128 && toHexString() == other.toHexString();
-  String toString() => 'Decimal128("${bin.hexString}")';
+  String toString() => 'BsonDecimal128("${bin.hexString}")';
   String toHexString() => bin.hexString;
   int get typeByte => bsonDecimal128;
-  Rational get value => convertBinaryToDecimal(bin);
+  Rational get value => convertBinaryToRational(bin);
   int byteLength() => 16;
 
   unpackValue(BsonBinary buffer) {
@@ -132,7 +133,7 @@ class BsonDecimal128 extends BsonObject {
     }
   }
 
-  static Rational convertBinaryToDecimal(BsonBinary binary) {
+  static Rational convertBinaryToRational(BsonBinary binary) {
     Int64 high, low;
     if (binary.byteList == null) {
       binary.makeByteList();
@@ -192,10 +193,10 @@ class BsonDecimal128 extends BsonObject {
       significand = -significand;
     }
 
-    return significand * ten.power(exponent.toInt());
+    return significand * _r10.power(exponent.toInt());
   }
 
-  static BsonBinary convertDecimalToBinary(Rational rational) {
+  static BsonBinary convertRationalToBinary(Rational rational) {
     if (rational == null) {
       // Rational does not manage NaN
       return BsonBinary.fromHexString('0000000000000000000000000000007c');
@@ -207,9 +208,22 @@ class BsonDecimal128 extends BsonObject {
       return BsonBinary.fromHexString('000000000000000000000000000000f8');
     } else if (rational == Rational.zero) {
       return BsonBinary.fromHexString('00000000000000000000000000004030');
+    } else if (rational.hasFinitePrecision &&
+        // if bigger than one (i.e at least one integer digit)
+        // we could have a lot of unnecessary trailing zeros calculated
+        // in the precision.
+        rational < _r1 &&
+        rational.precision > 34) {
+      // Return zero
+      return BsonBinary.fromHexString('00000000000000000000000000004030');
     }
 
-    String res = rational.toStringAsPrecisionFast(34);
+    String res;
+    if (rational.hasFinitePrecision) {
+      res = rational.toStringAsFixed(rational.scale);
+    } else {
+      res = rational.toStringAsPrecisionFast(34);
+    }
     int exponent = extractExponent(res);
     Rational significand = extractSignificand(res);
 
@@ -383,7 +397,7 @@ extension RationalExtension on Rational {
         : value.toStringAsFixed(shiftExponent);
   }
 
-  /// Allows to calculate the power of numers even if the exponent is negative
+  /// Allows to calculate the power of numbers even if the exponent is negative
   Rational power(int exponent) =>
       exponent.isNegative ? this.inverse.pow(-exponent) : this.pow(exponent);
 }
