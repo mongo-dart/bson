@@ -48,6 +48,9 @@ const _BSON_DATA_CODE = 13;
 /// Timestamp BSON Type
 const _BSON_DATA_TIMESTAMP = 17;
 
+/// Decimal128 Type (0x13)
+const bsonDecimal128 = 19;
+
 /// The following types are implemented partially /
 const _BSON_DATA_MIN_KEY = 0xff; // MinKey BSON Type
 const _BSON_DATA_MAX_KEY = 0x7f; // MaxKey BSON Type
@@ -92,6 +95,9 @@ abstract class BsonObject {
     }
     if (value == true || value == false) {
       return BsonBoolean(value);
+    }
+    if (value is Rational) {
+      return BsonDecimal128(value);
     }
     throw Exception('Not implemented for $value');
   }
@@ -169,6 +175,8 @@ abstract class BsonObject {
         return BsonRegexp.extractData(buffer);
       case _BSON_DATA_TIMESTAMP:
         return Timestamp.extractData(buffer);
+      case bsonDecimal128:
+        return BsonDecimal128.extractData(buffer);
       default:
         throw Exception('Not implemented for BSON TYPE $typeByte');
     }
@@ -209,6 +217,8 @@ abstract class BsonObject {
         return BsonRegexp.fromBuffer(buffer);
       case _BSON_DATA_TIMESTAMP:
         return Timestamp.fromBuffer(buffer);
+      case bsonDecimal128:
+        return BsonDecimal128.fromBuffer(buffer);
       default:
         throw Exception('Not implemented for BSON TYPE $typeByte');
     }

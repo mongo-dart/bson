@@ -3,9 +3,11 @@ import 'dart:typed_data';
 import 'package:bson/bson.dart';
 import 'dart:convert';
 
+import 'bson_decimal_128_test_lib.dart';
+
 void testUint8ListNegativeWrite() {
-  var bl =  Uint8List(4);
-  var ba =  ByteData.view(bl.buffer);
+  var bl = Uint8List(4);
+  var ba = ByteData.view(bl.buffer);
   ba.setInt32(0, -1);
   expect(bl[0], 255);
 }
@@ -361,4 +363,5 @@ void run() {
       expect(doc2_a[2], root['a'][2]);
     });
   });
+  runDecimal128();
 }

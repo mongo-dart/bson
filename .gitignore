@@ -5,3 +5,4 @@
 /.pub/
 .dart_tool
 pubspec.lock
+.vscode/

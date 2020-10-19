@@ -5,12 +5,13 @@ description: Bson library for Dart programming language. BSON, short for Binary 
 homepage: https://github.com/vadimtsushko/bson
 
 environment:
-  sdk: '>=2.10.0 <3.0.0'
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   fixnum: ^0.10.11
   more: ^3.0.0-nullsafety
+  rational: ^0.3.8
 
 dev_dependencies:
-  test: ^1.16.0-nullsafety.1
+  test: ^1.16.0-nullsafety.5
   pedantic: ^1.10.0-nullsafety

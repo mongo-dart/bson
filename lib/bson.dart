@@ -3,8 +3,13 @@ library bson;
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:bson/src/types/decimal_128.dart';
 import 'package:more/char_matcher.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:rational/rational.dart';
+
+export 'package:bson/src/types/decimal_128.dart';
+
 part 'src/bson_type.dart';
 part 'src/types/objectid.dart';
 part 'src/types/timestamp.dart';

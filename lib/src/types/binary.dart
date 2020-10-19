@@ -215,6 +215,12 @@ class BsonBinary extends BsonObject {
     offset += 8;
   }
 
+  /// Write an Int64 field
+  void writeFixInt64(Int64 value) {
+    byteList.setRange(offset, offset + 8, value.toBytes());
+    offset += 8;
+  }
+
   int readByte() => byteList[offset++];
 
   int readInt32() {
@@ -232,6 +238,13 @@ class BsonBinary extends BsonObject {
       return i64.toInt();
     }
     return byteArray.getInt64(offset - 8, Endian.little);
+  }
+
+  /// Read an Int64 value
+  Int64 readFixInt64() {
+    var i1 = readInt32();
+    var i2 = readInt32();
+    return Int64.fromInts(i2, i1);
   }
 
   double readDouble() {
