@@ -14,7 +14,7 @@ class BsonInt extends BsonObject {
   @override
   int byteLength() => 4;
   @override
-  int get typeByte => _BSON_DATA_INT;
+  int get typeByte => bsonDataInt;
   @override
   void packValue(BsonBinary buffer) => buffer.writeInt(data);
   @override
@@ -34,7 +34,7 @@ class BsonLong extends BsonObject {
   @override
   int byteLength() => 8;
   @override
-  int get typeByte => _BSON_DATA_LONG;
+  int get typeByte => bsonDataLong;
   @override
   void packValue(BsonBinary buffer) => buffer.writeInt64(data);
   @override

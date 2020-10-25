@@ -1,69 +1,111 @@
 part of bson;
 
 /// Number BSON Type
-const _BSON_DATA_NUMBER = 1;
+const bsonDataNumber = 1;
+@Deprecated('Use bsonDataNumber instead.')
+// ignore: unused_element
+const _BSON_DATA_NUMBER = bsonDataNumber;
 
 /// String BSON Type
-const _BSON_DATA_STRING = 2;
+const bsonDataString = 2;
+@Deprecated('Use bsonDataString instead.')
+// ignore: unused_element
+const _BSON_DATA_STRING = bsonDataString;
 
 /// Object BSON Type
-const _BSON_DATA_OBJECT = 3;
+const bsonDataObject = 3;
+@Deprecated('Use bsonDataObject instead.')
+// ignore: unused_element
+const _BSON_DATA_OBJECT = bsonDataObject;
 
 /// Array BSON Type
-const _BSON_DATA_ARRAY = 4;
+const bsonDataArray = 4;
+@Deprecated('Use bsonDataArray instead.')
+// ignore: unused_element
+const _BSON_DATA_ARRAY = bsonDataArray;
 
 /// BsonBinary BSON Type
-const _BSON_DATA_BINARY = 5;
+const bsonDataBinary = 5;
+@Deprecated('Use bsonDataBinary instead.')
+// ignore: unused_element
+const _BSON_DATA_BINARY = bsonDataBinary;
 
 /// undefined BSON Type
-const _BSON_DATA_UNDEFINED = 6;
+const bsonDataUndefined = 6;
+@Deprecated('Use bsonDataUndefined instead.')
+// ignore: unused_element
+const _BSON_DATA_UNDEFINED = bsonDataUndefined;
 
 /// ObjectID BSON Type
-const _BSON_DATA_OID = 7;
+const bsonDataObjectId = 7;
+@Deprecated('Use bsonDataObjectId instead.')
+// ignore: unused_element
+const _BSON_DATA_OID = bsonDataObjectId;
 
-/// Boolean BSON Type
-const _BSON_DATA_BOOLEAN = 8;
+/// Bool BSON Type
+const bsonDataBool = 8;
+@Deprecated('Use bsonDataBool instead.')
+// ignore: unused_element
+const _BSON_DATA_BOOLEAN = bsonDataBool;
 
 /// Date BSON Type
-const _BSON_DATA_DATE = 9;
+const bsonDataDate = 9;
+@Deprecated('Use bsonDataDate instead.')
+// ignore: unused_element
+const _BSON_DATA_DATE = bsonDataDate;
 
 /// null BSON Type
-const _BSON_DATA_NULL = 10;
+const bsonDataNull = 10;
+@Deprecated('Use bsonDataNull instead.')
+// ignore: unused_element
+const _BSON_DATA_NULL = bsonDataNull;
 
 /// RegExp BSON Type
-const _BSON_DATA_REGEXP = 11;
+const bsonDataRegExp = 11;
+@Deprecated('Use bsonDataRegExp instead.')
+// ignore: unused_element
+const _BSON_DATA_REGEXP = bsonDataRegExp;
 
 /// DBPointer BSON Type
-const _BSON_DATA_DBPOINTER = 12;
+const bsonDataDbPointer = 12;
+@Deprecated('Use bsonDataDbPointer instead.')
+// ignore: unused_element
+const _BSON_DATA_DBPOINTER = bsonDataDbPointer;
 
 /// 32 bit Integer BSON Type
-const _BSON_DATA_INT = 16;
+const bsonDataInt = 16;
+@Deprecated('Use bsonDataInt instead.')
+// ignore: unused_element
+const _BSON_DATA_INT = bsonDataInt;
 
 /// @classconstant BSON_DATA_LONG
-const _BSON_DATA_LONG = 18;
+const bsonDataLong = 18;
+@Deprecated('Use bsonDataLong instead.')
+// ignore: unused_element
+const _BSON_DATA_LONG = bsonDataLong;
 
 /// Code BSON Type
-const _BSON_DATA_CODE = 13;
+const bsonDataCode = 13;
+@Deprecated('Use bsonDataCode instead.')
+// ignore: unused_element
+const _BSON_DATA_CODE = bsonDataCode;
 
 /// Timestamp BSON Type
-const _BSON_DATA_TIMESTAMP = 17;
+const bsonDataTimestamp = 17;
+@Deprecated('Use bsonDataTimestamp instead.')
+// ignore: unused_element
+const _BSON_DATA_TIMESTAMP = bsonDataTimestamp;
 
 /// Decimal128 Type (0x13)
 const bsonDecimal128 = 19;
 
 /// The following types are implemented partially /
-const _BSON_DATA_MIN_KEY = 0xff; // MinKey BSON Type
-const _BSON_DATA_MAX_KEY = 0x7f; // MaxKey BSON Type
+//const _BSON_DATA_MIN_KEY = 0xff; // MinKey BSON Type
+//const _BSON_DATA_MAX_KEY = 0x7f; // MaxKey BSON Type
 
 /// The following data types are not yet implemted
 /// const BSON_DATA_SYMBOL = 14;
 /// const BSON_DATA_CODE_W_SCOPE = 15;
-/// const BSON_BINARY_SUBTYPE_DEFAULT = 0;
-/// const BSON_BINARY_SUBTYPE_FUNCTION = 1;
-/// const BSON_BINARY_SUBTYPE_BYTE_ARRAY = 2;
-/// const BSON_BINARY_SUBTYPE_UUID = 3;
-/// const BSON_BINARY_SUBTYPE_MD5 = 4;
-/// const BSON_BINARY_SUBTYPE_USER_DEFINED = 128;
 
 abstract class BsonObject {
   BsonObject();
@@ -71,157 +113,77 @@ abstract class BsonObject {
   factory BsonObject.bsonObjectFrom(var value) {
     if (value is BsonObject) {
       return value;
-    }
-    if (value is int) {
+    } else if (value is int) {
       return value.bitLength > 31 ? BsonLong(value) : BsonInt(value);
-    }
-    if (value is double) {
+    } else if (value is double) {
       return BsonDouble(value);
-    }
-    if (value is String) {
+    } else if (value is String) {
       return BsonString(value);
-    }
-    if (value is Map) {
+    } else if (value is ObjectId) {
+      return BsonObjectId(value);
+    } else if (value is Map) {
       return BsonMap(Map<String, dynamic>.from(value));
-    }
-    if (value is List) {
+    } else if (value is List) {
       return BsonArray(value);
-    }
-    if (value == null) {
+    } else if (value == null) {
       return BsonNull();
-    }
-    if (value is DateTime) {
+    } else if (value is DateTime) {
       return BsonDate(value);
-    }
-    if (value == true || value == false) {
+    } else if (value == true || value == false) {
       return BsonBoolean(value);
-    }
-    if (value is Rational) {
+    } else if (value is Rational) {
       return BsonDecimal128(value);
     }
     throw Exception('Not implemented for $value');
   }
-/* 
-  factory BsonObject.bsonObjectFromTypeByte(int typeByte) {
-    switch (typeByte) {
-      case _BSON_DATA_INT:
-        return BsonInt(null);
-      case _BSON_DATA_LONG:
-        return BsonLong(null);
-      case _BSON_DATA_NUMBER:
-        return BsonDouble(null);
-      case _BSON_DATA_STRING:
-        return BsonString(null);
-      case _BSON_DATA_ARRAY:
-        return BsonArray([]);
-      case _BSON_DATA_OBJECT:
-        return BsonMap({});
-      case _BSON_DATA_UNDEFINED:
-        return BsonNull();
-      case _BSON_DATA_OID:
-        return ObjectId();
-      case _BSON_DATA_NULL:
-        return BsonNull();
-      case _BSON_DATA_DBPOINTER:
-        return DbRef(null, null);
-      case _BSON_DATA_BOOLEAN:
-        return BsonBoolean(false);
-      case _BSON_DATA_BINARY:
-        return BsonBinary(0);
-      case _BSON_DATA_DATE:
-        return BsonDate(null);
-      case _BSON_DATA_CODE:
-        return BsonCode(null);
-      case _BSON_DATA_REGEXP:
-        return BsonRegexp(null);
-      case _BSON_DATA_TIMESTAMP:
-        return Timestamp(0, 0);
-      default:
-        throw Exception('Not implemented for BSON TYPE $typeByte');
-    }
-  }
- */
-  static dynamic extractData(int typeByte, BsonBinary buffer) {
-    switch (typeByte) {
-      case _BSON_DATA_INT:
-        return BsonInt.extractData(buffer);
-      case _BSON_DATA_LONG:
-        return BsonLong.extractData(buffer);
-      case _BSON_DATA_NUMBER:
-        return BsonDouble.extractData(buffer);
-      case _BSON_DATA_STRING:
-        return BsonString.extractData(buffer);
-      case _BSON_DATA_ARRAY:
-        return BsonArray.extractData(buffer);
-      case _BSON_DATA_OBJECT:
-        return BsonMap.extractData(buffer);
-      case _BSON_DATA_UNDEFINED:
-        return BsonNull();
-      case _BSON_DATA_OID:
-        return ObjectId.extractData(buffer);
-      case _BSON_DATA_NULL:
-        return BsonNull();
-      case _BSON_DATA_DBPOINTER:
-        return DbRef.extractData(buffer);
-      case _BSON_DATA_BOOLEAN:
-        return BsonBoolean.extractData(buffer);
-      case _BSON_DATA_BINARY:
-        return BsonBinary.extractData(buffer);
-      case _BSON_DATA_DATE:
-        return BsonDate.extractData(buffer);
-      case _BSON_DATA_CODE:
-        return BsonCode.extractData(buffer);
-      case _BSON_DATA_REGEXP:
-        return BsonRegexp.extractData(buffer);
-      case _BSON_DATA_TIMESTAMP:
-        return Timestamp.extractData(buffer);
-      case bsonDecimal128:
-        return BsonDecimal128.extractData(buffer);
-      default:
-        throw Exception('Not implemented for BSON TYPE $typeByte');
-    }
-  }
 
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {
     switch (typeByte) {
-      case _BSON_DATA_INT:
+      case bsonDataInt:
         return BsonInt.fromBuffer(buffer);
-      case _BSON_DATA_LONG:
+      case bsonDataLong:
         return BsonLong.fromBuffer(buffer);
-      case _BSON_DATA_NUMBER:
+      case bsonDataNumber:
         return BsonDouble.fromBuffer(buffer);
-      case _BSON_DATA_STRING:
+      case bsonDataString:
         return BsonString.fromBuffer(buffer);
-      case _BSON_DATA_ARRAY:
+      case bsonDataArray:
         return BsonArray.fromBuffer(buffer);
-      //return BsonArray([]);
-      case _BSON_DATA_OBJECT:
+      case bsonDataObject:
         return BsonMap.fromBuffer(buffer);
-      case _BSON_DATA_UNDEFINED:
+      case bsonDataUndefined:
         return BsonNull.fromBuffer(buffer);
-      case _BSON_DATA_OID:
-        return ObjectId.fromBuffer(buffer);
-      case _BSON_DATA_NULL:
+      case bsonDataObjectId:
+        return BsonObjectId.fromBuffer(buffer);
+      case bsonDataNull:
         return BsonNull.fromBuffer(buffer);
-      case _BSON_DATA_DBPOINTER:
+      case bsonDataDbPointer:
         return DbRef.fromBuffer(buffer);
-      case _BSON_DATA_BOOLEAN:
+      case bsonDataBool:
         return BsonBoolean.fromBuffer(buffer);
-      case _BSON_DATA_BINARY:
+      case bsonDataBinary:
         return BsonBinary.fromBuffer(buffer);
-      case _BSON_DATA_DATE:
+      case bsonDataDate:
         return BsonDate.fromBuffer(buffer);
-      case _BSON_DATA_CODE:
+      case bsonDataCode:
         return BsonCode.fromBuffer(buffer);
-      case _BSON_DATA_REGEXP:
+      case bsonDataRegExp:
         return BsonRegexp.fromBuffer(buffer);
-      case _BSON_DATA_TIMESTAMP:
+      case bsonDataTimestamp:
         return Timestamp.fromBuffer(buffer);
       case bsonDecimal128:
         return BsonDecimal128.fromBuffer(buffer);
       default:
         throw Exception('Not implemented for BSON TYPE $typeByte');
     }
+  }
+
+  static int elementSize(String? name, Object value) {
+    var size = 1;
+    if (name != null) {
+      size += Statics.getKeyUtf8(name).length + 1;
+    }
+    return size + BsonObject.bsonObjectFrom(value).byteLength();
   }
 
   int get typeByte;
@@ -238,16 +200,8 @@ abstract class BsonObject {
 
   void packValue(BsonBinary buffer);
 
+  @Deprecated('Since 1.0.0. Will be removed in a next release')
   void unpackValue(BsonBinary buffer);
 
   dynamic get value;
-}
-
-int elementSize(String? name, Object value) {
-  var size = 1;
-  if (name != null) {
-    size += _Statics.getKeyUtf8(name).length + 1;
-  }
-  size += BsonObject.bsonObjectFrom(value).byteLength();
-  return size;
 }

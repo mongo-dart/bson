@@ -9,7 +9,7 @@ class BsonNull extends BsonObject {
   @override
   int byteLength() => 0;
   @override
-  int get typeByte => _BSON_DATA_NULL;
+  int get typeByte => bsonDataNull;
   @override
   void packValue(BsonBinary buffer) {}
   @override

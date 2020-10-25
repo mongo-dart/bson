@@ -1,20 +1,21 @@
 library bson;
 
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:bson/src/types/decimal_128.dart';
-import 'package:more/char_matcher.dart';
+import 'package:bson/src/types/uuid.dart';
+import 'src/classes/object_id.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:rational/rational.dart';
+import 'src/statics.dart';
 
-export 'package:bson/src/types/decimal_128.dart';
+export 'src/types/decimal_128.dart';
+export 'src/classes/object_id.dart';
 
 part 'src/bson_type.dart';
 part 'src/types/objectid.dart';
 part 'src/types/timestamp.dart';
 part 'src/types/binary.dart';
-part 'src/statics.dart';
 part 'src/types/min_max_keys.dart';
 part 'src/types/int.dart';
 part 'src/types/string.dart';

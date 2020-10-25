@@ -4,6 +4,7 @@ import 'package:bson/bson.dart';
 import 'dart:convert';
 
 import 'bson_decimal_128_test_lib.dart';
+import 'bson_uuid_test_lib.dart';
 
 void testUint8ListNegativeWrite() {
   var bl = Uint8List(4);
@@ -134,32 +135,32 @@ void testMakeByteList() {
       hex = '0$hex';
     }
     var b = BsonBinary.fromHexString(hex);
-    b.makeByteList();
+    //b.makeByteList();
     expect(b.byteList[0], n);
   }
   var b = BsonBinary.fromHexString('0301');
-  b.makeByteList();
+  //b.makeByteList();
   expect(b.byteArray.getInt16(0, Endian.little), 259);
   b = BsonBinary.fromHexString('0301ad0c1ad34f1d');
-  b.makeByteList();
+  //b.makeByteList();
   expect(b.hexString, '0301ad0c1ad34f1d');
   var oid1 = ObjectId();
   var oid2 = ObjectId.fromHexString(oid1.toHexString());
-  oid2.id.makeByteList();
+  //oid2.id.makeByteList();
   expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
 }
 
 void testBsonIdFromHexString() {
   var oid1 = ObjectId();
   var oid2 = ObjectId.fromHexString(oid1.toHexString());
-  oid2.id.makeByteList();
+  //oid2.id.makeByteList();
   expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
   var b1 = BSON().serialize({'id': oid1});
   var b2 = BSON().serialize({'id': oid2});
   b1.rewind();
   b2.rewind();
   var oid3 = BSON().deserialize(b2)['id'];
-  expect(oid3.id.byteList, orderedEquals(oid1.id.byteList));
+  expect(oid3.bsonObjectId.byteList, orderedEquals(oid1.id.byteList));
 }
 
 void testBsonIdClientMode() {
@@ -175,8 +176,8 @@ void testBsonDbPointer() {
   var fromBson = bson.deserialize(b);
   var p2 = fromBson['p1'];
   expect(p2.collection, p1.collection);
-  expect(p2.id.toHexString(), p1.id.toHexString());
-  print(p1.id);
+  expect(p2.bsonObjectId.toHexString(), p1.bsonObjectId.toHexString());
+  print(p1.bsonObjectId);
 }
 
 void run() {
@@ -225,18 +226,18 @@ void run() {
           hex = '0$hex';
         }
         var b = BsonBinary.fromHexString(hex);
-        b.makeByteList();
+        //b.makeByteList();
         expect(b.byteList[0], n);
       }
       var b = BsonBinary.fromHexString('0301');
-      b.makeByteList();
+      //b.makeByteList();
       expect(b.byteArray.getInt16(0, Endian.little), 259);
       b = BsonBinary.fromHexString('0301ad0c1ad34f1d');
-      b.makeByteList();
+      //b.makeByteList();
       expect(b.hexString, '0301ad0c1ad34f1d');
       var oid1 = ObjectId();
       var oid2 = ObjectId.fromHexString(oid1.toHexString());
-      oid2.id.makeByteList();
+      //oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
     });
     test('test64Int', () {
@@ -284,7 +285,7 @@ void run() {
     test('testBsonIdFromHexString', () {
       var oid1 = ObjectId();
       var oid2 = ObjectId.fromHexString(oid1.toHexString());
-      oid2.id.makeByteList();
+      //oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
       var b1 = BSON().serialize({'id': oid1});
       var b2 = BSON().serialize({'id': oid2});
@@ -305,7 +306,7 @@ void run() {
       var fromBson = bson.deserialize(b);
       var p2 = fromBson['p1'];
       expect(p2.collection, p1.collection);
-      expect(p2.id.toHexString(), p1.id.toHexString());
+      expect(p2.bsonObjectId.toHexString(), p1.bsonObjectId.toHexString());
     });
     test('ObjectId to and from JSon', () {
       Object? _toEncodable(dynamic obj) {
@@ -364,4 +365,5 @@ void run() {
     });
   });
   runDecimal128();
+  runUuid();
 }

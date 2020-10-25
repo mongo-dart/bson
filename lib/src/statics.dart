@@ -1,6 +1,7 @@
-part of bson;
+import 'dart:convert';
+import 'dart:math';
 
-class _Statics {
+class Statics {
   static Stopwatch? _stopwatch;
   static Stopwatch get stopwatch => _stopwatch ??= Stopwatch();
   // ignore: unused_element

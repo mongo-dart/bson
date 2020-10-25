@@ -64,7 +64,7 @@ class BsonRegexp extends BsonObject {
   @override
   BsonRegexp get value => this;
   @override
-  int get typeByte => _BSON_DATA_REGEXP;
+  int get typeByte => bsonDataRegExp;
   @override
   int byteLength() => bsonPattern.byteLength() + bsonOptions.byteLength();
   @override

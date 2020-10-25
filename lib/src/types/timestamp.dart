@@ -5,7 +5,7 @@ class Timestamp extends BsonObject {
     seconds =
         _seconds ?? (DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt();
 
-    increment = _increment ?? _Statics.nextIncrement;
+    increment = _increment ?? Statics.nextIncrement;
   }
 
   Timestamp.fromBuffer(BsonBinary buffer) {
@@ -26,7 +26,7 @@ class Timestamp extends BsonObject {
   @override
   Timestamp get value => this;
   @override
-  int get typeByte => _BSON_DATA_TIMESTAMP;
+  int get typeByte => bsonDataTimestamp;
   @override
   String toString() => 'Timestamp($seconds, $increment)';
   @override

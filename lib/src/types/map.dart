@@ -13,7 +13,7 @@ class BsonMap extends BsonObject {
     var typeByte = buffer.readByte();
     while (typeByte != 0) {
       var key = buffer.readCString();
-      ret[key] = BsonObject.extractData(typeByte, buffer);
+      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, buffer).value;
       typeByte = buffer.readByte();
     }
     return ret;
@@ -24,7 +24,7 @@ class BsonMap extends BsonObject {
     if (_dataSize == null) {
       _dataSize = 0;
       data.forEach((String key, var value) {
-        _dataSize = _dataSize! + elementSize(key, value);
+        _dataSize = _dataSize! + BsonObject.elementSize(key, value);
       });
     }
     return _dataSize!;
@@ -35,7 +35,7 @@ class BsonMap extends BsonObject {
   @override
   int byteLength() => dataSize() + 1 + 4;
   @override
-  int get typeByte => _BSON_DATA_OBJECT;
+  int get typeByte => bsonDataObject;
   @override
   void packValue(BsonBinary buffer) {
     buffer.writeInt(byteLength());

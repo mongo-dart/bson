@@ -14,7 +14,7 @@ class BsonDate extends BsonObject {
   @override
   int byteLength() => 8;
   @override
-  int get typeByte => _BSON_DATA_DATE;
+  int get typeByte => bsonDataDate;
   @override
   void packValue(BsonBinary buffer) =>
       buffer.writeInt64(data.millisecondsSinceEpoch);

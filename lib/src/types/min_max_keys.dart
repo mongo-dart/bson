@@ -1,6 +1,6 @@
 part of bson;
 
-class MinKey extends BsonObject {
+/* class MinKey extends BsonObject {
   @override
   void packValue(BsonBinary buffer) {
     throw UnimplementedError();
@@ -17,8 +17,8 @@ class MinKey extends BsonObject {
   @override
   dynamic get value => throw UnimplementedError();
 }
-
-class MaxKey extends BsonObject {
+ */
+/* class MaxKey extends BsonObject {
   @override
   void packValue(BsonBinary buffer) {
     throw UnimplementedError();
@@ -35,3 +35,4 @@ class MaxKey extends BsonObject {
   @override
   dynamic get value => throw UnimplementedError();
 }
+ */

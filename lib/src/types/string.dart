@@ -22,7 +22,7 @@ class BsonString extends BsonObject {
   @override
   int byteLength() => utfData.length + 1 + 4;
   @override
-  int get typeByte => _BSON_DATA_STRING;
+  int get typeByte => bsonDataString;
   @override
   void packValue(BsonBinary buffer) {
     buffer.writeInt(utfData.length + 1);
@@ -46,7 +46,7 @@ class BsonCode extends BsonString {
 
   //get value => this;
   @override
-  int get typeByte => _BSON_DATA_CODE;
+  int get typeByte => bsonDataCode;
   @override
   String toString() => "BsonCode('$data')";
 }
@@ -72,7 +72,7 @@ class BsonCString extends BsonString {
   @override
   List<int> get utfData {
     if (useKeyCash) {
-      return _Statics.getKeyUtf8(data);
+      return Statics.getKeyUtf8(data);
     } else {
       return super.utfData;
     }

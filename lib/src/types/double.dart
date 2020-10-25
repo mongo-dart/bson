@@ -13,7 +13,7 @@ class BsonDouble extends BsonObject {
   @override
   int byteLength() => 8;
   @override
-  int get typeByte => _BSON_DATA_NUMBER;
+  int get typeByte => bsonDataNumber;
   @override
   void packValue(BsonBinary buffer) => buffer.writeDouble(data);
   @override

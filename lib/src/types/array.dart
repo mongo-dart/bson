@@ -14,7 +14,7 @@ class BsonArray extends BsonObject {
     while (typeByte != 0) {
       // Consume the name (for arrays it is the index)
       buffer.readCString();
-      ret.add(BsonObject.extractData(typeByte, buffer));
+      ret.add(BsonObject.fromTypeByteAndBuffer(typeByte, buffer).value);
       typeByte = buffer.readByte();
     }
     return ret;
@@ -24,7 +24,7 @@ class BsonArray extends BsonObject {
     if (_dataSize == null) {
       _dataSize = 0;
       for (var i = 0; i < data.length; i++) {
-        _dataSize = _dataSize! + elementSize('$i', data[i]);
+        _dataSize = _dataSize! + BsonObject.elementSize('$i', data[i]);
       }
     }
     return _dataSize!;
@@ -37,7 +37,7 @@ class BsonArray extends BsonObject {
   @override
   int byteLength() => dataSize() + 1 + 4;
   @override
-  int get typeByte => _BSON_DATA_ARRAY;
+  int get typeByte => bsonDataArray;
   @override
   void packValue(BsonBinary buffer) {
     buffer.writeInt(byteLength());

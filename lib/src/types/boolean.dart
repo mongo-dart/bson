@@ -13,7 +13,7 @@ class BsonBoolean extends BsonObject {
   @override
   int byteLength() => 1;
   @override
-  int get typeByte => _BSON_DATA_BOOLEAN;
+  int get typeByte => bsonDataBool;
   @override
   void packValue(BsonBinary buffer) => buffer.writeByte(data ? 1 : 0);
   @override
