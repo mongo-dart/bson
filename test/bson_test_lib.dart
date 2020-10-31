@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:bson/bson.dart';
 import 'dart:convert';
 
+import 'bson_binary_test_lib.dart';
 import 'bson_decimal_128_test_lib.dart';
 import 'bson_uuid_test_lib.dart';
 
@@ -364,6 +365,7 @@ void run() {
       expect(doc2_a[2], root['a'][2]);
     });
   });
+  runBinary();
   runDecimal128();
   runUuid();
 }
