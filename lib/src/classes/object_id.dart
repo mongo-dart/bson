@@ -1,11 +1,14 @@
 import 'dart:typed_data';
 
-import 'package:more/char_matcher.dart';
+//import 'package:more/char_matcher.dart';
 
 import '../statics.dart';
 import '../../bson.dart';
 
-final _objectIdMatcher = CharMatcher.inRange('a', 'f') | CharMatcher.digit();
+const String _charMatcherPattern = r'^[a-fA-F0-9]{24}$';
+final RegExp charMatcherRegExp = RegExp(_charMatcherPattern);
+
+//final _objectIdMatcher = CharMatcher.inRange('a', 'f') | CharMatcher.digit();
 
 class ObjectId /* extends BsonObject */ {
   ObjectId({bool clientMode = false})
@@ -16,7 +19,7 @@ class ObjectId /* extends BsonObject */ {
   ObjectId.fromBuffer(BsonBinary buffer) : id = extractData(buffer);
 
   factory ObjectId.fromHexString(String hexString) {
-    if (hexString.length != 24 || !_objectIdMatcher.everyOf(hexString)) {
+    if (!charMatcherRegExp.hasMatch(hexString)) {
       throw ArgumentError(
           'Expected hexadecimal string with length of 24, got $hexString');
     }
