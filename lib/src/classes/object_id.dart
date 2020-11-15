@@ -1,22 +1,18 @@
 import 'dart:typed_data';
 
-//import 'package:more/char_matcher.dart';
-
 import '../statics.dart';
 import '../../bson.dart';
 
 const String _charMatcherPattern = r'^[a-fA-F0-9]{24}$';
 final RegExp charMatcherRegExp = RegExp(_charMatcherPattern);
 
-//final _objectIdMatcher = CharMatcher.inRange('a', 'f') | CharMatcher.digit();
-
-class ObjectId /* extends BsonObject */ {
+class ObjectId {
   ObjectId({bool clientMode = false})
-      : id = createId(Timestamp(null, 0).seconds, clientMode);
+      : _id = createId(Timestamp(null, 0).seconds, clientMode);
   ObjectId.fromSeconds(int seconds, [bool clientMode = false])
-      : id = createId(seconds, clientMode);
-  ObjectId.fromBsonBinary(this.id);
-  ObjectId.fromBuffer(BsonBinary buffer) : id = extractData(buffer);
+      : _id = createId(seconds, clientMode);
+  ObjectId.fromBsonBinary(this._id);
+  ObjectId.fromBuffer(BsonBinary buffer) : _id = extractData(buffer);
 
   factory ObjectId.fromHexString(String hexString) {
     if (!charMatcherRegExp.hasMatch(hexString)) {
@@ -27,8 +23,6 @@ class ObjectId /* extends BsonObject */ {
   }
 
   static ObjectId parse(String hexString) => ObjectId.fromHexString(hexString);
-
-  BsonBinary id;
 
   static BsonBinary extractData(BsonBinary buffer) {
     var _id = BsonBinary.from(
@@ -58,18 +52,25 @@ class ObjectId /* extends BsonObject */ {
     }
   }
 
-  @override
-  int get hashCode => id.hexString.hashCode;
-  @override
-  bool operator ==(other) =>
-      other is ObjectId && toHexString() == other.toHexString();
-  @override
-  String toString() => 'ObjectId("${id.hexString}")';
-  String toHexString() => id.hexString;
+  BsonBinary _id;
+  BsonBinary get id => _id;
 
-  String toJson() => id.hexString;
+  @override
+  int get hashCode => _id.hexString.hashCode;
+  @override
+  bool operator ==(other) => other is ObjectId && $oid == other.$oid;
+  @override
+  String toString() => 'ObjectId("${_id.hexString}")';
+
+  /// Returns the hexadecimall string representation of this ObjectId
+  String get $oid => _id.hexString;
+
+  /// Same as $oid. It will be deprecated in a future release.
+  String toHexString() => _id.hexString;
+
+  String toJson() => _id.hexString;
 
   // Equivalent to mongo shell's "getTimestamp".
   DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(
-      int.parse(id.hexString.substring(0, 8), radix: 16) * 1000);
+      int.parse(_id.hexString.substring(0, 8), radix: 16) * 1000);
 }

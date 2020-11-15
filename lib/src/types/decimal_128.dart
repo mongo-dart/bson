@@ -248,8 +248,8 @@ class BsonDecimal128 extends BsonObject {
       lowSignificand -= maxUInt64;
     }
 
-    Int64 lowInt = Int64.parseRadix(lowSignificand.toString(), 10);
-    Int64 highInt = Int64.parseRadix(highSignificand.toString(), 10);
+    var lowInt = Int64.parseRadix(lowSignificand.toString(), 10);
+    var highInt = Int64.parseRadix(highSignificand.toString(), 10);
     highInt += (Int64(biasedExponent) << 49);
     if (rational.isNegative) {
       highInt |= signMask;
