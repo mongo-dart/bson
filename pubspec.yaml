@@ -8,8 +8,7 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
-  fixnum: 1.0.0-nullsafety.0 #^0.10.11
-  #more: ^3.0.0-nullsafety
+  fixnum: 1.0.0-nullsafety.0 
   rational: ^0.3.8
   uuid_type: ^1.1.1
 
