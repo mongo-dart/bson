@@ -1,20 +1,21 @@
 part of bson;
-class BsonBoolean extends BsonObject{
-  bool data;
+
+class BsonBoolean extends BsonObject {
   BsonBoolean(this.data);
-  get value=>data;
-  byteLength()=>1;
-  int get typeByte => _BSON_DATA_BOOLEAN;
-  packValue(BsonBinary buffer){
-     buffer.writeByte(data?1:0);
-  }
-  unpackValue(BsonBinary buffer){
-     var b = buffer.readByte();
-     if (b == 1){
-       data = true;
-     }
-     else{
-       data = false;
-     }
-  }
+  BsonBoolean.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
+
+  bool data;
+
+  static bool extractData(BsonBinary buffer) => buffer.readByte() == 1;
+
+  @override
+  bool get value => data;
+  @override
+  int byteLength() => 1;
+  @override
+  int get typeByte => bsonDataBool;
+  @override
+  void packValue(BsonBinary buffer) => buffer.writeByte(data ? 1 : 0);
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

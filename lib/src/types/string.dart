@@ -1,54 +1,91 @@
 part of bson;
-class BsonString extends BsonObject{
-  String data;
-  List<int> _utfData;
-  List<int> get utfData{
-    if (_utfData == null){
-      _utfData = utf8.encode(data);
-    }
-    return _utfData;
-  }
+
+class BsonString extends BsonObject {
   BsonString(this.data);
-  get value=>data;
-  byteLength()=>utfData.length+1+4;
-  int get typeByte => _BSON_DATA_STRING;
-  packValue(BsonBinary buffer){
-     buffer.writeInt(utfData.length+1);
-     buffer.byteList.setRange(buffer.offset,buffer.offset+utfData.length,utfData);
-     buffer.offset += utfData.length;
-     buffer.writeByte(0);
+  BsonString.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
+
+  String data;
+  List<int>? _utfData;
+
+  static String extractData(BsonBinary buffer) {
+    var size = buffer.readInt32() - 1;
+    var ret = utf8.decode(
+        buffer.byteList.getRange(buffer.offset, buffer.offset + size).toList());
+    buffer.offset += size + 1;
+    return ret;
   }
-  unpackValue(BsonBinary buffer){
-     int size = buffer.readInt32()-1;
-     data = utf8.decode(buffer.byteList.getRange(buffer.offset, buffer.offset+size).toList());
-     buffer.offset += size+1;
+
+  List<int> get utfData => _utfData ??= utf8.encode(data);
+
+  @override
+  String get value => data;
+  @override
+  int byteLength() => utfData.length + 1 + 4;
+  @override
+  int get typeByte => bsonDataString;
+  @override
+  void packValue(BsonBinary buffer) {
+    buffer.writeInt(utfData.length + 1);
+    buffer.byteList
+        .setRange(buffer.offset, buffer.offset + utfData.length, utfData);
+    buffer.offset += utfData.length;
+    buffer.writeByte(0);
   }
+
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }
-class BsonCode extends BsonString{
-  get value=>this;
-  int get typeByte => _BSON_DATA_CODE;
-  BsonCode(String dataValue):super(dataValue);
-  String toString()=>"BsonCode('$data')";
+
+class BsonCode extends BsonString {
+  BsonCode(String dataValue) : super(dataValue);
+
+  BsonCode.fromBuffer(BsonBinary buffer) : super.fromBuffer(buffer);
+
+  static String extractData(BsonBinary buffer) =>
+      BsonString.extractData(buffer);
+
+  //get value => this;
+  @override
+  int get typeByte => bsonDataCode;
+  @override
+  String toString() => "BsonCode('$data')";
 }
-class BsonCString extends BsonString{
+
+class BsonCString extends BsonString {
+  BsonCString(String data, [bool? useKeyCash])
+      : useKeyCash = useKeyCash ?? false,
+        super(data);
+
+  BsonCString.fromBuffer(BsonBinary buffer, [bool? useKeyCash])
+      : useKeyCash = useKeyCash ?? false,
+        super.fromBuffer(buffer);
+
   bool useKeyCash;
-  int get typeByte{
-   throw "Function typeByte of BsonCString must not be called";
-  }
-  BsonCString(String data, [this.useKeyCash = true]): super(data);
-  List<int> get utfData{
-    if (useKeyCash){
-      return _Statics.getKeyUtf8(data);
-    }
-    else {
+
+  static String extractData(BsonBinary buffer) =>
+      BsonString.extractData(buffer);
+
+  @override
+  int get typeByte =>
+      throw 'Function typeByte of BsonCString must not be called';
+
+  @override
+  List<int> get utfData {
+    if (useKeyCash) {
+      return Statics.getKeyUtf8(data);
+    } else {
       return super.utfData;
     }
   }
 
-  byteLength()=>utfData.length+1;
-  packValue(BsonBinary buffer){
-     buffer.byteList.setRange(buffer.offset,buffer.offset+utfData.length,utfData);
-     buffer.offset += utfData.length;
-     buffer.writeByte(0);
+  @override
+  int byteLength() => utfData.length + 1;
+
+  @override
+  void packValue(BsonBinary buffer) {
+    buffer.byteList
+        .setRange(buffer.offset, buffer.offset + utfData.length, utfData);
+    buffer.offset += utfData.length;
+    buffer.writeByte(0);
   }
 }

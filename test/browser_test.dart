@@ -1,7 +1,7 @@
-@TestOn("browser")
+@TestOn('browser')
 import 'bson_test_lib.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   run();
 }

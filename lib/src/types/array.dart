@@ -1,39 +1,52 @@
 part of bson;
-class BsonArray extends BsonObject{
-  List data;
-  int _dataSize;
-  int dataSize(){
-    if (_dataSize == null){
-      _dataSize = 0;
-      for(var i = 0; i < data.length; i++) {
-        _dataSize += elementSize(i.toString(), data[i]);
-      }
-    }
-    return _dataSize;
-  }
 
+class BsonArray extends BsonObject {
   BsonArray(this.data);
-  get value=>data;
-  byteLength()=>dataSize()+1+4;
-  int get typeByte => _BSON_DATA_ARRAY;
-  packValue(BsonBinary buffer){
-    buffer.writeInt(byteLength());
-      for(var i = 0; i < data.length; i++) {
-         bsonObjectFrom(data[i]).packElement(i.toString() ,buffer);
-      }
-     buffer.writeByte(0);
-  }
+  BsonArray.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
 
-  unpackValue(BsonBinary buffer){
-    data = [];
+  List data;
+  int? _dataSize;
+
+  static List<dynamic> extractData(BsonBinary buffer) {
+    var ret = <dynamic>[];
     buffer.offset += 4;
-    int typeByte = buffer.readByte();
-    while (typeByte != 0){
-      BsonObject bsonObject = bsonObjectFromTypeByte(typeByte);
-      var element = bsonObject.unpackElement(buffer);
-      data.add(element.value);
+    var typeByte = buffer.readByte();
+    while (typeByte != 0) {
+      // Consume the name (for arrays it is the index)
+      buffer.readCString();
+      ret.add(BsonObject.fromTypeByteAndBuffer(typeByte, buffer).value);
       typeByte = buffer.readByte();
     }
+    return ret;
   }
 
+  int get size {
+    if (_dataSize == null) {
+      _dataSize = 0;
+      for (var i = 0; i < data.length; i++) {
+        _dataSize = _dataSize! + BsonObject.elementSize('$i', data[i]);
+      }
+    }
+    return _dataSize!;
+  }
+
+  int dataSize() => size;
+
+  @override
+  List get value => data;
+  @override
+  int byteLength() => dataSize() + 1 + 4;
+  @override
+  int get typeByte => bsonDataArray;
+  @override
+  void packValue(BsonBinary buffer) {
+    buffer.writeInt(byteLength());
+    for (var i = 0; i < data.length; i++) {
+      BsonObject.bsonObjectFrom(data[i]).packElement(i.toString(), buffer);
+    }
+    buffer.writeByte(0);
+  }
+
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

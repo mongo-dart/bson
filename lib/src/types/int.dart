@@ -1,28 +1,42 @@
 part of bson;
-class BsonInt extends BsonObject{
-  int data;
+
+class BsonInt extends BsonObject {
   BsonInt(this.data);
-  get value=>data;
-  byteLength()=>4;
-  int get typeByte => _BSON_DATA_INT;
-  packValue(BsonBinary buffer){
-     buffer.writeInt(data);
-  }
-  unpackValue(BsonBinary buffer){
-     data = buffer.readInt32();
-  }
+
+  BsonInt.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
+
+  int data;
+
+  static int extractData(BsonBinary buffer) => buffer.readInt32();
+
+  @override
+  int get value => data;
+  @override
+  int byteLength() => 4;
+  @override
+  int get typeByte => bsonDataInt;
+  @override
+  void packValue(BsonBinary buffer) => buffer.writeInt(data);
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }
 
-class BsonLong extends BsonObject{
-  int data;
+class BsonLong extends BsonObject {
   BsonLong(this.data);
-  get value=>data;
-  byteLength()=>8;
-  int get typeByte => _BSON_DATA_LONG;
-  packValue(BsonBinary buffer){
-    buffer.writeInt64(data);
-  }
-  unpackValue(BsonBinary buffer){
-    data = buffer.readInt64();
-  }
+  BsonLong.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
+
+  int data;
+
+  static int extractData(BsonBinary buffer) => buffer.readInt64();
+
+  @override
+  int get value => data;
+  @override
+  int byteLength() => 8;
+  @override
+  int get typeByte => bsonDataLong;
+  @override
+  void packValue(BsonBinary buffer) => buffer.writeInt64(data);
+  @override
+  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

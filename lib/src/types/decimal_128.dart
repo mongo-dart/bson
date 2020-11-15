@@ -4,7 +4,7 @@ import 'package:fixnum/fixnum.dart';
 import '../../bson.dart';
 
 /// mask for Sign (10000000)
-final signMask = Int64.parseHex("8000000000000000");
+final signMask = Int64.parseHex('8000000000000000');
 
 /// mask for NaN (01111100)
 final naNMask = Int64.parseHex('7C00000000000000');
@@ -68,26 +68,17 @@ final Int64 maxExponent = Int64(12287);
 class BsonDecimal128 extends BsonObject {
   BsonBinary bin;
 
-  BsonDecimal128(Rational rational) {
-    if (rational == null) {
-      // NaN
-      bin = BsonBinary.fromHexString('0000000000000000000000000000007c');
-    } else {
-      bin = convertRationalToBinary(rational);
-    }
-  }
+  BsonDecimal128(Rational? rational) : bin = convertRationalToBinary(rational);
+
+  BsonDecimal128.fromBuffer(BsonBinary buffer) : bin = extractData(buffer);
 
   BsonDecimal128.fromBsonBinary(this.bin) {
-    if (bin == null) {
-      bin = BsonBinary.fromHexString('0000000000000000000000000000007c');
-    } else {
-      _checkBinaryLength(bin);
-    }
+    _checkBinaryLength(bin);
   }
 
   factory BsonDecimal128.fromHexString(String hexString) {
     if (hexString.length != 32) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'Expected hexadecimal string with length of 32, got $hexString');
     }
     return BsonDecimal128.fromBsonBinary(BsonBinary.fromHexString(hexString));
@@ -96,27 +87,44 @@ class BsonDecimal128 extends BsonObject {
   static BsonDecimal128 parse(String hexString) =>
       BsonDecimal128.fromHexString(hexString);
 
-  int get hashCode => bin.hexString.hashCode;
-  bool operator ==(other) =>
-      other is BsonDecimal128 && toHexString() == other.toHexString();
-  String toString() => 'BsonDecimal128("${bin.hexString}")';
-  String toHexString() => bin.hexString;
-  int get typeByte => bsonDecimal128;
-  Rational get value => convertBinaryToRational(bin);
-  int byteLength() => 16;
-
-  unpackValue(BsonBinary buffer) {
-    if (bin.byteList == null) {
-      bin.makeByteList();
-    }
-    bin.byteList.setRange(0, 16, buffer.byteList, buffer.offset);
+  static BsonBinary extractData(BsonBinary buffer) {
+    _checkBufferCapacity(buffer);
+    var content = buffer.byteList.sublist(buffer.offset, buffer.offset + 16);
+    var _bin = BsonBinary.from(content);
     buffer.offset += 16;
+    return _bin;
   }
 
-  packValue(BsonBinary buffer) {
-    if (bin.byteList == null) {
-      bin.makeByteList();
+  /// we check that the buffer received, starting from the offset,
+  /// contains at least 16 bytes
+  static void _checkBufferCapacity(BsonBinary _buffer) {
+    if (_buffer.byteList.length - 16 < _buffer.offset) {
+      throw ArgumentError('The buffer received has a remaining capacity of '
+          '${_buffer.byteList.length - _buffer.offset} bytes while at least 16'
+          'are needed');
     }
+  }
+
+  @override
+  int get hashCode => bin.hexString.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is BsonDecimal128 && toHexString() == other.toHexString();
+  @override
+  String toString() => 'BsonDecimal128("${bin.hexString}")';
+  String toHexString() => bin.hexString;
+  @override
+  int get typeByte => bsonDecimal128;
+  @override
+  Rational? get value => convertBinaryToRational(bin);
+  @override
+  int byteLength() => 16;
+
+  @override
+  void unpackValue(BsonBinary buffer) => bin = extractData(buffer);
+
+  @override
+  void packValue(BsonBinary buffer) {
     buffer.byteList.setRange(buffer.offset, buffer.offset + 16, bin.byteList);
     buffer.offset += 16;
   }
@@ -124,21 +132,14 @@ class BsonDecimal128 extends BsonObject {
   String toJson() => bin.hexString;
 
   void _checkBinaryLength(BsonBinary _binary) {
-    if (_binary.hexString == null) {
-      _binary.makeHexString();
-    }
     if (_binary.hexString.length != 32) {
       throw ArgumentError('The BsonBinary received is '
           '${_binary.hexString.length ~/ 2} bytes long instead of 16');
     }
   }
 
-  static Rational convertBinaryToRational(BsonBinary binary) {
+  static Rational? convertBinaryToRational(BsonBinary binary) {
     Int64 high, low;
-    if (binary.byteList == null) {
-      binary.makeByteList();
-      binary.subType = 0;
-    }
     binary.rewind();
     low = binary.readFixInt64();
     high = binary.readFixInt64();
@@ -183,7 +184,7 @@ class BsonDecimal128 extends BsonObject {
     if (exponent > maxExponent) {
       return Rational.zero;
     }
-    exponent -= 6176;
+    exponent = (exponent - 6176) as Int32;
 
     significand += highSignificand * maxUInt64;
     if (significand > maxSignificand) {
@@ -196,7 +197,7 @@ class BsonDecimal128 extends BsonObject {
     return significand * _r10.power(exponent.toInt());
   }
 
-  static BsonBinary convertRationalToBinary(Rational rational) {
+  static BsonBinary convertRationalToBinary(Rational? rational) {
     if (rational == null) {
       // Rational does not manage NaN
       return BsonBinary.fromHexString('0000000000000000000000000000007c');
@@ -224,8 +225,8 @@ class BsonDecimal128 extends BsonObject {
     } else {
       res = rational.toStringAsPrecisionFast(34);
     }
-    int exponent = extractExponent(res);
-    Rational significand = extractSignificand(res);
+    var exponent = extractExponent(res);
+    var significand = extractSignificand(res);
 
     // Significand greater or equal to 10^34 - 1 must be considered as 0
     if (significand > maxSignificand) {
@@ -247,8 +248,8 @@ class BsonDecimal128 extends BsonObject {
       lowSignificand -= maxUInt64;
     }
 
-    Int64 lowInt = Int64.parseRadix(lowSignificand.toString(), 10);
-    Int64 highInt = Int64.parseRadix(highSignificand.toString(), 10);
+    var lowInt = Int64.parseRadix(lowSignificand.toString(), 10);
+    var highInt = Int64.parseRadix(highSignificand.toString(), 10);
     highInt += (Int64(biasedExponent) << 49);
     if (rational.isNegative) {
       highInt |= signMask;
@@ -261,7 +262,7 @@ class BsonDecimal128 extends BsonObject {
     String value;
     if (parts.length == 2) {
       value = removeTrailingZeros(parts.last);
-      if (value.length != 0) {
+      if (value.isNotEmpty) {
         return -value.length;
       }
     }
@@ -399,5 +400,5 @@ extension RationalExtension on Rational {
 
   /// Allows to calculate the power of numbers even if the exponent is negative
   Rational power(int exponent) =>
-      exponent.isNegative ? this.inverse.pow(-exponent) : this.pow(exponent);
+      exponent.isNegative ? inverse.pow(-exponent) : pow(exponent);
 }
