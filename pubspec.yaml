@@ -1,5 +1,5 @@
 name: bson
-version: 1.0.0-nullsafety
+version: 1.0.0-nullsafety.2
 
 description: Bson library for Dart programming language. BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents.
 homepage: https://github.com/mongo-dart/bson
@@ -8,10 +8,10 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
-  fixnum: 1.0.0-nullsafety.0 
-  rational: ^0.3.8
+  fixnum: ^1.0.0
+  rational: ^1.0.0
   uuid_type: ^1.1.1
 
 dev_dependencies:
-  test: ^1.16.0-nullsafety.7
-  pedantic: ^1.10.0-nullsafety.2
+  test: ^1.16.4
+  pedantic: ^1.10.0

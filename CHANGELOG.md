@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-nullsafety.2
+
+- Updated dependencies
+
 ## 1.0.0-nullsafety
 
 **This is a preliminary port to the null-safety feature for the bson package. _It is not production ready yet._**
