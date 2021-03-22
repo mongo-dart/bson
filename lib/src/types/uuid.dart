@@ -1,17 +1,15 @@
 import 'dart:typed_data';
 
-import 'package:uuid_type/uuid_type.dart';
-
 import '../../bson.dart';
 
 class BsonUuid extends BsonBinary {
-  BsonUuid([Uuid? uuid]) : super.from(uuidToByteList(uuid));
+  BsonUuid([UuidValue? uuid]) : super.from(uuidToByteList(uuid));
 
   BsonUuid.from(Iterable<int> byteList) : super.from(byteList);
 
   BsonUuid.fromHexString(String hexString) : super.fromHexString(hexString);
 
-  factory BsonUuid.parse(String uuidString) => BsonUuid(Uuid.parse(uuidString));
+  factory BsonUuid.parse(String uuidString) => BsonUuid(UuidValue(uuidString));
 
   factory BsonUuid.fromBuffer(BsonBinary buffer) {
     var ret = BsonBinary.fromBuffer(buffer);
@@ -22,15 +20,15 @@ class BsonUuid extends BsonBinary {
     return ret;
   }
 
-  static Uint8List uuidToByteList(Uuid? uuid) =>
-      (uuid ??= RandomBasedUuidGenerator().generate()).bytes;
+  static Uint8List uuidToByteList(UuidValue? uuid) =>
+      Uint8List.fromList((uuid ??= UuidValue.v4()).toBytes());
 
   @override
   String toString() => 'UUID("${value.toString()}")';
   String toHexString() => hexString;
 
   @override
-  Uuid get value => Uuid.fromBytes(byteList);
+  UuidValue get value => UuidValue.fromByteList(byteList);
 
   String toJson() => value.toString();
 }

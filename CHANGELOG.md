@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+A **Breaking change** in relation to Uuid management. As uuid_type package wasn't yet ported to null-safety, I moved to the widely used uuid one.
+The name of the class is no more Uuid (in uuid package Uuid is the generator class), but UuidValue.
+I had to make a custom version of UuidValue because it was missing some functionalities, but I hope that the standard package will adopt this changes in a near future. This is why I left the name as UuidValue instead of the more intuitive Uuid.
+
 ## 1.0.0-nullsafety.2
 
 - Updated dependencies

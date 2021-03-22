@@ -11,6 +11,7 @@ import 'src/statics.dart';
 
 export 'src/types/decimal_128.dart';
 export 'src/classes/object_id.dart';
+export 'src/classes/uuid_value.dart';
 
 part 'src/bson_type.dart';
 part 'src/types/objectid.dart';

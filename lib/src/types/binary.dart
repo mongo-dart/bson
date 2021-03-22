@@ -187,7 +187,7 @@ class BsonBinary extends BsonObject {
     if (numOfBytes == 3) {
       byteArrayTmp.setInt32(0, value, endianness);
     } else {
-      throw Exception('Unsupported num of bytes: ${numOfBytes}');
+      throw Exception('Unsupported num of bytes: $numOfBytes');
     }
     byteList.setRange(offset, offset + numOfBytes, byteListTmp);
   }

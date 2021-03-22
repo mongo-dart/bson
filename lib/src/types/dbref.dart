@@ -47,7 +47,7 @@ class DbRef extends BsonObject {
   }
 
   @override
-  int get hashCode => '${collection}.${bsonObjectId.toHexString()}'.hashCode;
+  int get hashCode => '$collection.${bsonObjectId.toHexString()}'.hashCode;
   @override
   bool operator ==(other) =>
       other is DbRef &&

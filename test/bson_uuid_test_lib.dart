@@ -1,13 +1,12 @@
 import 'package:bson/src/types/uuid.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';
-import 'package:uuid_type/uuid_type.dart';
 
 void runUuid() {
   group('UUID:', () {
     group('Reading Uuid', () {
       test('Regular Constructor', () {
-        var uuid = Uuid.parse('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var uuid = UuidValue('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
         var bsonUuid = BsonUuid(uuid);
         var value = bsonUuid.value;
         expect(value, uuid);

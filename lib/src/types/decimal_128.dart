@@ -241,8 +241,8 @@ class BsonDecimal128 extends BsonObject {
     // encoding as case 1 number (first bit of the combination field not '11')
     // because the minimum value of the case 2 (2^114) is higher than
     // the max allowed value (10^34-1)
-    Rational highSignificand = significand ~/ maxUInt64;
-    Rational lowSignificand = significand - (highSignificand * maxUInt64);
+    var highSignificand = significand ~/ maxUInt64;
+    var lowSignificand = significand - (highSignificand * maxUInt64);
     // Needed because we are using Int instead of UInt
     if (lowSignificand >= maxInt64) {
       lowSignificand -= maxUInt64;
