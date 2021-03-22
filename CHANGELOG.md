@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Fix on Uuid management
+
 ## 1.0.0
 
 A **Breaking change** in relation to Uuid management. As uuid_type package wasn't yet ported to null-safety, I moved to the widely used uuid one.

@@ -1,3 +1,5 @@
+import 'package:bson/src/types/uuid.dart';
+import 'package:rational/rational.dart';
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
@@ -52,6 +54,8 @@ void typeTest() {
   expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
   expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
   expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
+  expect(BsonObject.bsonObjectFrom(Rational.fromInt(1)) is Rational, isTrue);
+  expect(BsonObject.bsonObjectFrom(UuidValue.v4()) is UuidValue, isTrue);
 }
 
 void test64Int() {
@@ -262,6 +266,9 @@ void run() {
       expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
       expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
       expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
+      expect(BsonObject.bsonObjectFrom(Rational.fromInt(1)) is BsonDecimal128,
+          isTrue);
+      expect(BsonObject.bsonObjectFrom(UuidValue.v4()) is BsonUuid, isTrue);
     });
   });
   group('ObjectId:', () {
@@ -363,6 +370,80 @@ void run() {
       root = bson.deserialize(buffer);
       var doc2_a = doc2['a'] as List;
       expect(doc2_a[2], root['a'][2]);
+    });
+
+    group('Full Serialize Deserialize', () {
+      var bson = BSON();
+      test('int', () {
+        var map = {'_id': 5, 'int': 4};
+        var buffer = bson.serialize(map);
+        expect(
+            buffer.hexString, '17000000105f6964000500000010696e74000400000000');
+        buffer.offset = 0;
+        Map root = bson.deserialize(buffer);
+        expect(root['int'], 4);
+        expect(root['_id'], 5);
+      });
+
+      test('List<int> - one element', () {
+        var doc1 = {
+          'list': [15]
+        };
+        var buffer = bson.serialize(doc1);
+        expect(
+            buffer.hexString, '17000000046c697374000c0000001030000f0000000000');
+        buffer.offset = 0;
+        var root = bson.deserialize(buffer);
+        expect(15, root['list'].first);
+      });
+
+      test('List<int> many elements>', () {
+        var doc2 = {
+          '_id': 5,
+          'list': [2, 3, 5]
+        };
+        var buffer = bson.serialize(doc2);
+        expect(
+            buffer.hexString,
+            '2e000000105f69640005000000046c69'
+            '7374001a0000001030000200000010310003000000103200050000000000');
+        buffer.offset = 0;
+        buffer.readByte();
+        expect(1, buffer.offset);
+        buffer.readInt32();
+        expect(5, buffer.offset);
+        buffer.offset = 0;
+        var root = bson.deserialize(buffer);
+        var doc2_a = doc2['list'] as List;
+        expect(doc2_a[2], root['list'][2]);
+      });
+
+      test('Rational', () {
+        var rational = Rational.fromInt(4);
+        var map = {'_id': 5, 'rational': rational};
+        var buffer = bson.serialize(map);
+        expect(
+            buffer.hexString,
+            '28000000105f69640005000000137261'
+            '74696f6e616c000400000000000000000000000000403000');
+        buffer.offset = 0;
+        Map result = bson.deserialize(buffer);
+        expect(result['rational'], rational);
+        expect(result['_id'], 5);
+      });
+      test('Uuid', () {
+        var uuid = UuidValue('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var map = {'_id': 5, 'uuid': uuid};
+        var buffer = bson.serialize(map);
+        expect(
+            buffer.hexString,
+            '29000000105f69640005000000057575'
+            '69640010000000046ba7b8119dad11d180b400c04fd430c800');
+        buffer.offset = 0;
+        Map result = bson.deserialize(buffer);
+        expect(result['uuid'], uuid);
+        expect(result['_id'], 5);
+      });
     });
   });
   runBinary();

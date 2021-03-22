@@ -133,6 +133,8 @@ abstract class BsonObject {
       return BsonBoolean(value);
     } else if (value is Rational) {
       return BsonDecimal128(value);
+    } else if (value is UuidValue) {
+      return BsonUuid(value);
     }
     throw Exception('Not implemented for $value');
   }

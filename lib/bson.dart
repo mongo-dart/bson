@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:bson/src/types/decimal_128.dart';
 import 'package:bson/src/types/uuid.dart';
 import 'src/classes/object_id.dart';
+import 'src/classes/uuid_value.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:rational/rational.dart';
 import 'src/statics.dart';

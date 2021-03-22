@@ -71,19 +71,19 @@ class BsonBinary extends BsonObject {
     return result;
   }
 
-  BsonBinary(int length)
+  BsonBinary(int length, {int? subType})
       : _byteList = Uint8List(length),
-        _subType = subtypeBinary;
+        _subType = subType ?? subtypeBinary;
 
-  BsonBinary.from(Iterable<int> byteList)
+  BsonBinary.from(Iterable<int> byteList, {int? subType})
       : _byteList = Uint8List(byteList.length)
           ..setRange(0, byteList.length, byteList),
-        _subType = subtypeBinary;
+        _subType = subType ?? subtypeBinary;
 
-  BsonBinary.fromHexString(String hexString)
+  BsonBinary.fromHexString(String hexString, {int? subType})
       : _hexString = hexString.toLowerCase(),
         _byteList = _makeByteList(hexString.toLowerCase()),
-        _subType = subtypeBinary;
+        _subType = subType ?? subtypeBinary;
 
   factory BsonBinary.fromBuffer(BsonBinary buffer) {
     var data = extractData(buffer);
