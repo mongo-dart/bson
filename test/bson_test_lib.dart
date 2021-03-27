@@ -417,7 +417,17 @@ void run() {
         var doc2_a = doc2['list'] as List;
         expect(doc2_a[2], root['list'][2]);
       });
-
+      test('Null', () {
+        var nullValue;
+        var map = {'_id': 5, 'nullValue': nullValue};
+        var buffer = bson.serialize(map);
+        expect(buffer.hexString,
+            '19000000105f696400050000000a6e756c6c56616c75650000');
+        buffer.offset = 0;
+        Map result = bson.deserialize(buffer);
+        expect(result['nullValue'], isNull);
+        expect(result['_id'], 5);
+      });
       test('Rational', () {
         var rational = Rational.fromInt(4);
         var map = {'_id': 5, 'rational': rational};

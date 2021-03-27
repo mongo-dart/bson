@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Fixed error preventing null values serialization
+
 ## 1.0.1
 
 - Fix on Uuid management

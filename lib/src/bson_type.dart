@@ -180,7 +180,7 @@ abstract class BsonObject {
     }
   }
 
-  static int elementSize(String? name, Object value) {
+  static int elementSize(String? name, Object? value) {
     var size = 1;
     if (name != null) {
       size += Statics.getKeyUtf8(name).length + 1;
