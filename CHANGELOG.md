@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Removed the wrapper class UuidValue. Now we are using the original class from the Uuid package.
+
 ## 1.0.2
 
 - Fixed error preventing null values serialization

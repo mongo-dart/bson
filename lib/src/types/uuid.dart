@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:uuid/uuid.dart';
+
 import '../../bson.dart';
 
 class BsonUuid extends BsonBinary {
@@ -24,7 +26,7 @@ class BsonUuid extends BsonBinary {
   }
 
   static Uint8List uuidToByteList(UuidValue? uuid) =>
-      Uint8List.fromList((uuid ??= UuidValue.v4()).toBytes());
+      Uint8List.fromList((uuid ??= Uuid().v4obj()).toBytes());
 
   @override
   String toString() => 'UUID("${value.toString()}")';

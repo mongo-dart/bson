@@ -4,15 +4,15 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:bson/src/types/decimal_128.dart';
 import 'package:bson/src/types/uuid.dart';
+import 'package:uuid/uuid.dart';
 import 'src/classes/object_id.dart';
-import 'src/classes/uuid_value.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:rational/rational.dart';
 import 'src/statics.dart';
 
 export 'src/types/decimal_128.dart';
 export 'src/classes/object_id.dart';
-export 'src/classes/uuid_value.dart';
+export 'package:uuid/uuid.dart';
 
 part 'src/bson_type.dart';
 part 'src/types/objectid.dart';

@@ -3,6 +3,7 @@ import 'package:rational/rational.dart';
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
 import 'bson_binary_test_lib.dart';
@@ -55,7 +56,7 @@ void typeTest() {
   expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
   expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
   expect(BsonObject.bsonObjectFrom(Rational.fromInt(1)) is Rational, isTrue);
-  expect(BsonObject.bsonObjectFrom(UuidValue.v4()) is UuidValue, isTrue);
+  expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is UuidValue, isTrue);
 }
 
 void test64Int() {
@@ -268,7 +269,7 @@ void run() {
       expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
       expect(BsonObject.bsonObjectFrom(Rational.fromInt(1)) is BsonDecimal128,
           isTrue);
-      expect(BsonObject.bsonObjectFrom(UuidValue.v4()) is BsonUuid, isTrue);
+      expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is BsonUuid, isTrue);
     });
   });
   group('ObjectId:', () {
