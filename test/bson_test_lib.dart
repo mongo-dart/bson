@@ -336,6 +336,13 @@ void run() {
     });
   });
   group('BsonSerialization:', () {
+    test('testSimpleSerializeDeserialize', () {
+      final buffer = BSON().serialize({'id': 42});
+      expect(buffer.hexString, '0d000000106964002a00000000');
+      final root = BSON().deserialize(buffer);
+      expect(root['id'], 42);
+    });
+
     test('testSerializeDeserialize', () {
       var bson = BSON();
       var map = {'_id': 5, 'a': 4};

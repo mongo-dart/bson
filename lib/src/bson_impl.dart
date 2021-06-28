@@ -13,6 +13,7 @@ class BSON {
   }
 
   Map<String, dynamic> deserialize(BsonBinary buffer) {
+    buffer.offset = 0;
     if (buffer.byteList.length < 5) {
       throw Exception('corrupt bson message < 5 bytes long');
     }
