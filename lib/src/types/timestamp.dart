@@ -1,52 +1,35 @@
 part of bson;
 
-class Timestamp extends BsonObject {
-  Timestamp([int? _seconds, int? _increment]) {
-    seconds =
-        _seconds ?? (DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt();
+class BsonTimestamp extends BsonObject {
+  BsonTimestamp([Timestamp? _timestamp])
+      : timestamp = _timestamp ??
+            Timestamp((DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt(),
+                Statics.nextIncrement);
 
-    increment = _increment ?? Statics.nextIncrement;
-  }
+  BsonTimestamp.fromBuffer(BsonBinary buffer) : timestamp = extractData(buffer);
 
-  Timestamp.fromBuffer(BsonBinary buffer) {
-    var data = extractData(buffer);
-    seconds = data.seconds;
-    increment = data.increment;
-  }
+  Timestamp timestamp;
 
-  late int seconds;
-  late int increment;
-
-  static _TimestampData extractData(BsonBinary buffer) {
+  static Timestamp extractData(BsonBinary buffer) {
     var _increment = buffer.readInt32();
     var _seconds = buffer.readInt32();
-    return _TimestampData(_increment, _seconds);
+    return Timestamp(_seconds, _increment);
   }
 
   @override
-  Timestamp get value => this;
+  Timestamp get value => timestamp;
   @override
   int get typeByte => bsonDataTimestamp;
   @override
-  String toString() => 'Timestamp($seconds, $increment)';
+  String toString() => '$timestamp';
   @override
   int byteLength() => 8;
   @override
   void packValue(BsonBinary buffer) {
-    buffer.writeInt(increment);
-    buffer.writeInt(seconds);
+    buffer.writeInt(timestamp.increment);
+    buffer.writeInt(timestamp.seconds);
   }
 
   @override
-  void unpackValue(BsonBinary buffer) {
-    increment = buffer.readInt32();
-    seconds = buffer.readInt32();
-  }
-}
-
-class _TimestampData {
-  _TimestampData(this.seconds, this.increment);
-
-  int seconds;
-  int increment;
+  void unpackValue(BsonBinary buffer) => timestamp = extractData(buffer);
 }

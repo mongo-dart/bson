@@ -14,8 +14,8 @@ class Statics {
     return Duration(milliseconds: _stopwatch!.elapsedMilliseconds);
   }
 
-  static int _current_increment = Random().nextInt(0xFFFFFFFF);
-  static int get nextIncrement => _current_increment++;
+  static int _currentIncrement = Random().nextInt(0xFFFFFFFF);
+  static int get nextIncrement => _currentIncrement++;
 
   static int? _requestId;
   // ignore: unused_element
@@ -27,14 +27,14 @@ class Statics {
 
   static List<int>? _maxBits;
   // ignore: unused_element
-  static int MaxBits(int bits) {
+  static int maxBits(int bits) {
     _maxBits ??= List<int>.generate(
         65, (int index) => index == 0 ? 0 : 2 << index - 1,
         growable: false);
     return _maxBits![bits];
   }
 
-  static final int RandomId = Random().nextInt(0xFFFFFFFF);
+  static final int randomId = Random().nextInt(0xFFFFFFFF);
   static final Map<String, List<int>> keys = <String, List<int>>{};
   static List<int> getKeyUtf8(String key) {
     if (!keys.containsKey(key)) {

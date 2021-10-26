@@ -4,30 +4,37 @@ class BsonBinary extends BsonObject {
   static final bool useFixnum = _isIntWorkaroundNeeded();
   static final bufferSize = 256;
   @Deprecated('use "bufferSize"')
+  // ignore: non_constant_identifier_names
   static final BUFFER_SIZE = bufferSize;
 
   static final subtypeBinary = 0;
   @Deprecated('use "subtypeBinary"')
+  // ignore: non_constant_identifier_names
   static final SUBTYPE_DEFAULT = subtypeBinary;
 
   static final subtypeFunction = 1;
   @Deprecated('use "subtypeFunction"')
+  // ignore: non_constant_identifier_names
   static final SUBTYPE_FUNCTION = subtypeFunction;
 
   static final subtypeBinaryOld = 2;
   @Deprecated('use "subtypeBinaryOld"')
+  // ignore: non_constant_identifier_names
   static final SUBTYPE_BYTE_ARRAY = subtypeBinaryOld;
 
   static final subtypeUuidOld = 3;
   @Deprecated('use "subtypeUuidOld"')
+  // ignore: non_constant_identifier_names
   static final SUBTYPE_UUID = subtypeUuidOld;
 
   static final subtypeUuid = 4;
   @Deprecated('use "subtypeUuid"')
+  // ignore: non_constant_identifier_names
   static final SUBTYPE_MD5 = subtypeUuid;
 
   static final subtypeUserDefined = 128;
   @Deprecated('use "subtypeUserDefined"')
+  // ignore: non_constant_identifier_names
   static final SUBTYPE_USER_DEFINED = subtypeUserDefined;
 
   // Use a list as jump-table. It is faster than switch and if.

@@ -254,7 +254,9 @@ class BsonDecimal128 extends BsonObject {
     if (rational.isNegative) {
       highInt |= signMask;
     }
-    return BsonBinary(16)..writeFixInt64(lowInt)..writeFixInt64(highInt);
+    return BsonBinary(16)
+      ..writeFixInt64(lowInt)
+      ..writeFixInt64(highInt);
   }
 
   static int extractExponent(String valueString) {

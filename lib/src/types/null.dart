@@ -5,6 +5,7 @@ class BsonNull extends BsonObject {
   BsonNull.fromBuffer(BsonBinary buffer);
 
   @override
+  // ignore: prefer_void_to_null
   Null get value => null;
   @override
   int byteLength() => 0;

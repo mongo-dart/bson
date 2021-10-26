@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.4
+
+- Switched to Lints from Pedantic
+- MaxBits static variable renamed to maxBits
+- RandomId static variable renamed randomId
+- Fixed a bug in Timestamp class so that, unpacking a buffer, seconds and increment were inverted.
+- Decoupled the original `Timestamp` class into a new `Timestamp` and a bsonData `BsonTimestamp`.
+
 ## 1.0.3
 
 - Removed the wrapper class UuidValue. Now we are using the original class from the Uuid package.

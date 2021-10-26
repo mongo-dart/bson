@@ -2,6 +2,7 @@ library bson;
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:bson/src/classes/timestamp.dart';
 import 'package:bson/src/types/decimal_128.dart';
 import 'package:bson/src/types/uuid.dart';
 import 'package:uuid/uuid.dart';
@@ -12,6 +13,7 @@ import 'src/statics.dart';
 
 export 'src/types/decimal_128.dart';
 export 'src/classes/object_id.dart';
+export 'src/classes/timestamp.dart';
 export 'package:uuid/uuid.dart';
 
 part 'src/bson_type.dart';

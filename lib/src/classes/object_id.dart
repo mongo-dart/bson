@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:bson/src/classes/timestamp.dart';
+
 import '../statics.dart';
 import '../../bson.dart';
 
@@ -41,13 +43,13 @@ class ObjectId {
     }
 
     if (clientMode) {
-      var s = '${getOctet(seconds)}${getOctet(Statics.RandomId)}'
+      var s = '${getOctet(seconds)}${getOctet(Statics.randomId)}'
           '${getOctet(Statics.nextIncrement)}';
       return BsonBinary.fromHexString(s);
     } else {
       return BsonBinary(12)
         ..writeInt(seconds, endianness: Endian.big)
-        ..writeInt(Statics.RandomId)
+        ..writeInt(Statics.randomId)
         ..writeInt(Statics.nextIncrement, endianness: Endian.big);
     }
   }

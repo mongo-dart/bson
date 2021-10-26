@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'bson_binary_test_lib.dart';
 import 'bson_decimal_128_test_lib.dart';
+import 'bson_timestamp_test_lib.dart';
 import 'bson_uuid_test_lib.dart';
 
 void testUint8ListNegativeWrite() {
@@ -130,8 +131,8 @@ void testSerializeDeserialize() {
   expect(5, buffer.offset);
   buffer.offset = 0;
   root = bson.deserialize(buffer);
-  var doc2_a = doc2['a'] as List;
-  expect(doc2_a[2], root['a'][2]);
+  var doc2A = doc2['a'] as List;
+  expect(doc2A[2], root['a'][2]);
 }
 
 void testMakeByteList() {
@@ -376,8 +377,8 @@ void run() {
       expect(5, buffer.offset);
       buffer.offset = 0;
       root = bson.deserialize(buffer);
-      var doc2_a = doc2['a'] as List;
-      expect(doc2_a[2], root['a'][2]);
+      var doc2A = doc2['a'] as List;
+      expect(doc2A[2], root['a'][2]);
     });
 
     group('Full Serialize Deserialize', () {
@@ -422,11 +423,11 @@ void run() {
         expect(5, buffer.offset);
         buffer.offset = 0;
         var root = bson.deserialize(buffer);
-        var doc2_a = doc2['list'] as List;
-        expect(doc2_a[2], root['list'][2]);
+        var doc2A = doc2['list'] as List;
+        expect(doc2A[2], root['list'][2]);
       });
       test('Null', () {
-        var nullValue;
+        int? nullValue;
         var map = {'_id': 5, 'nullValue': nullValue};
         var buffer = bson.serialize(map);
         expect(buffer.hexString,
@@ -467,4 +468,5 @@ void run() {
   runBinary();
   runDecimal128();
   runUuid();
+  runTimestamp();
 }

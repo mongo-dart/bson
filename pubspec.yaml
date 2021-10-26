@@ -1,5 +1,5 @@
 name: bson
-version: 1.0.3
+version: 1.0.4
 
 description: Bson library for Dart programming language. BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents.
 homepage: https://github.com/mongo-dart/bson
@@ -14,4 +14,5 @@ dependencies:
 
 dev_dependencies:
   test: ^1.16.4
-  pedantic: ^1.10.0
+  lints: ^1.0.0
+
