@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0
+ 
+ - Upgraded rational dependency from ^1.0.0 to ^2.0.0
+
 ## 1.0.4
 
 - Switched to Lints from Pedantic

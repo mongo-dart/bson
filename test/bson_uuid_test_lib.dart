@@ -1,7 +1,6 @@
 import 'package:bson/src/types/uuid.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';
-import 'package:uuid/uuid.dart';
 
 void runUuid() {
   group('UUID:', () {

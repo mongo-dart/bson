@@ -3,7 +3,6 @@ import 'package:rational/rational.dart';
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
 import 'bson_binary_test_lib.dart';

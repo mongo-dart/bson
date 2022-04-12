@@ -241,7 +241,7 @@ class BsonDecimal128 extends BsonObject {
     // encoding as case 1 number (first bit of the combination field not '11')
     // because the minimum value of the case 2 (2^114) is higher than
     // the max allowed value (10^34-1)
-    var highSignificand = significand ~/ maxUInt64;
+    var highSignificand = significand._intDivision(maxUInt64);
     var lowSignificand = significand - (highSignificand * maxUInt64);
     // Needed because we are using Int instead of UInt
     if (lowSignificand >= maxInt64) {
@@ -326,6 +326,39 @@ class BsonDecimal128 extends BsonObject {
 extension RationalExtension on Rational {
   // If merged in the original source it is no more needed
   static final _r10 = Rational.fromInt(10);
+  static final _r0 = Rational.fromInt(0);
+  static final _r5 = Rational.fromInt(5);
+  static final _i0 = BigInt.zero;
+  static final _i1 = BigInt.one;
+  static final _i2 = BigInt.two;
+  static final _i5 = BigInt.from(5);
+  static final _i10 = BigInt.from(10);
+
+  /// Converts a [num] to a string representation with [precision] significant
+  /// digits.
+  String toStringAsPrecision(int precision) {
+    assert(precision > 0);
+
+    if (this == _r0) {
+      return precision == 1 ? '0' : '0.'.padRight(1 + precision, '0');
+    }
+
+    final limit = _r10.pow(precision);
+
+    var shift = _r1;
+    var absValue = abs();
+    var pad = 0;
+    while (absValue * shift < limit) {
+      pad++;
+      shift *= _r10;
+    }
+    while (absValue * shift >= limit) {
+      pad--;
+      shift /= _r10;
+    }
+    final value = (this * shift)._round() / shift;
+    return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
+  }
 
   /// Provides a faster approach than the orginal method
   String toStringAsPrecisionFast(int requiredPrecision) {
@@ -348,7 +381,7 @@ extension RationalExtension on Rational {
       /// the length. Maybe that there is a cleaner way,
       var pwr = requiredPrecision + denominator.toRadixString(10).length;
       var shifter = _r10.pow(pwr);
-      var rational = (this * shifter).round() / shifter;
+      var rational = (this * shifter)._round() / shifter;
       return rational.toStringAsPrecisionFast(requiredPrecision);
     }
 
@@ -392,7 +425,7 @@ extension RationalExtension on Rational {
       /// here we shift the number and round, so that we loose the non required
       /// precision digits (if any), and then we move back the digits in the
       /// opposite direction.
-      value = (this * coefficient).round() / coefficient;
+      value = (this * coefficient)._round() / coefficient;
     }
 
     return shiftExponent <= 0
@@ -403,4 +436,98 @@ extension RationalExtension on Rational {
   /// Allows to calculate the power of numbers even if the exponent is negative
   Rational power(int exponent) =>
       exponent.isNegative ? inverse.pow(-exponent) : pow(exponent);
+
+  bool get hasFinitePrecision {
+    // the denominator should only be a product of powers of 2 and 5
+    var den = denominator;
+    while (den % _i5 == _i0) {
+      den = den ~/ _i5;
+    }
+    while (den % _i2 == _i0) {
+      den = den ~/ _i2;
+    }
+    return den == _i1;
+  }
+
+  /// The precision of this [num].
+  ///
+  /// The sum of the number of digits before and after the decimal point.
+  ///
+  /// **WARNING for dart2js** : It can give bad result for large number.
+  ///
+  /// Throws [StateError] if the precision is infinite, i.e. when
+  /// [hasFinitePrecision] is `false`.
+  int get precision {
+    if (!hasFinitePrecision) {
+      throw StateError('This number has an infinite precision: $this');
+    }
+    var x = numerator;
+    while (x % denominator != _i0) {
+      x *= _i10;
+    }
+    x = x ~/ denominator;
+    return x.abs().toString().length;
+  }
+
+  /// The scale of this [num].
+  ///
+  /// The number of digits after the decimal point.
+  ///
+  /// **WARNING for dart2js** : It can give bad result for large number.
+  ///
+  /// Throws [StateError] if the scale is infinite, i.e. when
+  /// [hasFinitePrecision] is `false`.
+  int get scale {
+    if (!hasFinitePrecision) {
+      throw StateError('This number has an infinite precision: $this');
+    }
+    var i = 0;
+    var x = numerator;
+    while (x % denominator != _i0) {
+      i++;
+      x *= _i10;
+    }
+    return i;
+  }
+
+  /// Converts a [num] to a string representation with [fractionDigits] digits
+  /// after the decimal point.
+  String toStringAsFixed(int fractionDigits) {
+    if (fractionDigits == 0) {
+      return round().toString();
+    } else {
+      var mul = _i1;
+      for (var i = 0; i < fractionDigits; i++) {
+        mul *= _i10;
+      }
+      final mulRat = Rational(mul);
+      final lessThanOne = abs() < _r1;
+      final tmp = (lessThanOne ? (abs() + _r1) : abs()) * mulRat;
+      final tmpRound = tmp._round();
+      final intPart = (lessThanOne
+              ? ((tmpRound._intDivision(mulRat)) - _r1)
+              : (tmpRound._intDivision(mulRat)))
+          .toBigInt();
+      final decimalPart =
+          tmpRound.toString().substring(intPart.toString().length);
+      return '${isNegative ? '-' : ''}$intPart.$decimalPart';
+    }
+  }
+
+  bool get isNegative => numerator < _i0;
+
+  /// Returns the integer value closest to this [num].
+  ///
+  /// Rounds away from zero when there is no closest integer:
+  /// [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
+  Rational _round() {
+    final abs = this.abs();
+    final absBy10 = abs * _r10;
+    var r = abs._truncate();
+    if (absBy10 % _r10 >= _r5) r += _r1;
+    return isNegative ? -r : r;
+  }
+
+  Rational _truncate() => Rational(numerator ~/ denominator, _i1);
+  Rational _intDivision(Rational other) => (this / other)._truncate();
 }
