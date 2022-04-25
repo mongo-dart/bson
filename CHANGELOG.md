@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0-1.0.beta
+
+Moving to the most recent version of the `Rational` class, a **Breaking change** had been introduced. We have decided to substitute the `Rational` class with the `Decimal` one, because the latter, that it is a wrapper around the former, contains more user friendly methods. You can always get a `Rational` instance, if needed, calling the `toRational()` method of the`Decimal` class.
+
 ## 1.0.4
 
 - Switched to Lints from Pedantic

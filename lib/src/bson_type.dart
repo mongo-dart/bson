@@ -1,114 +1,99 @@
 part of bson;
+// ignore_for_file: constant_identifier_names
 
 /// Number BSON Type
 const bsonDataNumber = 1;
 @Deprecated('Use bsonDataNumber instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_NUMBER = bsonDataNumber;
 
 /// String BSON Type
 const bsonDataString = 2;
 @Deprecated('Use bsonDataString instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_STRING = bsonDataString;
 
 /// Object BSON Type
 const bsonDataObject = 3;
 @Deprecated('Use bsonDataObject instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_OBJECT = bsonDataObject;
 
 /// Array BSON Type
 const bsonDataArray = 4;
 @Deprecated('Use bsonDataArray instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_ARRAY = bsonDataArray;
 
 /// BsonBinary BSON Type
 const bsonDataBinary = 5;
 @Deprecated('Use bsonDataBinary instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_BINARY = bsonDataBinary;
 
 /// undefined BSON Type
 const bsonDataUndefined = 6;
 @Deprecated('Use bsonDataUndefined instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_UNDEFINED = bsonDataUndefined;
 
 /// ObjectID BSON Type
 const bsonDataObjectId = 7;
 @Deprecated('Use bsonDataObjectId instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_OID = bsonDataObjectId;
 
 /// Bool BSON Type
 const bsonDataBool = 8;
 @Deprecated('Use bsonDataBool instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_BOOLEAN = bsonDataBool;
 
 /// Date BSON Type
 const bsonDataDate = 9;
 @Deprecated('Use bsonDataDate instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_DATE = bsonDataDate;
 
 /// null BSON Type
 const bsonDataNull = 10;
 @Deprecated('Use bsonDataNull instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_NULL = bsonDataNull;
 
 /// RegExp BSON Type
 const bsonDataRegExp = 11;
 @Deprecated('Use bsonDataRegExp instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_REGEXP = bsonDataRegExp;
 
 /// DBPointer BSON Type
 const bsonDataDbPointer = 12;
 @Deprecated('Use bsonDataDbPointer instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_DBPOINTER = bsonDataDbPointer;
 
 /// 32 bit Integer BSON Type
 const bsonDataInt = 16;
 @Deprecated('Use bsonDataInt instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_INT = bsonDataInt;
 
 /// @classconstant BSON_DATA_LONG
 const bsonDataLong = 18;
 @Deprecated('Use bsonDataLong instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_LONG = bsonDataLong;
 
 /// Code BSON Type
 const bsonDataCode = 13;
 @Deprecated('Use bsonDataCode instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_CODE = bsonDataCode;
 
 /// Timestamp BSON Type
 const bsonDataTimestamp = 17;
 @Deprecated('Use bsonDataTimestamp instead.')
-// ignore: constant_identifier_names
 // ignore: unused_element
 const _BSON_DATA_TIMESTAMP = bsonDataTimestamp;
 
@@ -147,7 +132,7 @@ abstract class BsonObject {
       return BsonDate(value);
     } else if (value == true || value == false) {
       return BsonBoolean(value);
-    } else if (value is Rational) {
+    } else if (value is Decimal) {
       return BsonDecimal128(value);
     } else if (value is UuidValue) {
       return BsonUuid(value);

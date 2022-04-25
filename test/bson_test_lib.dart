@@ -1,9 +1,8 @@
 import 'package:bson/src/types/uuid.dart';
-import 'package:rational/rational.dart';
+import 'package:decimal/decimal.dart';
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
 import 'bson_binary_test_lib.dart';
@@ -56,7 +55,7 @@ void typeTest() {
   expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
   expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
   expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
-  expect(BsonObject.bsonObjectFrom(Rational.fromInt(1)) is Rational, isTrue);
+  expect(BsonObject.bsonObjectFrom(Decimal.fromInt(1)) is Decimal, isTrue);
   expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is UuidValue, isTrue);
 }
 
@@ -268,7 +267,7 @@ void run() {
       expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
       expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
       expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
-      expect(BsonObject.bsonObjectFrom(Rational.fromInt(1)) is BsonDecimal128,
+      expect(BsonObject.bsonObjectFrom(Decimal.fromInt(1)) is BsonDecimal128,
           isTrue);
       expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is BsonUuid, isTrue);
     });
@@ -437,9 +436,9 @@ void run() {
         expect(result['nullValue'], isNull);
         expect(result['_id'], 5);
       });
-      test('Rational', () {
-        var rational = Rational.fromInt(4);
-        var map = {'_id': 5, 'rational': rational};
+      test('Decimal', () {
+        var decimal = Decimal.fromInt(4);
+        var map = {'_id': 5, 'rational': decimal};
         var buffer = bson.serialize(map);
         expect(
             buffer.hexString,
@@ -447,7 +446,7 @@ void run() {
             '74696f6e616c000400000000000000000000000000403000');
         buffer.offset = 0;
         Map result = bson.deserialize(buffer);
-        expect(result['rational'], rational);
+        expect(result['rational'], decimal);
         expect(result['_id'], 5);
       });
       test('Uuid', () {

@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:bson/src/classes/timestamp.dart';
-
 import '../statics.dart';
 import '../../bson.dart';
 

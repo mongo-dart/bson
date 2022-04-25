@@ -8,7 +8,7 @@ import 'package:bson/src/types/uuid.dart';
 import 'package:uuid/uuid.dart';
 import 'src/classes/object_id.dart';
 import 'package:fixnum/fixnum.dart';
-import 'package:rational/rational.dart';
+import 'package:decimal/decimal.dart';
 import 'src/statics.dart';
 
 export 'src/types/decimal_128.dart';
