@@ -91,17 +91,17 @@ class BsonDecimal128 extends BsonObject {
   static BsonBinary extractData(BsonBinary buffer) {
     _checkBufferCapacity(buffer);
     var content = buffer.byteList.sublist(buffer.offset, buffer.offset + 16);
-    var _bin = BsonBinary.from(content);
+    var bin = BsonBinary.from(content);
     buffer.offset += 16;
-    return _bin;
+    return bin;
   }
 
   /// we check that the buffer received, starting from the offset,
   /// contains at least 16 bytes
-  static void _checkBufferCapacity(BsonBinary _buffer) {
-    if (_buffer.byteList.length - 16 < _buffer.offset) {
+  static void _checkBufferCapacity(BsonBinary buffer) {
+    if (buffer.byteList.length - 16 < buffer.offset) {
       throw ArgumentError('The buffer received has a remaining capacity of '
-          '${_buffer.byteList.length - _buffer.offset} bytes while at least 16'
+          '${buffer.byteList.length - buffer.offset} bytes while at least 16'
           'are needed');
     }
   }
@@ -132,10 +132,10 @@ class BsonDecimal128 extends BsonObject {
 
   String toJson() => bin.hexString;
 
-  void _checkBinaryLength(BsonBinary _binary) {
-    if (_binary.hexString.length != 32) {
+  void _checkBinaryLength(BsonBinary binary) {
+    if (binary.hexString.length != 32) {
       throw ArgumentError('The BsonBinary received is '
-          '${_binary.hexString.length ~/ 2} bytes long instead of 16');
+          '${binary.hexString.length ~/ 2} bytes long instead of 16');
     }
   }
 

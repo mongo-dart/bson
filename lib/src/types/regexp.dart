@@ -30,10 +30,10 @@ class BsonRegexp extends BsonObject {
   late BsonCString bsonPattern;
   late BsonCString bsonOptions;
 
-  static _BsonRegexpData extractData(BsonBinary buffer) {
-    var _pattern = buffer.readCString();
-    var _options = buffer.readCString();
-    return _BsonRegexpData(_pattern, _options);
+  static BsonRegexpData extractData(BsonBinary buffer) {
+    var pattern = buffer.readCString();
+    var options = buffer.readCString();
+    return BsonRegexpData(pattern, options);
   }
 
   static String createOptionsString(
@@ -86,8 +86,8 @@ class BsonRegexp extends BsonObject {
   Map<String, Object> toJson() => {'\$regex': pattern, '\$oid': options};
 }
 
-class _BsonRegexpData {
-  _BsonRegexpData(this.pattern, this.options);
+class BsonRegexpData {
+  BsonRegexpData(this.pattern, this.options);
 
   String pattern;
   String options;

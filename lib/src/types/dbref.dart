@@ -16,11 +16,11 @@ class DbRef extends BsonObject {
   late BsonObjectId bsonObjectId;
   late BsonString bsonCollection;
 
-  static _DbRefData extractData(BsonBinary buffer) {
-    var _bsonCollection = BsonString.fromBuffer(buffer);
-    var _collection = _bsonCollection.data;
-    var _bsonObjectId = BsonObjectId.fromBuffer(buffer);
-    return _DbRefData(_collection, _bsonObjectId, _bsonCollection);
+  static DbRefData extractData(BsonBinary buffer) {
+    var bsonCollection = BsonString.fromBuffer(buffer);
+    var collection = bsonCollection.data;
+    var bsonObjectId = BsonObjectId.fromBuffer(buffer);
+    return DbRefData(collection, bsonObjectId, bsonCollection);
   }
 
   @override
@@ -55,8 +55,8 @@ class DbRef extends BsonObject {
       bsonObjectId.toHexString() == other.bsonObjectId.toHexString();
 }
 
-class _DbRefData {
-  _DbRefData(this.collection, this.bsonObjectId, this.bsonCollection);
+class DbRefData {
+  DbRefData(this.collection, this.bsonObjectId, this.bsonCollection);
 
   final String collection;
   final BsonObjectId bsonObjectId;

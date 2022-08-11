@@ -15,11 +15,11 @@ class DBPointer extends BsonObject {
   late BsonObjectId bsonObjectId;
   late BsonString bsonCollection;
 
-  static _DBPointerData extractData(BsonBinary buffer) {
-    var _bsonCollection = BsonString.fromBuffer(buffer);
-    var _collection = _bsonCollection.data;
-    var _bsonObjectId = BsonObjectId.fromBuffer(buffer);
-    return _DBPointerData(_collection, _bsonObjectId, _bsonCollection);
+  static DBPointerData extractData(BsonBinary buffer) {
+    var bsonCollection = BsonString.fromBuffer(buffer);
+    var collection = bsonCollection.data;
+    var bsonObjectId = BsonObjectId.fromBuffer(buffer);
+    return DBPointerData(collection, bsonObjectId, bsonCollection);
   }
 
   @override
@@ -54,8 +54,8 @@ class DBPointer extends BsonObject {
       bsonObjectId.toHexString() == other.bsonObjectId.toHexString();
 }
 
-class _DBPointerData {
-  _DBPointerData(this.collection, this.id, this.bsonCollection);
+class DBPointerData {
+  DBPointerData(this.collection, this.id, this.bsonCollection);
 
   final String collection;
   final BsonObjectId id;

@@ -114,13 +114,13 @@ class BsonBinary extends BsonObject {
 
   int offset = 0;
 
-  static _BsonBinaryData extractData(BsonBinary buffer) {
+  static BsonBinaryData extractData(BsonBinary buffer) {
     var size = buffer.readInt32();
     var locSubType = buffer.readByte();
     var locByteList = Uint8List(size);
     locByteList.setRange(0, size, buffer.byteList, buffer.offset);
     buffer.offset += size;
-    return _BsonBinaryData(locByteList, locSubType);
+    return BsonBinaryData(locByteList, locSubType);
   }
 
   Uint8List get byteList => _byteList;
@@ -341,8 +341,8 @@ bool _isIntWorkaroundNeeded() {
   return newInt.toString() == n.toString();
 }
 
-class _BsonBinaryData {
-  _BsonBinaryData(this.byteList, this.subType);
+class BsonBinaryData {
+  BsonBinaryData(this.byteList, this.subType);
 
   final Uint8List byteList;
   final int subType;

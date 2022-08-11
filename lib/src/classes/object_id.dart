@@ -25,10 +25,10 @@ class ObjectId {
   static ObjectId parse(String hexString) => ObjectId.fromHexString(hexString);
 
   static BsonBinary extractData(BsonBinary buffer) {
-    var _id = BsonBinary.from(
+    var id = BsonBinary.from(
         Uint8List(12)..setRange(0, 12, buffer.byteList, buffer.offset));
     buffer.offset += 12;
-    return _id;
+    return id;
   }
 
   static BsonBinary createId(int seconds, bool clientMode) {

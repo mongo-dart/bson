@@ -1,8 +1,8 @@
 part of bson;
 
 class BsonTimestamp extends BsonObject {
-  BsonTimestamp([Timestamp? _timestamp])
-      : timestamp = _timestamp ??
+  BsonTimestamp([Timestamp? parmTimestamp])
+      : timestamp = parmTimestamp ??
             Timestamp((DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt(),
                 Statics.nextIncrement);
 
@@ -11,9 +11,9 @@ class BsonTimestamp extends BsonObject {
   Timestamp timestamp;
 
   static Timestamp extractData(BsonBinary buffer) {
-    var _increment = buffer.readInt32();
-    var _seconds = buffer.readInt32();
-    return Timestamp(_seconds, _increment);
+    var increment = buffer.readInt32();
+    var seconds = buffer.readInt32();
+    return Timestamp(seconds, increment);
   }
 
   @override

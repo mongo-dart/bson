@@ -9,8 +9,7 @@ void runDecimal128() {
     group('Utils', () {
       test('Detect Exponent simple', () {
         expect(
-            BsonDecimal128.extractExponent(
-                Decimal.one.toStringAsPrecision(34)),
+            BsonDecimal128.extractExponent(Decimal.one.toStringAsPrecision(34)),
             0);
         expect(
             BsonDecimal128.extractExponent(
@@ -110,9 +109,7 @@ void runDecimal128() {
       });
       test('Long number', () {
         expect(
-            BsonDecimal128(Decimal.parse('36890000000000000011'))
-                .bin
-                .hexString,
+            BsonDecimal128(Decimal.parse('36890000000000000011')).bin.hexString,
             '0b0029648c9bf3ff0100000000004030');
       });
       test('Smaller', () {

@@ -1,7 +1,7 @@
 part of bson;
 
 class BsonObjectId extends BsonObject {
-  BsonObjectId(ObjectId _id) : id = createBsonBinaryFromObjectId(_id);
+  BsonObjectId(ObjectId parmId) : id = createBsonBinaryFromObjectId(parmId);
 
   BsonObjectId.fromBsonBinary(this.id);
 
@@ -10,13 +10,13 @@ class BsonObjectId extends BsonObject {
   BsonBinary id;
 
   static BsonBinary extractData(BsonBinary buffer) {
-    var _id = BsonBinary.from(
+    var id = BsonBinary.from(
         Uint8List(12)..setRange(0, 12, buffer.byteList, buffer.offset));
     buffer.offset += 12;
-    return _id;
+    return id;
   }
 
-  static BsonBinary createBsonBinaryFromObjectId(ObjectId _id) => _id.id;
+  static BsonBinary createBsonBinaryFromObjectId(ObjectId parmId) => parmId.id;
 
   @override
   int get hashCode => id.hexString.hashCode;
