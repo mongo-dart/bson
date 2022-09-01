@@ -318,7 +318,7 @@ void run() {
       expect(p2.bsonObjectId.toHexString(), p1.bsonObjectId.toHexString());
     });
     test('ObjectId to and from JSon', () {
-      Object? _toEncodable(dynamic obj) {
+      Object? toEncodable(dynamic obj) {
         if (obj is DateTime) {
           return obj.toString();
         }
@@ -328,7 +328,7 @@ void run() {
       var id = ObjectId();
       var date = DateTime.utc(2015, 1, 1);
       var obj = {'_id': id, 'intFld': 20, 'dateFld': date};
-      var jsObj = json.encode(obj, toEncodable: _toEncodable);
+      var jsObj = json.encode(obj, toEncodable: toEncodable);
       var outObj = json.decode(jsObj);
       expect(outObj['intFld'], 20);
       expect(outObj['_id'], id.toHexString());

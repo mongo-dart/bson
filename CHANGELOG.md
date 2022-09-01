@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- Lint fix
+
 ## 2.0.0
 
 - Lints updated
