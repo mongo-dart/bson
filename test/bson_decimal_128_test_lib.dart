@@ -20,18 +20,18 @@ void runDecimal128() {
       test('Detect Exponent decimal', () {
         var dec = Decimal.parse('0.45');
         expect(BsonDecimal128.extractExponent(dec.toStringAsPrecision(34)), -2);
-        expect(dec, Decimal.parse('4.5') * ten.pow(-1));
+        expect(dec, Decimal.parse('4.5') * ten.pow(-1).toDecimal());
         dec = Decimal.parse('0.00045');
         expect(BsonDecimal128.extractExponent(dec.toStringAsPrecision(34)), -5);
-        expect(dec, Decimal.parse('45') * ten.pow(-5));
+        expect(dec, Decimal.parse('45') * ten.pow(-5).toDecimal());
       });
       test('Detect Exponent high numbers', () {
         var dec = Decimal.parse('1000');
         expect(BsonDecimal128.extractExponent(dec.toStringAsPrecision(34)), 3);
-        expect(dec, Decimal.one * ten.pow(3));
+        expect(dec, Decimal.one * ten.pow(3).toDecimal());
         dec = Decimal.parse('27564578390000000');
         expect(BsonDecimal128.extractExponent(dec.toStringAsPrecision(34)), 7);
-        expect(dec, Decimal.parse('2756457839') * ten.pow(7));
+        expect(dec, Decimal.parse('2756457839') * ten.pow(7).toDecimal());
       });
 
       test('Detect Significand', () {
@@ -48,24 +48,26 @@ void runDecimal128() {
         var dec = Decimal.parse('0.45');
         expect(BsonDecimal128.extractSignificand(dec.toStringAsPrecision(34)),
             Decimal.fromInt(45));
-        expect(dec, Decimal.fromInt(45) * ten.pow(-1 + 1 - ('45'.length)));
+        expect(dec,
+            Decimal.fromInt(45) * ten.pow(-1 + 1 - ('45'.length)).toDecimal());
         dec = Decimal.parse('0.00045');
         expect(BsonDecimal128.extractSignificand(dec.toStringAsPrecision(34)),
             Decimal.fromInt(45));
-        expect(dec, Decimal.fromInt(45) * ten.pow(-4 + 1 - ('45'.length)));
+        expect(dec,
+            Decimal.fromInt(45) * ten.pow(-4 + 1 - ('45'.length)).toDecimal());
       });
       test('Detect Significand high numbers', () {
         var dec = Decimal.parse('1000');
         expect(BsonDecimal128.extractSignificand(dec.toStringAsPrecision(34)),
             Decimal.one);
-        expect(dec, Decimal.one * ten.pow(3 + 1 - ('1'.length)));
+        expect(dec, Decimal.one * ten.pow(3 + 1 - ('1'.length)).toDecimal());
         dec = Decimal.parse('27564578390000000');
         expect(BsonDecimal128.extractSignificand(dec.toStringAsPrecision(34)),
             Decimal.parse('2756457839'));
         expect(
             dec,
             Decimal.parse('2756457839') *
-                ten.pow(16 + 1 - ('2756457839'.length)));
+                ten.pow(16 + 1 - ('2756457839'.length)).toDecimal());
       });
       test('Compare', () {
         expect(

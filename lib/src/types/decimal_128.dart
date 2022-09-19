@@ -33,10 +33,11 @@ final significand2Mask = Int64.parseHex('00007FFFFFFFFFFF');
 final significand2impliedMask = Int64.parseHex('2000000000000');
 
 final Decimal infinityValue =
-    Decimal.parse('10000000000000000000000000000000000').pow(10000);
-final Decimal maxSignificand = Decimal.fromInt(10).pow(34) - Decimal.one;
-final Decimal maxUInt64 = Decimal.fromInt(2).pow(64);
-final Decimal maxInt64 = Decimal.fromInt(2).pow(63);
+    Decimal.parse('10000000000000000000000000000000000').pow(10000).toDecimal();
+final Decimal maxSignificand =
+    Decimal.fromInt(10).pow(34).toDecimal() - Decimal.one;
+final Decimal maxUInt64 = Decimal.fromInt(2).pow(64).toDecimal();
+final Decimal maxInt64 = Decimal.fromInt(2).pow(63).toDecimal();
 final Decimal _d10 = Decimal.fromInt(10);
 final Decimal _d1 = Decimal.fromInt(1);
 
@@ -195,7 +196,7 @@ class BsonDecimal128 extends BsonObject {
       significand = -significand;
     }
 
-    return significand * _d10.pow(exponent.toInt());
+    return significand * _d10.pow(exponent.toInt()).toDecimal();
   }
 
   static BsonBinary convertDecimalToBinary(Decimal? decimal) {

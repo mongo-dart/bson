@@ -121,7 +121,7 @@ extension DecimalExt on Decimal {
       /// the length. Maybe that there is a cleaner way,
       var pwr =
           requiredPrecision + toRational().denominator.toRadixString(10).length;
-      var shifter = Decimal.ten.pow(pwr);
+      var shifter = Decimal.ten.pow(pwr).toDecimal();
       Decimal decimal = ((this * shifter).round() / shifter).toDecimal();
       return decimal.toStringAsPrecisionFast(requiredPrecision);
     }
@@ -161,7 +161,7 @@ extension DecimalExt on Decimal {
     } else {
       /// given the exponent, we calculate the value to be used in order
       /// to shift our number
-      var coefficient = Decimal.ten.pow(shiftExponent);
+      var coefficient = Decimal.ten.pow(shiftExponent).toDecimal();
 
       /// here we shift the number and round, so that we loose the non required
       /// precision digits (if any), and then we move back the digits in the
