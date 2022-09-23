@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   fixnum: ^1.0.0
-  decimal: ^2.0.0
+  decimal: '>=2.0.0 <2.3.0'
   rational: ^2.2.0
   uuid: ^3.0.0
 
