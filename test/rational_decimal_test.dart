@@ -16,7 +16,7 @@ void main() {
           initTime.millisecondsSinceEpoch;
 
       expect(rResult, dResult);
-      expect(dMilli < 100, isTrue);
+      expect(dMilli, lessThan(100));
     });
 
     test('Scale', () {
@@ -25,7 +25,7 @@ void main() {
       var rMilli = DateTime.now().millisecondsSinceEpoch -
           initTime.millisecondsSinceEpoch;
       expect(rResult, expectedScale);
-      expect(rMilli < 100, isTrue);
+      expect(rMilli, lessThan(100));
     });
 
     test('Precision', () {
@@ -34,7 +34,7 @@ void main() {
       var dMilli = DateTime.now().millisecondsSinceEpoch -
           initTime.millisecondsSinceEpoch;
       expect(dResult, expectedPrecision);
-      expect(dMilli < 100, isTrue);
+      expect(dMilli, lessThan(100));
     });
 
     // todo
@@ -44,7 +44,7 @@ void main() {
       var dMilli = DateTime.now().millisecondsSinceEpoch -
           initTime.millisecondsSinceEpoch;
       expect(dResult, expectedSignificand);
-      expect(dMilli < 100, isTrue);
+      expect(dMilli, lessThan(100));
     });
     test('To String as Precision', () {
       var initTime = DateTime.now();
