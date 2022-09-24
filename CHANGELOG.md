@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.1.0
+## 3.0.0
 
-- Reorganization and adoption of Decimal 2.3.0
+- Reorganization and adoption of Decimal 2.3.0 that contains potential **breaking changes**
 
 ## 2.0.2
 
