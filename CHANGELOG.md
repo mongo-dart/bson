@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Reorganization and adoption of Decimal 2.3.0
+
 ## 2.0.2
 
 - Temporary fix for breaking change in Decimal 2.3.0

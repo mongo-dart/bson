@@ -1,6 +1,7 @@
-import 'package:bson/src/extension/decimal_extension.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:packages_extensions/decimal_extension.dart';
+import 'package:rational/rational.dart';
 
 import '../../bson.dart';
 
@@ -33,12 +34,14 @@ final significand2Mask = Int64.parseHex('00007FFFFFFFFFFF');
 final significand2impliedMask = Int64.parseHex('2000000000000');
 
 final Decimal infinityValue =
-    Decimal.parse('10000000000000000000000000000000000').pow(10000);
-final Decimal maxSignificand = Decimal.fromInt(10).pow(34) - Decimal.one;
-final Decimal maxUInt64 = Decimal.fromInt(2).pow(64);
-final Decimal maxInt64 = Decimal.fromInt(2).pow(63);
+    Rational.parse('10000000000000000000000000000000000')
+        .pow(10000)
+        .toDecimal();
+final Decimal maxSignificand =
+    (Rational.fromInt(10).pow(34) - Rational.one).toDecimal();
+final Decimal maxUInt64 = Rational.fromInt(2).pow(64).toDecimal();
+final Decimal maxInt64 = Rational.fromInt(2).pow(63).toDecimal();
 final Decimal _d10 = Decimal.fromInt(10);
-final Decimal _d1 = Decimal.fromInt(1);
 
 final Int64 maxExponent = Int64(12287);
 
@@ -195,7 +198,7 @@ class BsonDecimal128 extends BsonObject {
       significand = -significand;
     }
 
-    return significand * _d10.pow(exponent.toInt());
+    return significand * _d10.pow(exponent.toInt()).toDecimal();
   }
 
   static BsonBinary convertDecimalToBinary(Decimal? decimal) {
@@ -210,22 +213,17 @@ class BsonDecimal128 extends BsonObject {
       return BsonBinary.fromHexString('000000000000000000000000000000f8');
     } else if (decimal == Decimal.zero) {
       return BsonBinary.fromHexString('00000000000000000000000000004030');
-    } else if (decimal.hasFinitePrecision &&
+    } else if (
         // if bigger than one (i.e at least one integer digit)
         // we could have a lot of unnecessary trailing zeros calculated
         // in the precision.
-        decimal < _d1 &&
-        decimal.significandLength > 34) {
+        decimal < Decimal.one && decimal.significandLength > 34) {
       // Return zero
       return BsonBinary.fromHexString('00000000000000000000000000004030');
     }
 
-    String res;
-    if (decimal.hasFinitePrecision) {
-      res = decimal.toStringAsFixed(decimal.scaleExt);
-    } else {
-      res = decimal.toStringAsPrecisionFast(34);
-    }
+    String res = decimal.toStringAsFixed(decimal.scaleFast);
+
     var exponent = extractExponent(res);
     var significand = extractSignificand(res);
 
