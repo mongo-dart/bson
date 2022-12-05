@@ -15,7 +15,7 @@ class ObjectId {
   ObjectId.fromBuffer(BsonBinary buffer) : _id = extractData(buffer);
 
   factory ObjectId.fromHexString(String hexString) {
-    if (!charMatcherRegExp.hasMatch(hexString)) {
+    if (!isValidHexId(hexString)) {
       throw ArgumentError(
           'Expected hexadecimal string with length of 24, got $hexString');
     }
@@ -23,6 +23,11 @@ class ObjectId {
   }
 
   static ObjectId parse(String hexString) => ObjectId.fromHexString(hexString);
+  static ObjectId? tryParse(String hexString) =>
+      isValidHexId(hexString) ? parse(hexString) : null;
+
+  static bool isValidHexId(String hexString) =>
+      charMatcherRegExp.hasMatch(hexString);
 
   static BsonBinary extractData(BsonBinary buffer) {
     var id = BsonBinary.from(

@@ -10,6 +10,8 @@ import 'bson_decimal_128_test_lib.dart';
 import 'bson_timestamp_test_lib.dart';
 import 'bson_uuid_test_lib.dart';
 
+final Matcher throwsArgumentError = throwsA(TypeMatcher<ArgumentError>());
+
 void testUint8ListNegativeWrite() {
   var bl = Uint8List(4);
   var ba = ByteData.view(bl.buffer);
@@ -296,6 +298,7 @@ void run() {
       var oid2 = ObjectId.fromHexString(oid1.toHexString());
       //oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
+      expect(ObjectId.isValidHexId(oid1.toHexString()), isTrue);
       var b1 = BSON().serialize({'id': oid1});
       var b2 = BSON().serialize({'id': oid2});
       b1.rewind();
@@ -334,7 +337,19 @@ void run() {
       expect(outObj['_id'], id.toHexString());
       expect(outObj['dateFld'], date.toString());
     });
+
+    test('Parsing', () {
+      var wrongString = 'aaab0045564gf';
+      var correctHexId = ObjectId().toHexString();
+      expect(ObjectId.isValidHexId(wrongString), isFalse);
+      expect(ObjectId.tryParse(wrongString), isNull);
+      expect(() => ObjectId.parse(wrongString), throwsArgumentError);
+      expect(ObjectId.isValidHexId(correctHexId), isTrue);
+      expect(ObjectId.parse(correctHexId).toHexString(), correctHexId);
+      expect(ObjectId.tryParse(correctHexId)?.toHexString(), correctHexId);
+    });
   });
+
   group('BsonSerialization:', () {
     test('testSimpleSerializeDeserialize', () {
       final buffer = BSON().serialize({'id': 42});

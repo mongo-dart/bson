@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.1
+
+- Added `isValidHexId()` to ObjectId class
+- Added `TryParse()` to ObjectId class
+
 ## 3.0.0
 
 - Reorganization and adoption of Decimal 2.3.0 that contains potential **breaking changes**
