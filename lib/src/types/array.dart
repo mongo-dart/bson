@@ -46,7 +46,4 @@ class BsonArray extends BsonObject {
     }
     buffer.writeByte(0);
   }
-
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

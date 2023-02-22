@@ -16,6 +16,4 @@ class BsonBoolean extends BsonObject {
   int get typeByte => bsonDataBool;
   @override
   void packValue(BsonBinary buffer) => buffer.writeByte(data ? 1 : 0);
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

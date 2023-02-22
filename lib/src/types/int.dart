@@ -17,26 +17,22 @@ class BsonInt extends BsonObject {
   int get typeByte => bsonDataInt;
   @override
   void packValue(BsonBinary buffer) => buffer.writeInt(data);
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }
 
 class BsonLong extends BsonObject {
   BsonLong(this.data);
   BsonLong.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
 
-  int data;
+  Int64 data;
 
-  static int extractData(BsonBinary buffer) => buffer.readInt64();
+  static Int64 extractData(BsonBinary buffer) => buffer.readFixInt64();
 
   @override
-  int get value => data;
+  Int64 get value => data;
   @override
   int byteLength() => 8;
   @override
   int get typeByte => bsonDataLong;
   @override
-  void packValue(BsonBinary buffer) => buffer.writeInt64(data);
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
+  void packValue(BsonBinary buffer) => buffer.writeFixInt64(data);
 }

@@ -18,6 +18,4 @@ class BsonDate extends BsonObject {
   @override
   void packValue(BsonBinary buffer) =>
       buffer.writeInt64(data.millisecondsSinceEpoch);
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

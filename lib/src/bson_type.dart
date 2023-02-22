@@ -69,33 +69,18 @@ const _BSON_DATA_REGEXP = bsonDataRegExp;
 
 /// DBPointer BSON Type
 const bsonDataDbPointer = 12;
-@Deprecated('Use bsonDataDbPointer instead.')
-// ignore: unused_element
-const _BSON_DATA_DBPOINTER = bsonDataDbPointer;
 
 /// 32 bit Integer BSON Type
 const bsonDataInt = 16;
-@Deprecated('Use bsonDataInt instead.')
-// ignore: unused_element
-const _BSON_DATA_INT = bsonDataInt;
 
 /// @classconstant BSON_DATA_LONG
 const bsonDataLong = 18;
-@Deprecated('Use bsonDataLong instead.')
-// ignore: unused_element
-const _BSON_DATA_LONG = bsonDataLong;
 
 /// Code BSON Type
 const bsonDataCode = 13;
-@Deprecated('Use bsonDataCode instead.')
-// ignore: unused_element
-const _BSON_DATA_CODE = bsonDataCode;
 
 /// Timestamp BSON Type
 const bsonDataTimestamp = 17;
-@Deprecated('Use bsonDataTimestamp instead.')
-// ignore: unused_element
-const _BSON_DATA_TIMESTAMP = bsonDataTimestamp;
 
 /// Decimal128 Type (0x13)
 const bsonDecimal128 = 19;
@@ -114,8 +99,12 @@ abstract class BsonObject {
   factory BsonObject.bsonObjectFrom(var value) {
     if (value is BsonObject) {
       return value;
+    } else if (value is Int64) {
+      return BsonLong(value);
+    } else if (value is Int32) {
+      return BsonInt(value.toInt());
     } else if (value is int) {
-      return value.bitLength > 31 ? BsonLong(value) : BsonInt(value);
+      return value.bitLength > 31 ? BsonLong(Int64(value)) : BsonInt(value);
     } else if (value is double) {
       return BsonDouble(value);
     } else if (value is String) {
@@ -204,9 +193,6 @@ abstract class BsonObject {
   }
 
   void packValue(BsonBinary buffer);
-
-  @Deprecated('Since 1.0.0. Will be removed in a next release')
-  void unpackValue(BsonBinary buffer);
 
   dynamic get value;
 }

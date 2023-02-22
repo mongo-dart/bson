@@ -16,6 +16,4 @@ class BsonDouble extends BsonObject {
   int get typeByte => bsonDataNumber;
   @override
   void packValue(BsonBinary buffer) => buffer.writeDouble(data);
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }

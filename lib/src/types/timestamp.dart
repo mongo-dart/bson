@@ -29,7 +29,4 @@ class BsonTimestamp extends BsonObject {
     buffer.writeInt(timestamp.increment);
     buffer.writeInt(timestamp.seconds);
   }
-
-  @override
-  void unpackValue(BsonBinary buffer) => timestamp = extractData(buffer);
 }

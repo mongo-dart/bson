@@ -34,9 +34,6 @@ class BsonObjectId extends BsonObject {
   int byteLength() => 12;
 
   @override
-  void unpackValue(BsonBinary buffer) => id = extractData(buffer);
-
-  @override
   void packValue(BsonBinary buffer) {
     buffer.byteList.setRange(buffer.offset, buffer.offset + 12, id.byteList);
     buffer.offset += 12;

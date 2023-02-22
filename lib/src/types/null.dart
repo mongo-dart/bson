@@ -13,6 +13,4 @@ class BsonNull extends BsonObject {
   int get typeByte => bsonDataNull;
   @override
   void packValue(BsonBinary buffer) {}
-  @override
-  void unpackValue(BsonBinary buffer) {}
 }

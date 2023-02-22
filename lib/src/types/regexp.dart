@@ -67,13 +67,6 @@ class BsonRegexp extends BsonObject {
   int get typeByte => bsonDataRegExp;
   @override
   int byteLength() => bsonPattern.byteLength() + bsonOptions.byteLength();
-  @override
-  void unpackValue(BsonBinary buffer) {
-    pattern = buffer.readCString();
-    options = buffer.readCString();
-    bsonPattern = BsonCString(pattern, false);
-    bsonOptions = BsonCString(options, false);
-  }
 
   @override
   String toString() => "BsonRegexp('$pattern',options:'$options')";

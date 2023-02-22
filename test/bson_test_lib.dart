@@ -1,5 +1,6 @@
 import 'package:bson/src/types/uuid.dart';
 import 'package:decimal/decimal.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
@@ -12,20 +13,20 @@ import 'bson_uuid_test_lib.dart';
 
 final Matcher throwsArgumentError = throwsA(TypeMatcher<ArgumentError>());
 
-void testUint8ListNegativeWrite() {
+/* void testUint8ListNegativeWrite() {
   var bl = Uint8List(4);
   var ba = ByteData.view(bl.buffer);
   ba.setInt32(0, -1);
   expect(bl[0], 255);
-}
+} */
 
-void testBsonBinaryWithNegativeOne() {
+/* void testBsonBinaryWithNegativeOne() {
   var b = BsonBinary(4);
   b.writeInt(-1);
   expect(b.hexString, 'ffffffff');
 }
-
-void testBsonBinary() {
+ */
+/* void testBsonBinary() {
   var b = BsonBinary(8);
   b.writeInt(0);
   b.writeInt(1);
@@ -50,24 +51,30 @@ void testBsonBinary() {
   b = BsonBinary(4);
   b.writeInt(-100);
   expect('9cffffff', b.hexString);
-}
+} */
 
-void typeTest() {
+/* void typeTest() {
   expect(BsonObject.bsonObjectFrom(1234) is BsonInt, isTrue);
   expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
   expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
   expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
   expect(BsonObject.bsonObjectFrom(Decimal.fromInt(1)) is Decimal, isTrue);
   expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is UuidValue, isTrue);
-}
-
+} */
+/* 
 void test64Int() {
   var b = BsonBinary(8);
   b.writeInt64(-1);
   expect(b.hexString, 'ffffffffffffffff');
 }
 
-void testDateTime() {
+void test32Int() {
+  var b = BsonBinary(4);
+  b.writeInt(-1);
+  expect(b.hexString, 'ffffffff');
+} */
+
+/* void testDateTime() {
   var date = DateTime(2012, 10, 6, 10, 15, 20);
   var bson = BSON();
   var sourceMap = {'d': date};
@@ -75,8 +82,8 @@ void testDateTime() {
   buffer.rewind();
   Map targetMap = bson.deserialize(buffer);
   expect(targetMap['d'], sourceMap['d']);
-}
-
+} */
+/* 
 void testObjectId() {
   var id1 = ObjectId();
   expect(id1, isNotNull);
@@ -88,17 +95,17 @@ void testObjectId() {
   var leading8chars = id1.toHexString().substring(0, 8);
   expect('0000000a', leading8chars,
       reason: 'Timestamp part of ObjectId must be encoded BigEndian');
-}
-
+} */
+/* 
 void testObjectIdDateTime() {
   var objectId = ObjectId.fromHexString('51c87a81a58a563d1304f4ed');
   var expected = DateTime.fromMillisecondsSinceEpoch(1372093057000);
   var actual = objectId.dateTime;
 
   expect(expected, actual);
-}
+} */
 
-void testSerializeDeserialize() {
+/* void testSerializeDeserialize() {
   var bson = BSON();
   var map = {'_id': 5, 'a': 4};
   var buffer = bson.serialize(map);
@@ -134,9 +141,9 @@ void testSerializeDeserialize() {
   root = bson.deserialize(buffer);
   var doc2A = doc2['a'] as List;
   expect(doc2A[2], root['a'][2]);
-}
+} */
 
-void testMakeByteList() {
+/* void testMakeByteList() {
   for (var n = 0; n < 125; n++) {
     var hex = n.toRadixString(16);
     if (hex.length.isOdd) {
@@ -157,8 +164,8 @@ void testMakeByteList() {
   //oid2.id.makeByteList();
   expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
 }
-
-void testBsonIdFromHexString() {
+ */
+/* void testBsonIdFromHexString() {
   var oid1 = ObjectId();
   var oid2 = ObjectId.fromHexString(oid1.toHexString());
   //oid2.id.makeByteList();
@@ -169,14 +176,14 @@ void testBsonIdFromHexString() {
   b2.rewind();
   var oid3 = BSON().deserialize(b2)['id'];
   expect(oid3.bsonObjectId.byteList, orderedEquals(oid1.id.byteList));
-}
+} */
 
-void testBsonIdClientMode() {
+/* void testBsonIdClientMode() {
   var oid2 = ObjectId(clientMode: true);
   expect(oid2.toHexString().length, 24);
-}
+} */
 
-void testBsonDbPointer() {
+/* void testBsonDbPointer() {
   var p1 = DBPointer('Test', ObjectId());
   var bson = BSON();
   var b = bson.serialize({'p1': p1});
@@ -186,7 +193,7 @@ void testBsonDbPointer() {
   expect(p2.collection, p1.collection);
   expect(p2.bsonObjectId.toHexString(), p1.bsonObjectId.toHexString());
   print(p1.bsonObjectId);
-}
+} */
 
 void run() {
   group('BSonBsonBinary:', () {
@@ -252,6 +259,16 @@ void run() {
       var b = BsonBinary(8);
       b.writeInt64(-1);
       expect(b.hexString, 'ffffffffffffffff');
+    });
+    test('testFix64Int', () {
+      var b = BsonBinary(8);
+      b.writeFixInt64(Int64(-1));
+      expect(b.hexString, 'ffffffffffffffff');
+    });
+    test('test32Int', () {
+      var b = BsonBinary(4);
+      b.writeInt(-1);
+      expect(b.hexString, 'ffffffff');
     });
     test('testDateTime', () {
       var date = DateTime(2012, 10, 6, 10, 15, 20).toUtc();
@@ -398,13 +415,16 @@ void run() {
     group('Full Serialize Deserialize', () {
       var bson = BSON();
       test('int', () {
-        var map = {'_id': 5, 'int': 4};
+        var map = {'_id': 5, 'int': 4, 'int64': Int64(5)};
         var buffer = bson.serialize(map);
         expect(
-            buffer.hexString, '17000000105f6964000500000010696e74000400000000');
+            buffer.hexString,
+            '26000000105f69640005000000'
+            '10696e74000400000012696e74363400050000000000000000');
         buffer.offset = 0;
         Map root = bson.deserialize(buffer);
-        expect(root['int'], 4);
+        expect(root['int'], Int32(4));
+        expect(root['int64'], Int64(5));
         expect(root['_id'], 5);
       });
 

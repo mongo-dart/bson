@@ -29,12 +29,6 @@ class DbRef extends BsonObject {
   int get typeByte => bsonDataDbPointer;
   @override
   int byteLength() => bsonCollection.byteLength() + bsonObjectId.byteLength();
-  @override
-  void unpackValue(BsonBinary buffer) {
-    bsonCollection = BsonString.fromBuffer(buffer);
-    collection = bsonCollection.data;
-    bsonObjectId = BsonObjectId.fromBuffer(buffer);
-  }
 
   @override
   String toString() =>

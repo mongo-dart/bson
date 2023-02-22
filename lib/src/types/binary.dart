@@ -321,15 +321,6 @@ class BsonBinary extends BsonObject {
   }
 
   @override
-  void unpackValue(BsonBinary buffer) {
-    var size = buffer.readInt32();
-    _subType = buffer.readByte();
-    _byteList = Uint8List(size);
-    byteList.setRange(0, size, buffer.byteList, buffer.offset);
-    buffer.offset += size;
-  }
-
-  @override
   dynamic get value => this;
   @override
   String toString() => 'BsonBinary($hexString)';

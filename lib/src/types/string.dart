@@ -31,9 +31,6 @@ class BsonString extends BsonObject {
     buffer.offset += utfData.length;
     buffer.writeByte(0);
   }
-
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
 }
 
 class BsonCode extends BsonString {

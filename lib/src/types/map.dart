@@ -44,19 +44,4 @@ class BsonMap extends BsonObject {
     });
     buffer.writeByte(0);
   }
-
-  @override
-  void unpackValue(BsonBinary buffer) => data = extractData(buffer);
-
-  /*  void unpackValue(BsonBinary buffer) {
-    data = {};
-    buffer.offset += 4;
-    var typeByte = buffer.readByte();
-    while (typeByte != 0) {
-      var bsonObject = BsonObject.bsonObjectFromTypeByte(typeByte);
-      var element = bsonObject.unpackElement(buffer);
-      data[element.name] = element.value;
-      typeByte = buffer.readByte();
-    }
-  } */
 }
