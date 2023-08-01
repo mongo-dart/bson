@@ -3,7 +3,7 @@ part of bson;
 class BSON {
   BsonBinary serialize(var object, [int offset = 0]) {
     var bsonObject = BsonObject.bsonObjectFrom(object);
-    if (!((bsonObject is BsonMap) || (bsonObject is BsonArray))) {
+    if (bsonObject is! BsonMap && bsonObject is! BsonArray) {
       throw Exception('Invalid value for BSON serialize: $object');
     }
     var buffer = BsonBinary(bsonObject.byteLength() + offset);
