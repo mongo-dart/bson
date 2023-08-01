@@ -127,6 +127,8 @@ abstract class BsonObject {
       return BsonUuid(value);
     } else if (value is Timestamp) {
       return BsonTimestamp(value);
+    } else if (value is List<int>) {
+      return BsonBinary.from(value);
     }
     throw Exception('Not implemented for $value');
   }
