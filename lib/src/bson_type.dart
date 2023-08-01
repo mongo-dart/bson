@@ -70,17 +70,17 @@ const _BSON_DATA_REGEXP = bsonDataRegExp;
 /// DBPointer BSON Type
 const bsonDataDbPointer = 12;
 
-/// 32 bit Integer BSON Type
-const bsonDataInt = 16;
-
-/// @classconstant BSON_DATA_LONG
-const bsonDataLong = 18;
-
 /// Code BSON Type
 const bsonDataCode = 13;
 
+/// 32 bit Integer BSON Type
+const bsonDataInt = 16;
+
 /// Timestamp BSON Type
 const bsonDataTimestamp = 17;
+
+/// @classconstant BSON_DATA_LONG
+const bsonDataLong = 18;
 
 /// Decimal128 Type (0x13)
 const bsonDecimal128 = 19;

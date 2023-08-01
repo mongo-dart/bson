@@ -7,10 +7,10 @@ include: package:lints/recommended.yaml
 #     - camel_case_types
 
 analyzer:
-  language:
-    strict-raw-types: false
-  strong-mode:
-    implicit-casts: true # activate with false
-    implicit-dynamic: true #activate with false   
+#  language:
+#    strict-raw-types: false
+#  strong-mode:
+#    implicit-casts: true # activate with false
+#    implicit-dynamic: true #activate with false   
   errors:
     uri_has_not_been_generated: ignore
