@@ -83,8 +83,7 @@ class BsonBinary extends BsonObject {
         _subType = subType ?? subtypeBinary;
 
   BsonBinary.from(Iterable<int> byteList, {int? subType})
-      : _byteList = Uint8List(byteList.length)
-          ..setRange(0, byteList.length, byteList),
+      : _byteList = Uint8List.fromList(byteList.toList()),
         _subType = subType ?? subtypeBinary;
 
   BsonBinary.fromHexString(String hexString, {int? subType})
