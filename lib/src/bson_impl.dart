@@ -2,10 +2,10 @@ part of bson;
 
 class BSON {
   BsonBinary serialize(var object, [int offset = 0]) {
-    if (!((object is Map) || (object is List))) {
+    var bsonObject = BsonObject.bsonObjectFrom(object);
+    if (!((bsonObject is BsonMap) || (bsonObject is BsonArray))) {
       throw Exception('Invalid value for BSON serialize: $object');
     }
-    var bsonObject = BsonObject.bsonObjectFrom(object);
     var buffer = BsonBinary(bsonObject.byteLength() + offset);
     buffer.offset = offset;
     BsonObject.bsonObjectFrom(object).packValue(buffer);
