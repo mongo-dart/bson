@@ -127,8 +127,9 @@ abstract class BsonObject {
       return BsonUuid(value);
     } else if (value is Timestamp) {
       return BsonTimestamp(value);
+    } else {
+      return BsonObject.bsonObjectFrom(value.toJson());
     }
-    throw Exception('Not implemented for $value');
   }
 
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {
