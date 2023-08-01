@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.0
+
+- Objects that implement a `toJson()` method can now be passed to `BsonObject.bsonObjectFrom()` and `BSON.serialize()` methods to facilitate migration from JSON.
+
 ## 4.0.0
 
 - **Breaking Change**. The BsonLong class is now backed by an `Int64` field. `BsonLong` object returned from the server will always be returned as Int64. Int values passed to the server will be passed as int32 if below the int32 limit, otherwise as int64 objects. The `BsonObject.bsonObjectFrom()` method now also accept `Int64` and `Int32` Objects. This change was needed to avoid the limits that the int type has on the web apps.
