@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'bson_binary_test_lib.dart';
 import 'bson_decimal_128_test_lib.dart';
+import 'bson_from_json_test_lib.dart';
 import 'bson_timestamp_test_lib.dart';
 import 'bson_uuid_test_lib.dart';
 
@@ -503,4 +504,5 @@ void run() {
   runDecimal128();
   runUuid();
   runTimestamp();
+  runToJson();
 }
