@@ -96,7 +96,11 @@ const bsonDecimal128 = 19;
 abstract class BsonObject {
   BsonObject();
 
-  factory BsonObject.bsonObjectFrom(var value) {
+  /// Create a BsonObject from a value.
+  /// 
+  /// If [useJsonMethods] is true, the value will be converted to a json object
+  /// with its `toJson()` method before being converted to a BsonObject.
+  factory BsonObject.bsonObjectFrom(var value, {bool useJsonMethods = true}) {
     if (value is BsonObject) {
       return value;
     } else if (value is Int64) {
@@ -127,9 +131,10 @@ abstract class BsonObject {
       return BsonUuid(value);
     } else if (value is Timestamp) {
       return BsonTimestamp(value);
-    } else {
-      return BsonObject.bsonObjectFrom(value.toJson());
+    } else if (useJsonMethods) {
+      return BsonObject.bsonObjectFrom(value.toJson(), useJsonMethods: false);
     }
+    throw Exception('Not implemented for $value');
   }
 
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {
