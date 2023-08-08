@@ -46,6 +46,12 @@ class DBPointer extends BsonObject {
       other is DBPointer &&
       collection == other.collection &&
       bsonObjectId.toHexString() == other.bsonObjectId.toHexString();
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }
 
 class DBPointerData {

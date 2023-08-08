@@ -16,4 +16,10 @@ class BsonDouble extends BsonObject {
   int get typeByte => bsonDataNumber;
   @override
   void packValue(BsonBinary buffer) => buffer.writeDouble(data);
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }

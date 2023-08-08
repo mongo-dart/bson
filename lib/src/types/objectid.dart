@@ -6,7 +6,8 @@ class BsonObjectId extends BsonObject {
   BsonObjectId.fromBsonBinary(this.id);
 
   BsonObjectId.fromBuffer(BsonBinary buffer) : id = extractData(buffer);
-
+  BsonObjectId.fromEJson(Map<String, dynamic> eJsonMap)
+      : id = extractEJson(eJsonMap);
   BsonBinary id;
 
   static BsonBinary extractData(BsonBinary buffer) {
@@ -14,6 +15,20 @@ class BsonObjectId extends BsonObject {
         Uint8List(12)..setRange(0, 12, buffer.byteList, buffer.offset));
     buffer.offset += 12;
     return id;
+  }
+
+  static BsonBinary extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$id) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson ObjectId representation');
+    }
+
+    if (entry.value is! String) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson ObjectId representation');
+    }
+    return createBsonBinaryFromObjectId(ObjectId.parse(entry.value));
   }
 
   static BsonBinary createBsonBinaryFromObjectId(ObjectId parmId) => parmId.id;
@@ -40,4 +55,7 @@ class BsonObjectId extends BsonObject {
   }
 
   String toJson() => id.hexString;
+
+  @override
+  eJson({bool relaxed = false}) => {type$id: toHexString()};
 }

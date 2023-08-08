@@ -4,10 +4,26 @@ class BsonInt extends BsonObject {
   BsonInt(this.data);
 
   BsonInt.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
+  BsonInt.fromEJson(Map<String, dynamic> eJsonMap)
+      : data = extractEJson(eJsonMap);
 
   int data;
 
   static int extractData(BsonBinary buffer) => buffer.readInt32();
+
+  static int extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$int32) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson Int32 representation');
+    }
+
+    if (entry.value is! String) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson Int32 representation');
+    }
+    return int.parse(entry.value);
+  }
 
   @override
   int get value => data;
@@ -17,15 +33,33 @@ class BsonInt extends BsonObject {
   int get typeByte => bsonDataInt;
   @override
   void packValue(BsonBinary buffer) => buffer.writeInt(data);
+
+  @override
+  eJson({bool relaxed = false}) =>
+      relaxed ? data : {type$int32: data.toString()};
 }
 
 class BsonLong extends BsonObject {
   BsonLong(this.data);
   BsonLong.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
-
+  BsonLong.fromEJson(Map<String, dynamic> eJsonMap)
+      : data = extractEJson(eJsonMap);
   Int64 data;
 
   static Int64 extractData(BsonBinary buffer) => buffer.readFixInt64();
+  static Int64 extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$int64) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson Int64 representation');
+    }
+
+    if (entry.value is! String) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson Int64 representation');
+    }
+    return Int64(int.parse(entry.value));
+  }
 
   @override
   Int64 get value => data;
@@ -35,4 +69,8 @@ class BsonLong extends BsonObject {
   int get typeByte => bsonDataLong;
   @override
   void packValue(BsonBinary buffer) => buffer.writeFixInt64(data);
+
+  @override
+  eJson({bool relaxed = false}) =>
+      relaxed ? data : {type$int64: data.toString()};
 }

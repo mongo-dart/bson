@@ -29,4 +29,10 @@ class BsonTimestamp extends BsonObject {
     buffer.writeInt(timestamp.increment);
     buffer.writeInt(timestamp.seconds);
   }
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }

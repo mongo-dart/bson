@@ -317,4 +317,10 @@ class BsonDecimal128 extends BsonObject {
     }
     return '$buffer';
   }
+
+  @override
+  eJson({bool? relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }

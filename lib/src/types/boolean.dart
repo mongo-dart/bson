@@ -16,4 +16,10 @@ class BsonBoolean extends BsonObject {
   int get typeByte => bsonDataBool;
   @override
   void packValue(BsonBinary buffer) => buffer.writeByte(data ? 1 : 0);
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }

@@ -8,7 +8,9 @@ class BSON {
     var bsonObject = BsonObject.bsonObjectFrom(object);
     var buffer = BsonBinary(bsonObject.byteLength() + offset);
     buffer.offset = offset;
-    BsonObject.bsonObjectFrom(object).packValue(buffer);
+    //BsonObject.bsonObjectFrom(object).packValue(buffer);
+    bsonObject.packValue(buffer);
+
     return buffer;
   }
 

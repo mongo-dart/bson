@@ -324,6 +324,12 @@ class BsonBinary extends BsonObject {
   dynamic get value => this;
   @override
   String toString() => 'BsonBinary($hexString)';
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }
 
 bool _isIntWorkaroundNeeded() {

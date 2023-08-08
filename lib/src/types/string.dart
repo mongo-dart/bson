@@ -31,6 +31,12 @@ class BsonString extends BsonObject {
     buffer.offset += utfData.length;
     buffer.writeByte(0);
   }
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }
 
 class BsonCode extends BsonString {

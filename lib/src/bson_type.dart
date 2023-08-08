@@ -131,6 +131,55 @@ abstract class BsonObject {
     throw Exception('Not implemented for $value');
   }
 
+  factory BsonObject.bsonObjectFromEJson(Object value) {
+    /// EJson value
+    if (value is Map<String, dynamic> &&
+        value.length == 1 &&
+        value.keys.first.startsWith(r'$')) {
+      var key = value.keys.first;
+      if (key == type$id) {
+        return BsonObjectId.fromEJson(value);
+      }
+      if (key == type$int64) {
+        return BsonLong.fromEJson(value);
+      }
+      if (key == type$int32) {
+        return BsonInt.fromEJson(value);
+      }
+      if (key == type$date) {
+        return BsonDate.fromEJson(value);
+      }
+    } else if (value is List) {
+      return BsonArray.fromEJson(value);
+    }
+
+    throw UnsupportedError('Type value not supported for Map $value');
+    /*   if (value is BsonObject) {
+      return value;
+    } else if (value is Int64) {
+      return BsonLong(value);
+    } else if (value is double) {
+      return BsonDouble(value);
+    } else if (value is String) {
+      return BsonString(value);
+    } else if (value is Map) {
+      return BsonMap(Map<String, dynamic>.from(value));
+    } else if (value is List) {
+      return BsonArray(value);
+    } else if (value == null) {
+      return BsonNull();
+    } else if (value == true || value == false) {
+      return BsonBoolean(value);
+    } else if (value is Decimal) {
+      return BsonDecimal128(value);
+    } else if (value is UuidValue) {
+      return BsonUuid(value);
+    } else if (value is Timestamp) {
+      return BsonTimestamp(value);
+    }
+    throw Exception('Not implemented for $value'); */
+  }
+
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {
     switch (typeByte) {
       case bsonDataInt:
@@ -172,12 +221,20 @@ abstract class BsonObject {
     }
   }
 
-  static int elementSize(String? name, Object? value) {
+  static int elementSize(String? name, value) {
     var size = 1;
     if (name != null) {
       size += Statics.getKeyUtf8(name).length + 1;
     }
     return size + BsonObject.bsonObjectFrom(value).byteLength();
+  }
+
+  static int eJsonElementSize(String? name, value) {
+    var size = 1;
+    if (name != null) {
+      size += Statics.getKeyUtf8(name).length + 1;
+    }
+    return size + BsonObject.bsonObjectFromEJson(value).byteLength();
   }
 
   int get typeByte;
@@ -195,4 +252,5 @@ abstract class BsonObject {
   void packValue(BsonBinary buffer);
 
   dynamic get value;
+  dynamic eJson({bool relaxed = false});
 }

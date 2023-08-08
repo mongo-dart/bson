@@ -13,4 +13,10 @@ class BsonNull extends BsonObject {
   int get typeByte => bsonDataNull;
   @override
   void packValue(BsonBinary buffer) {}
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }

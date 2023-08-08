@@ -47,6 +47,12 @@ class DbRef extends BsonObject {
       other is DbRef &&
       collection == other.collection &&
       bsonObjectId.toHexString() == other.bsonObjectId.toHexString();
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }
 
 class DbRefData {

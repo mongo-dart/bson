@@ -77,6 +77,12 @@ class BsonRegexp extends BsonObject {
   }
 
   Map<String, Object> toJson() => {'\$regex': pattern, '\$oid': options};
+
+  @override
+  eJson({bool relaxed = false}) {
+    // TODO: implement eJson
+    throw UnimplementedError();
+  }
 }
 
 class BsonRegexpData {
