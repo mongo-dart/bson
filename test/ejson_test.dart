@@ -39,7 +39,11 @@ void main() {
     test('typeTest', () {
       expect(BsonObject.bsonObjectFromEJson({type$int32: '1234'}) is BsonInt,
           isTrue);
-      expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
+      expect(BsonObject.bsonObjectFromEJson('asdfasdf') is BsonString, isTrue);
+      expect(
+          BsonObject.bsonObjectFromEJson({type$code: 'function() {}'})
+              is BsonCode,
+          isTrue);
       expect(
           BsonObject.bsonObjectFromEJson({
             r'$date': {
@@ -48,7 +52,11 @@ void main() {
           }) is BsonDate,
           isTrue);
       expect(
-          BsonObject.bsonObjectFrom([
+          BsonObject.bsonObjectFromEJson(
+              {r'$date': DateTime.now().toIso8601String()}) is BsonDate,
+          isTrue);
+      expect(
+          BsonObject.bsonObjectFromEJson([
             {type$int32: '2'},
             {type$int32: '3'},
             {type$int32: '4'}

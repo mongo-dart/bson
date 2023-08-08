@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.0.1-1.2.dev
+
+- added String to EJson
+- added Code to EJson
+
+## 4.0.1-1.1.dev
+
+- Small fixes
+- EJson methods made static.
+- Created eJson2doc and doc2eJson methods
+
 ## 4.0.1-1.0.dev
 
 - **Experimental** - Ejson management - Only for types ObjectId, int and date

@@ -13,16 +13,16 @@ class BsonRegexp extends BsonObject {
             caseInsensitive: caseInsensitive,
             dotAll: dotAll,
             extended: extended) {
-    bsonPattern = BsonCString(pattern, false);
-    bsonOptions = BsonCString(this.options, false);
+    bsonPattern = BsonCString(pattern);
+    bsonOptions = BsonCString(this.options);
   }
 
   BsonRegexp.fromBuffer(BsonBinary buffer) {
     var data = extractData(buffer);
     pattern = data.pattern;
     options = data.options;
-    bsonPattern = BsonCString(pattern, false);
-    bsonOptions = BsonCString(options, false);
+    bsonPattern = BsonCString(pattern);
+    bsonOptions = BsonCString(options);
   }
 
   late String pattern;

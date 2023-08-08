@@ -149,8 +149,13 @@ abstract class BsonObject {
       if (key == type$date) {
         return BsonDate.fromEJson(value);
       }
+      if (key == type$code) {
+        return BsonCode.fromEJson(value);
+      }
     } else if (value is Map<String, dynamic>) {
       return BsonMap.fromEJson(value);
+    } else if (value is String) {
+      return BsonString.fromEJson(value);
     } else if (value is List) {
       return BsonArray.fromEJson(value);
     }

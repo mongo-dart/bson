@@ -10,6 +10,7 @@ class BsonDate extends BsonObject {
 
   static DateTime extractData(BsonBinary buffer) =>
       DateTime.fromMillisecondsSinceEpoch(buffer.readInt64(), isUtc: true);
+
   static DateTime extractEJson(Map<String, dynamic> eJsonMap) {
     var entry = eJsonMap.entries.first;
     if (entry.key != type$date) {

@@ -3,7 +3,7 @@ part of bson;
 class BsonString extends BsonObject {
   BsonString(this.data);
   BsonString.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
-
+  BsonString.fromEJson(ejson) : data = extractEJson(ejson);
   String data;
   List<int>? _utfData;
 
@@ -13,6 +13,15 @@ class BsonString extends BsonObject {
         buffer.byteList.getRange(buffer.offset, buffer.offset + size).toList());
     buffer.offset += size + 1;
     return ret;
+  }
+
+  static String extractEJson(ejson) {
+    if (ejson is! String) {
+      throw ArgumentError(
+          'The received Object is not a valid String representation');
+    }
+
+    return ejson;
   }
 
   List<int> get utfData => _utfData ??= utf8.encode(data);
@@ -33,40 +42,58 @@ class BsonString extends BsonObject {
   }
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) => data;
 }
 
 class BsonCode extends BsonString {
-  BsonCode(String dataValue) : super(dataValue);
-
-  BsonCode.fromBuffer(BsonBinary buffer) : super.fromBuffer(buffer);
+  BsonCode(super.dataValue) : super();
+  BsonCode.fromBuffer(super.buffer) : super.fromBuffer();
+  BsonCode.fromEJson(Map<String, dynamic> eJsonMap)
+      : super(extractEJson(eJsonMap));
 
   static String extractData(BsonBinary buffer) =>
       BsonString.extractData(buffer);
+
+  static String extractEJson(Map<String, dynamic> ejsonMap) {
+    var entry = ejsonMap.entries.first;
+    if (entry.key != type$code) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson Code representation');
+    }
+    if (entry.value is String) {
+      return entry.value;
+    }
+
+    throw ArgumentError(
+        'The received Map is not a valid EJson String representation');
+  }
 
   //get value => this;
   @override
   int get typeByte => bsonDataCode;
   @override
   String toString() => "BsonCode('$data')";
+
+  @override
+  eJson({bool relaxed = false}) => {type$code: data};
 }
 
 class BsonCString extends BsonString {
-  BsonCString(String data, [bool? useKeyCash])
-      : useKeyCash = useKeyCash ?? false,
-        super(data);
-
-  BsonCString.fromBuffer(BsonBinary buffer, [bool? useKeyCash])
-      : useKeyCash = useKeyCash ?? false,
-        super.fromBuffer(buffer);
+  BsonCString(super.data, {this.useKeyCash = false}) : super();
+  BsonCString.fromBuffer(super.buffer, {this.useKeyCash = false})
+      : super.fromBuffer();
+  BsonCString.fromEJson(Map<String, dynamic> eJsonMap,
+      {this.useKeyCash = false})
+      : super(extractEJson(eJsonMap)) {
+    throw ArgumentError('Should never be called');
+  }
 
   bool useKeyCash;
 
   static String extractData(BsonBinary buffer) =>
       BsonString.extractData(buffer);
+  static String extractEJson(ejson) =>
+      throw ArgumentError('Should never be called');
 
   @override
   int get typeByte =>
@@ -91,4 +118,8 @@ class BsonCString extends BsonString {
     buffer.offset += utfData.length;
     buffer.writeByte(0);
   }
+
+  @override
+  eJson({bool relaxed = false}) =>
+      throw ArgumentError('Should never be called');
 }
