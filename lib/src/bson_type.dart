@@ -149,11 +149,13 @@ abstract class BsonObject {
       if (key == type$date) {
         return BsonDate.fromEJson(value);
       }
+    } else if (value is Map<String, dynamic>) {
+      return BsonMap.fromEJson(value);
     } else if (value is List) {
       return BsonArray.fromEJson(value);
     }
 
-    throw UnsupportedError('Type value not supported for Map $value');
+    throw UnsupportedError('Type value not supported for Object $value');
     /*   if (value is BsonObject) {
       return value;
     } else if (value is Int64) {
