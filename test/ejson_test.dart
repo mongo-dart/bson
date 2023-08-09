@@ -13,37 +13,138 @@ import 'bson_uuid_test_lib.dart';
 final Matcher throwsArgumentError = throwsA(TypeMatcher<ArgumentError>());
 
 void main() {
-  group('Ejson BsonBinary:', () {
-    test('testDateTime', () {
-      var date = DateTime(2012, 10, 6, 10, 15, 20).toUtc();
+  var bson = BSON();
+
+  group('Ejson Types:', () {
+    group('Object Id', () {
+      var oid = ObjectId.parse('57e193d7a9cc81b4027498b5');
+      var sourceMap = {'_id': oid};
+      var hexBuffer = '16000000075f69640057e193d7a9cc81b4027498b500';
       var eJsonSource = {
-        'd': {
-          r'$date': {r'$numberLong': date.millisecondsSinceEpoch.toString()}
-        }
+        '_id': {r'$oid': '57e193d7a9cc81b4027498b5'}
       };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('String', () {
+      var string = 'string type';
+      var sourceMap = {'string': string};
+      var hexBuffer =
+          '1d00000002737472696e67000c000000737472696e6720747970650000';
+      var eJsonSource = {'string': string};
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('DateTime', () {
+      var date = DateTime(2012, 10, 6, 10, 15, 20).toUtc();
       var sourceMap = {'d': date};
-      var bson = BSON();
+      var hexBuffer = '10000000096400c09124353a01000000';
 
-      var buffer = bson.serialize(sourceMap);
-      buffer.rewind();
-      Map targetEJsonMap = EJson.deserialize(buffer);
-      expect(targetEJsonMap['d'], eJsonSource['d']);
+      test('- canonical', () {
+        var eJsonSource = {
+          'd': {
+            r'$date': {r'$numberLong': date.millisecondsSinceEpoch.toString()}
+          }
+        };
 
-      buffer = EJson.serialize(eJsonSource);
-      buffer.rewind();
-      Map targetMap = bson.deserialize(buffer);
-      expect(targetMap['d'], sourceMap['d']);
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var eJsonSource = {
+          'd': {r'$date': date.toIso8601String()}
+        };
+
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
     });
   });
   group('BsonTypesTest:', () {
     test('typeTest', () {
-      expect(BsonObject.bsonObjectFromEJson({type$int32: '1234'}) is BsonInt,
+      expect(
+          BsonObject.bsonObjectFromEJson(
+              {type$objectId: '57e193d7a9cc81b4027498b5'}) is BsonObjectId,
           isTrue);
       expect(BsonObject.bsonObjectFromEJson('asdfasdf') is BsonString, isTrue);
-      expect(
-          BsonObject.bsonObjectFromEJson({type$code: 'function() {}'})
-              is BsonCode,
-          isTrue);
       expect(
           BsonObject.bsonObjectFromEJson({
             r'$date': {
@@ -55,6 +156,15 @@ void main() {
           BsonObject.bsonObjectFromEJson(
               {r'$date': DateTime.now().toIso8601String()}) is BsonDate,
           isTrue);
+
+      expect(BsonObject.bsonObjectFromEJson({type$int32: '1234'}) is BsonInt,
+          isTrue);
+
+      expect(
+          BsonObject.bsonObjectFromEJson({type$code: 'function() {}'})
+              is BsonCode,
+          isTrue);
+
       expect(
           BsonObject.bsonObjectFromEJson([
             {type$int32: '2'},
@@ -67,25 +177,7 @@ void main() {
       expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is BsonUuid, isTrue);
     });
   });
-  group('ObjectId:', () {
-    test('testBsonIdFromHexString', () {
-      var oid1 = ObjectId();
-      var oid2 = ObjectId.fromHexString(oid1.toHexString());
-      //oid2.id.makeByteList();
-      expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
-      expect(ObjectId.isValidHexId(oid1.toHexString()), isTrue);
-      var b1 = EJson.serialize({
-        'id': {type$id: oid1.$oid}
-      });
-      var b2 = EJson.serialize({
-        'id': {type$id: oid2.$oid}
-      });
-      b1.rewind();
-      b2.rewind();
-      var oid3 = EJson.deserialize(b2)['id'];
-      expect(oid3, {type$id: oid1.$oid});
-    });
-
+  group('Misc:', () {
     test('testBsonDbPointer', () {
       var p1 = DBPointer('Test', ObjectId());
       var bson = BSON();

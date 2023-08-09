@@ -19,7 +19,7 @@ class BsonObjectId extends BsonObject {
 
   static BsonBinary extractEJson(Map<String, dynamic> eJsonMap) {
     var entry = eJsonMap.entries.first;
-    if (entry.key != type$id) {
+    if (entry.key != type$objectId) {
       throw ArgumentError(
           'The received Map is not a avalid EJson ObjectId representation');
     }
@@ -57,5 +57,5 @@ class BsonObjectId extends BsonObject {
   String toJson() => id.hexString;
 
   @override
-  eJson({bool relaxed = false}) => {type$id: toHexString()};
+  eJson({bool relaxed = false}) => {type$objectId: toHexString()};
 }

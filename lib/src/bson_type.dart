@@ -137,7 +137,7 @@ abstract class BsonObject {
         value.length == 1 &&
         value.keys.first.startsWith(r'$')) {
       var key = value.keys.first;
-      if (key == type$id) {
+      if (key == type$objectId) {
         return BsonObjectId.fromEJson(value);
       }
       if (key == type$int64) {
@@ -155,7 +155,16 @@ abstract class BsonObject {
     } else if (value is Map<String, dynamic>) {
       return BsonMap.fromEJson(value);
     } else if (value is String) {
-      return BsonString.fromEJson(value);
+      return BsonString(value);
+    } else if (value is double) {
+      return BsonDouble(value);
+    } else if (value is int) {
+      if (value <= Int32.MAX_VALUE.toInt()) {
+        return BsonInt(value);
+      } else if (value <= Int64.MAX_VALUE.toInt()) {
+        return BsonLong.fromInt(value);
+      }
+      return BsonDouble.fromInt(value);
     } else if (value is List) {
       return BsonArray.fromEJson(value);
     }

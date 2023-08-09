@@ -41,6 +41,7 @@ class BsonInt extends BsonObject {
 
 class BsonLong extends BsonObject {
   BsonLong(this.data);
+  BsonLong.fromInt(int data) : data = Int64(data);
   BsonLong.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
   BsonLong.fromEJson(Map<String, dynamic> eJsonMap)
       : data = extractEJson(eJsonMap);
