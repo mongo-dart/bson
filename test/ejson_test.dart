@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:bson/src/ejson.dart';
 import 'package:bson/src/types/uuid.dart';
 import 'package:bson/src/utils/types_def.dart';
 import 'package:decimal/decimal.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';
 
@@ -91,10 +94,368 @@ void main() {
         expect(result, sourceMap);
       });
     });
+    group('Int32', () {
+      var int32 = 30567;
+      var sourceMap = {'int32': int32};
+      var hexBuffer = '1000000010696e743332006777000000';
+      var eJsonSource = {
+        'int32': {type$int32: '30567'}
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, sourceMap);
+
+        buffer = EJson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Int64', () {
+      var int64 = 1593275430567;
+      var sourceMap = {'int64': Int64(int64)};
+      var hexBuffer = '1400000012696e74363400a7b69df67201000000';
+      var eJsonSource = {
+        'int64': {type$int64: '1593275430567'}
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, sourceMap);
+
+        buffer = EJson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Double', () {
+      var doubleVar = 290.13;
+      var sourceMap = {'double': doubleVar};
+      var hexBuffer = '1500000001646f75626c6500ae47e17a1422724000';
+      var eJsonSource = {
+        'double': {type$double: '290.13'}
+      };
+      var eJsonRelaxed = {'double': 290.13};
+
+      var doubleVarInf = double.infinity;
+      var sourceMapInf = {'double': doubleVarInf};
+      var eJsonSourceInf = {
+        'double': {type$double: 'Infinity'}
+      };
+      var hexBufferInf = '1500000001646f75626c6500000000000000f07f00';
+
+      var doubleVarNegInf = double.negativeInfinity;
+      var sourceMapNegInf = {'double': doubleVarNegInf};
+      var eJsonSourceNegInf = {
+        'double': {type$double: '-Infinity'}
+      };
+      var hexBufferNegInf = '1500000001646f75626c6500000000000000f0ff00';
+
+      var doubleVarNaN = double.nan;
+      var sourceMapNaN = {'double': doubleVarNaN};
+      var eJsonSourceNaN = {
+        'double': {type$double: 'NaN'}
+      };
+      var hexBufferNaN = '1500000001646f75626c6500000000000000f8ff00';
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonRelaxed);
+
+        buffer = EJson.serialize(eJsonRelaxed);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- Infinity - canonical', () {
+        var buffer = bson.serialize(sourceMapInf);
+        expect(buffer.hexString, hexBufferInf);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSourceInf);
+
+        buffer = EJson.serialize(eJsonSourceInf);
+        expect(buffer.hexString, hexBufferInf);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapInf);
+      });
+      test('- Infinity - relaxed', () {
+        var buffer = bson.serialize(sourceMapInf);
+        expect(buffer.hexString, hexBufferInf);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSourceInf);
+
+        buffer = EJson.serialize(eJsonSourceInf);
+        expect(buffer.hexString, hexBufferInf);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapInf);
+      });
+      test('- Negative Infinity - canonical', () {
+        var buffer = bson.serialize(sourceMapNegInf);
+        expect(buffer.hexString, hexBufferNegInf);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSourceNegInf);
+
+        buffer = EJson.serialize(eJsonSourceNegInf);
+        expect(buffer.hexString, hexBufferNegInf);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapNegInf);
+      });
+      test('- Negative Infinity - relaxed', () {
+        var buffer = bson.serialize(sourceMapNegInf);
+        expect(buffer.hexString, hexBufferNegInf);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSourceNegInf);
+
+        buffer = EJson.serialize(eJsonSourceNegInf);
+        expect(buffer.hexString, hexBufferNegInf);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapNegInf);
+      });
+      test('- NaN - canonical', () {
+        var buffer = bson.serialize(sourceMapNaN);
+        expect(buffer.hexString, hexBufferNaN);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSourceNaN);
+
+        buffer = EJson.serialize(eJsonSourceNaN);
+        expect(buffer.hexString, hexBufferNaN);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect((result['double'] as double).isNaN, isTrue);
+      });
+      test('- NaN - relaxed', () {
+        var buffer = bson.serialize(sourceMapNaN);
+        expect(buffer.hexString, hexBufferNaN);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSourceNaN);
+
+        buffer = EJson.serialize(eJsonSourceNaN);
+        expect(buffer.hexString, hexBufferNaN);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect((result['double'] as double).isNaN, isTrue);
+      });
+    });
+    group('Decimal 128', () {
+      var dec = Decimal.fromInt(230);
+      var sourceMap = {'decimal': dec};
+      var hexBuffer =
+          '1e00000013646563696d616c001700000000000000000000000000423000';
+      var eJsonSource = {
+        'decimal': {type$decimal128: dec.toString()}
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Uuid', () {
+      var uuid = UuidValue('c8edabc3-f738-4ca3-b68d-ab92a91478a3');
+      var sourceMap = {'uuid': uuid};
+      var hexBuffer =
+          '200000000575756964001000000004c8edabc3f7384ca3b68dab92a91478a300';
+      var eJsonSource = {
+        'uuid': {type$uuid: uuid.toString()}
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Binary', () {
+      var binary = BsonBinary.fromHexString('c8edabc3f7384ca3b68dab92a91478a3',
+          subType: BsonBinary.subtypeBinary);
+      var sourceMap = {'binary': binary};
+      var hexBuffer =
+          '220000000562696e617279001000000000c8edabc3f7384ca3b68dab92a91478a300';
+      var eJsonSource = {
+        'binary': {
+          type$binary: {
+            'base64': base64.encode(binary.byteList),
+            'subType': '0'
+          }
+        }
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
     group('DateTime', () {
       var date = DateTime(2012, 10, 6, 10, 15, 20).toUtc();
+      var beforeEpoch = DateTime(1012, 10, 6, 10, 15, 20).toUtc();
+      var after9999 = DateTime.utc(10000);
+
       var sourceMap = {'d': date};
+      var sourceMapBE = {'d': beforeEpoch};
+
+      var sourceMapA9 = {'d': after9999};
+
       var hexBuffer = '10000000096400c09124353a01000000';
+      var hexBufferBE = '10000000096400c05da7c586e4ffff00';
+      var hexBufferA9 = '1000000009640000dc1fd277e6000000';
 
       test('- canonical', () {
         var eJsonSource = {
@@ -122,6 +483,170 @@ void main() {
           'd': {r'$date': date.toIso8601String()}
         };
 
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- before epoch - canonical', () {
+        var eJsonSource = {
+          'd': {
+            r'$date': {
+              r'$numberLong': beforeEpoch.millisecondsSinceEpoch.toString()
+            }
+          }
+        };
+
+        var buffer = bson.serialize(sourceMapBE);
+        expect(buffer.hexString, hexBufferBE);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBufferBE);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapBE);
+      });
+      test('- before epoch - relaxed', () {
+        var eJsonSource = {
+          'd': {
+            r'$date': {
+              r'$numberLong': beforeEpoch.millisecondsSinceEpoch.toString()
+            }
+          }
+        };
+
+        var buffer = bson.serialize(sourceMapBE);
+        expect(buffer.hexString, hexBufferBE);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBufferBE);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapBE);
+      });
+      test('- after 9999 - canonical', () {
+        var eJsonSource = {
+          'd': {
+            r'$date': {
+              r'$numberLong': after9999.millisecondsSinceEpoch.toString()
+            }
+          }
+        };
+
+        var buffer = bson.serialize(sourceMapA9);
+        expect(buffer.hexString, hexBufferA9);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBufferA9);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapA9);
+      });
+      test('- after 9999 - relaxed', () {
+        var eJsonSource = {
+          'd': {
+            r'$date': {
+              r'$numberLong': after9999.millisecondsSinceEpoch.toString()
+            }
+          }
+        };
+
+        var buffer = bson.serialize(sourceMapA9);
+        expect(buffer.hexString, hexBufferA9);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBufferA9);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMapA9);
+      });
+    });
+    group('Bool', () {
+      var boolean = true;
+      var sourceMap = {'bool': boolean};
+      var hexBuffer = '0c00000008626f6f6c000100';
+      var eJsonSource = {'bool': boolean};
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Null', () {
+      Null nullValue;
+      var sourceMap = {'null': nullValue};
+      var hexBuffer = '0b0000000a6e756c6c0000';
+      var eJsonSource = {'null': nullValue};
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
         var buffer = bson.serialize(sourceMap);
         expect(buffer.hexString, hexBuffer);
 
@@ -175,6 +700,8 @@ void main() {
       expect(BsonObject.bsonObjectFrom(Decimal.fromInt(1)) is BsonDecimal128,
           isTrue);
       expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is BsonUuid, isTrue);
+      expect(BsonObject.bsonObjectFromEJson(null) is BsonNull, isTrue);
+      expect(BsonObject.bsonObjectFromEJson(false) is BsonBoolean, isTrue);
     });
   });
   group('Misc:', () {

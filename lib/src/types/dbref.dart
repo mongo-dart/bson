@@ -1,4 +1,5 @@
-part of bson;
+import '../../bson.dart';
+import '../utils/types_def.dart';
 
 class DbRef extends BsonObject {
   DbRef(this.collection, ObjectId id)
@@ -7,6 +8,12 @@ class DbRef extends BsonObject {
 
   DbRef.fromBuffer(BsonBinary buffer) {
     var data = extractData(buffer);
+    collection = data.collection;
+    bsonObjectId = data.bsonObjectId;
+    bsonCollection = data.bsonCollection;
+  }
+  DbRef.fromEJson(Map<String, dynamic> eJsonMap) {
+    var data = extractEJson(eJsonMap);
     collection = data.collection;
     bsonObjectId = data.bsonObjectId;
     bsonCollection = data.bsonCollection;
@@ -21,6 +28,24 @@ class DbRef extends BsonObject {
     var collection = bsonCollection.data;
     var bsonObjectId = BsonObjectId.fromBuffer(buffer);
     return DbRefData(collection, bsonObjectId, bsonCollection);
+  }
+
+  static DbRefData extractEJson(Map<String, dynamic> eJsonMap) {
+    if (eJsonMap is! Map<String, Object>) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson DbRef representation');
+    }
+
+    if (eJsonMap.containsKey(type$ref) && eJsonMap.containsKey(type$id)) {
+      String locCollection = eJsonMap[type$ref] as String;
+      var locBsonObjectId =
+          BsonObjectId.fromEJson(eJsonMap[type$id] as Map<String, Object>);
+
+      return DbRefData(
+          locCollection, locBsonObjectId, BsonString(locCollection));
+    }
+    throw ArgumentError(
+        'The received Map is not a valid EJson DbRef representation');
   }
 
   @override
@@ -49,10 +74,8 @@ class DbRef extends BsonObject {
       bsonObjectId.toHexString() == other.bsonObjectId.toHexString();
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) =>
+      {type$ref: collection, type$id: bsonObjectId.eJson()};
 }
 
 class DbRefData {

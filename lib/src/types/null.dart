@@ -1,8 +1,18 @@
-part of bson;
+import '../../bson.dart';
 
 class BsonNull extends BsonObject {
   BsonNull();
   BsonNull.fromBuffer(BsonBinary buffer);
+  BsonNull.fromEJson(ejson) {
+    extractEJson(ejson);
+  }
+
+  static void extractEJson(ejson) {
+    if (ejson != null) {
+      throw ArgumentError(
+          'The received Object is not a valid Null representation');
+    }
+  }
 
   @override
   // ignore: prefer_void_to_null
@@ -15,8 +25,5 @@ class BsonNull extends BsonObject {
   void packValue(BsonBinary buffer) {}
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) => null;
 }

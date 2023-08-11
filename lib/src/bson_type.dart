@@ -131,29 +131,57 @@ abstract class BsonObject {
     throw Exception('Not implemented for $value');
   }
 
-  factory BsonObject.bsonObjectFromEJson(Object value) {
+  factory BsonObject.bsonObjectFromEJson(var value) {
     /// EJson value
     if (value is Map<String, dynamic> &&
         value.length == 1 &&
         value.keys.first.startsWith(r'$')) {
       var key = value.keys.first;
-      if (key == type$objectId) {
+      if (value.containsKey(type$objectId)) {
         return BsonObjectId.fromEJson(value);
       }
-      if (key == type$int64) {
+      if (value.containsKey(type$int64)) {
         return BsonLong.fromEJson(value);
       }
-      if (key == type$int32) {
+      if (value.containsKey(type$int32)) {
         return BsonInt.fromEJson(value);
       }
-      if (key == type$date) {
+      if (value.containsKey(type$double)) {
+        return BsonDouble.fromEJson(value);
+      }
+      if (value.containsKey(type$date)) {
         return BsonDate.fromEJson(value);
       }
-      if (key == type$code) {
+      if (key == type$decimal128) {
+        return BsonDecimal128.fromEJson(value);
+      }
+      if (value.containsKey(type$timestamp)) {
+        return BsonTimestamp.fromEJson(value);
+      }
+      if (value.containsKey(type$uuid)) {
+        return BsonUuid.fromEJson(value);
+      }
+      if (value.containsKey(type$binary)) {
+        return BsonBinary.fromEJson(value);
+      }
+      if (value.containsKey(type$code)) {
         return BsonCode.fromEJson(value);
+      }
+      if (value.containsKey(type$regex)) {
+        return BsonRegexp.fromEJson(value);
+      }
+      if (value.containsKey(type$ref)) {
+        return DbRef.fromEJson(value);
+      }
+      if (value.containsKey(type$dbPointer)) {
+        return DBPointer.fromEJson(value);
       }
     } else if (value is Map<String, dynamic>) {
       return BsonMap.fromEJson(value);
+    } else if (value == null) {
+      return BsonNull();
+    } else if (value is bool) {
+      return BsonBoolean(value);
     } else if (value is String) {
       return BsonString(value);
     } else if (value is double) {
@@ -165,35 +193,15 @@ abstract class BsonObject {
         return BsonLong.fromInt(value);
       }
       return BsonDouble.fromInt(value);
+    } else if (value is Int32) {
+      return BsonInt(value.toInt());
+    } else if (value is Int64) {
+      return BsonLong(value);
     } else if (value is List) {
       return BsonArray.fromEJson(value);
     }
 
     throw UnsupportedError('Type value not supported for Object $value');
-    /*   if (value is BsonObject) {
-      return value;
-    } else if (value is Int64) {
-      return BsonLong(value);
-    } else if (value is double) {
-      return BsonDouble(value);
-    } else if (value is String) {
-      return BsonString(value);
-    } else if (value is Map) {
-      return BsonMap(Map<String, dynamic>.from(value));
-    } else if (value is List) {
-      return BsonArray(value);
-    } else if (value == null) {
-      return BsonNull();
-    } else if (value == true || value == false) {
-      return BsonBoolean(value);
-    } else if (value is Decimal) {
-      return BsonDecimal128(value);
-    } else if (value is UuidValue) {
-      return BsonUuid(value);
-    } else if (value is Timestamp) {
-      return BsonTimestamp(value);
-    }
-    throw Exception('Not implemented for $value'); */
   }
 
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {

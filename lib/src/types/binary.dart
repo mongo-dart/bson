@@ -2,37 +2,37 @@ part of bson;
 
 class BsonBinary extends BsonObject {
   static final bool useFixnum = _isIntWorkaroundNeeded();
-  static final bufferSize = 256;
+  static const bufferSize = 256;
   @Deprecated('use "bufferSize"')
   // ignore: non_constant_identifier_names
   static final BUFFER_SIZE = bufferSize;
 
-  static final subtypeBinary = 0;
+  static const subtypeBinary = 0;
   @Deprecated('use "subtypeBinary"')
   // ignore: non_constant_identifier_names
   static final SUBTYPE_DEFAULT = subtypeBinary;
 
-  static final subtypeFunction = 1;
+  static const subtypeFunction = 1;
   @Deprecated('use "subtypeFunction"')
   // ignore: non_constant_identifier_names
   static final SUBTYPE_FUNCTION = subtypeFunction;
 
-  static final subtypeBinaryOld = 2;
+  static const subtypeBinaryOld = 2;
   @Deprecated('use "subtypeBinaryOld"')
   // ignore: non_constant_identifier_names
   static final SUBTYPE_BYTE_ARRAY = subtypeBinaryOld;
 
-  static final subtypeUuidOld = 3;
+  static const subtypeUuidOld = 3;
   @Deprecated('use "subtypeUuidOld"')
   // ignore: non_constant_identifier_names
   static final SUBTYPE_UUID = subtypeUuidOld;
 
-  static final subtypeUuid = 4;
+  static const subtypeUuid = 4;
   @Deprecated('use "subtypeUuid"')
   // ignore: non_constant_identifier_names
   static final SUBTYPE_MD5 = subtypeUuid;
 
-  static final subtypeUserDefined = 128;
+  static const subtypeUserDefined = 128;
   @Deprecated('use "subtypeUserDefined"')
   // ignore: non_constant_identifier_names
   static final SUBTYPE_USER_DEFINED = subtypeUserDefined;
@@ -92,15 +92,20 @@ class BsonBinary extends BsonObject {
         _byteList = _makeByteList(hexString.toLowerCase()),
         _subType = subType ?? subtypeBinary;
 
-  factory BsonBinary.fromBuffer(BsonBinary buffer) {
-    var data = extractData(buffer);
-    if (data.subType == subtypeUuid) {
-      return BsonUuid.from(data.byteList);
-    } else if (data.subType != subtypeBinary) {
+  factory BsonBinary.fromBuffer(BsonBinary buffer) =>
+      BsonBinary._fromBsonBinaryData(extractData(buffer));
+
+  factory BsonBinary.fromEJson(Map<String, dynamic> eJsonMap) =>
+      BsonBinary._fromBsonBinaryData(extractEJson(eJsonMap));
+
+  factory BsonBinary._fromBsonBinaryData(BsonBinaryData binData) {
+    if (binData.subType == subtypeUuid) {
+      return BsonUuid.from(binData.byteList);
+    } else if (binData.subType != subtypeBinary) {
       throw ArgumentError(
-          'Binary subtype "${data.subType}" is not yet managed');
+          'Binary subtype "${binData.subType}" is not yet managed');
     }
-    return BsonBinary.from(data.byteList);
+    return BsonBinary.from(binData.byteList);
   }
 
   // These values are always initiated
@@ -121,6 +126,29 @@ class BsonBinary extends BsonObject {
     locByteList.setRange(0, size, buffer.byteList, buffer.offset);
     buffer.offset += size;
     return BsonBinaryData(locByteList, locSubType);
+  }
+
+  static BsonBinaryData extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$binary) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson Binary representation');
+    }
+    if (entry.value is! Map<String, Object>) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson Binary representation');
+    }
+    var content = entry.value as Map<String, Object>;
+    if (content.containsKey('base64') && content.containsKey('subType')) {
+      String key = content['base64'] as String;
+      String type = content['subType'] as String;
+
+      var uint8List = base64Decode(key);
+      int locSubType = int.parse(type, radix: 16);
+      return BsonBinaryData(uint8List, locSubType);
+    }
+    throw ArgumentError(
+        'The received Map is not a avalid EJson Binary representation');
   }
 
   Uint8List get byteList => _byteList;
@@ -323,13 +351,22 @@ class BsonBinary extends BsonObject {
   @override
   dynamic get value => this;
   @override
+  int get hashCode => '$hexString$_subType'.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is BsonBinary &&
+      hexString == other.hexString &&
+      _subType == other._subType;
+  @override
   String toString() => 'BsonBinary($hexString)';
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) => {
+        type$binary: {
+          'base64': base64.encode(byteList),
+          'subType': subType.toRadixString(16)
+        }
+      };
 }
 
 bool _isIntWorkaroundNeeded() {

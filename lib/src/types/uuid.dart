@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:bson/src/utils/types_def.dart';
+
 import '../../bson.dart';
 
 class BsonUuid extends BsonBinary {
@@ -23,6 +25,20 @@ class BsonUuid extends BsonBinary {
     return ret;
   }
 
+  factory BsonUuid.fromEJson(Map<String, dynamic> eJsonMap) =>
+      BsonUuid(UuidValue(extractEJson(eJsonMap)));
+
+  static String extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+
+    if (entry.key == type$uuid && entry.value is String) {
+      return entry.value;
+    }
+
+    throw ArgumentError(
+        'The received Map is not a valid EJson Uuid representation');
+  }
+
   static Uint8List uuidToByteList(UuidValue? uuid) =>
       Uint8List.fromList((uuid ??= Uuid().v4obj()).toBytes());
 
@@ -34,4 +50,7 @@ class BsonUuid extends BsonBinary {
   UuidValue get value => UuidValue.fromByteList(byteList);
 
   String toJson() => value.toString();
+
+  @override
+  eJson({bool relaxed = false}) => {type$uuid: value.toString()};
 }

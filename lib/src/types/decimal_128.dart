@@ -1,3 +1,4 @@
+import 'package:bson/src/utils/types_def.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:packages_extensions/decimal_extension.dart';
@@ -73,12 +74,12 @@ class BsonDecimal128 extends BsonObject {
   BsonBinary bin;
 
   BsonDecimal128(Decimal? decimal) : bin = convertDecimalToBinary(decimal);
-
-  BsonDecimal128.fromBuffer(BsonBinary buffer) : bin = extractData(buffer);
-
   BsonDecimal128.fromBsonBinary(this.bin) {
     _checkBinaryLength(bin);
   }
+  BsonDecimal128.fromBuffer(BsonBinary buffer) : bin = extractData(buffer);
+  BsonDecimal128.fromEJson(Map<String, dynamic> eJsonMap)
+      : bin = extractEJson(eJsonMap);
 
   factory BsonDecimal128.fromHexString(String hexString) {
     if (hexString.length != 32) {
@@ -97,6 +98,20 @@ class BsonDecimal128 extends BsonObject {
     var bin = BsonBinary.from(content);
     buffer.offset += 16;
     return bin;
+  }
+
+  static BsonBinary extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$decimal128) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson Decimal128 representation');
+    }
+
+    if (entry.value is! String) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson Decimal128 representation');
+    }
+    return convertDecimalToBinary(Decimal.parse(entry.value));
   }
 
   /// we check that the buffer received, starting from the offset,
@@ -319,8 +334,6 @@ class BsonDecimal128 extends BsonObject {
   }
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) =>
+      {type$decimal128: '${convertBinaryToDecimal(bin)}'};
 }

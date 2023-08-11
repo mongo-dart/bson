@@ -2,8 +2,7 @@
 
 ## 4.0.1-1.2.dev
 
-- added String to EJson
-- added Code to EJson
+- added String, Code, Double, Null, Boolean, Binary, UUid and Decimal128 to EJson
 
 ## 4.0.1-1.1.dev
 

@@ -1,4 +1,5 @@
-part of bson;
+import '../../bson.dart';
+import '../utils/types_def.dart';
 
 class BsonRegexp extends BsonObject {
   BsonRegexp(this.pattern,
@@ -24,6 +25,13 @@ class BsonRegexp extends BsonObject {
     bsonPattern = BsonCString(pattern);
     bsonOptions = BsonCString(options);
   }
+  BsonRegexp.fromEJson(Map<String, dynamic> eJsonMap) {
+    var data = extractEJson(eJsonMap);
+    pattern = data.pattern;
+    options = data.options;
+    bsonPattern = BsonCString(pattern);
+    bsonOptions = BsonCString(options);
+  }
 
   late String pattern;
   late String options;
@@ -34,6 +42,27 @@ class BsonRegexp extends BsonObject {
     var pattern = buffer.readCString();
     var options = buffer.readCString();
     return BsonRegexpData(pattern, options);
+  }
+
+  static BsonRegexpData extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$regex) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson Regex representation');
+    }
+    if (entry.value is! Map<String, Object>) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson Regex representation');
+    }
+    var content = entry.value as Map<String, Object>;
+    if (content.containsKey('pattern') && content.containsKey('options')) {
+      String locPattern = content['pattern'] as String;
+      String locOptions = content['options'] as String;
+
+      return BsonRegexpData(locPattern, locOptions);
+    }
+    throw ArgumentError(
+        'The received Map is not a valid EJson Timestamp representation');
   }
 
   static String createOptionsString(
@@ -79,15 +108,14 @@ class BsonRegexp extends BsonObject {
   Map<String, Object> toJson() => {'\$regex': pattern, '\$oid': options};
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) => {
+        type$regex: {'pattern': pattern, 'options': options}
+      };
 }
 
 class BsonRegexpData {
   BsonRegexpData(this.pattern, this.options);
 
-  String pattern;
-  String options;
+  final String pattern;
+  final String options;
 }

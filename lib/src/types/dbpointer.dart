@@ -1,4 +1,5 @@
-part of bson;
+import '../../bson.dart';
+import '../utils/types_def.dart';
 
 class DBPointer extends BsonObject {
   DBPointer(this.collection, ObjectId id)
@@ -6,6 +7,12 @@ class DBPointer extends BsonObject {
         bsonObjectId = BsonObjectId(id);
   DBPointer.fromBuffer(BsonBinary buffer) {
     var data = extractData(buffer);
+    collection = data.collection;
+    bsonObjectId = data.id;
+    bsonCollection = data.bsonCollection;
+  }
+  DBPointer.fromEJson(Map<String, dynamic> eJsonMap) {
+    var data = extractEJson(eJsonMap);
     collection = data.collection;
     bsonObjectId = data.id;
     bsonCollection = data.bsonCollection;
@@ -20,6 +27,29 @@ class DBPointer extends BsonObject {
     var collection = bsonCollection.data;
     var bsonObjectId = BsonObjectId.fromBuffer(buffer);
     return DBPointerData(collection, bsonObjectId, bsonCollection);
+  }
+
+  static DBPointerData extractEJson(Map<String, dynamic> eJsonMap) {
+    var entry = eJsonMap.entries.first;
+    if (entry.key != type$dbPointer) {
+      throw ArgumentError(
+          'The received Map is not a avalid EJson DbPointer representation');
+    }
+    if (entry.value is! Map<String, Object>) {
+      throw ArgumentError(
+          'The received Map is not a valid EJson DbPointer representation');
+    }
+    var content = entry.value as Map<String, Object>;
+    if (content.containsKey(type$ref) && content.containsKey(type$id)) {
+      String locCollection = content[type$ref] as String;
+      var locBsonObjectId =
+          BsonObjectId.fromEJson(content[type$id] as Map<String, Object>);
+
+      return DBPointerData(
+          locCollection, locBsonObjectId, BsonString(locCollection));
+    }
+    throw ArgumentError(
+        'The received Map is not a valid EJson Timestamp representation');
   }
 
   @override
@@ -48,10 +78,9 @@ class DBPointer extends BsonObject {
       bsonObjectId.toHexString() == other.bsonObjectId.toHexString();
 
   @override
-  eJson({bool relaxed = false}) {
-    // TODO: implement eJson
-    throw UnimplementedError();
-  }
+  eJson({bool relaxed = false}) => {
+        type$dbPointer: {type$ref: collection, type$id: bsonObjectId.eJson()}
+      };
 }
 
 class DBPointerData {
