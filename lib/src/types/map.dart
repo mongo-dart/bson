@@ -1,74 +1,110 @@
 import '../../bson.dart';
+import '../utils/types_def.dart';
 
 class BsonMap extends BsonObject {
-  BsonMap(Map<String, dynamic> data) : buffer = _pack(data);
-  BsonMap.fromBuffer(this.buffer);
-  BsonMap.fromEJson(Map<String, dynamic> eJsonMap)
-      : buffer = _fromEJson(eJsonMap);
+  BsonMap(Map<String, dynamic> data) : _mapData = data2buffer(data);
+  BsonMap.fromBsonMapData(this._mapData);
 
-  BsonBinary buffer;
+  factory BsonMap.fromBuffer(BsonBinary fullBuffer) =>
+      BsonMap._fromBsonMapData(extractData(fullBuffer));
 
-  static Map<String, dynamic> extractData(BsonBinary buffer) {
+  factory BsonMap.fromEJson(Map<String, dynamic> eJsonMap) =>
+      BsonMap._fromBsonMapData(ejson2buffer(eJsonMap));
+
+  factory BsonMap._fromBsonMapData(BsonMapData mapData) {
+    var ret = mapData.document;
+    if (ret.containsKey(type$ref) && ret.containsKey(type$id)) {
+      return DbRef(ret[type$ref], ret[type$id]);
+    }
+    return BsonMap.fromBsonMapData(mapData);
+  }
+
+  //final BsonBinary buffer;
+  //final int initialOffset;
+  final BsonMapData _mapData;
+
+  //Map<String, dynamic> get data => _data ??= _buffer2data(_mapData);
+
+  /// Extract data from a buffer with leading length and trailing terminator (0)
+  static BsonMapData extractData(BsonBinary fullBuffer) {
+    int offset = fullBuffer.offset;
+    int length = fullBuffer.readInt32();
+    fullBuffer.offset = offset + length;
+    return BsonMapData(fullBuffer, offset + 4, length - 5);
+  }
+
+/* 
+  static Map<String, dynamic> _extractData(BsonBinary buffer) {
+    print('Buffer in _extractData: ${buffer.offset} ${buffer.hexString}');
     var ret = <String, dynamic>{};
     buffer.offset += 4;
     var typeByte = buffer.readByte();
     while (typeByte != 0) {
       var key = buffer.readCString();
       ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, buffer).value;
+      if (buffer.atEnd()) {
+        break;
+      }
       typeByte = buffer.readByte();
     }
     return ret;
   }
+ */
+  static BsonMapData extractEJson(Map<String, dynamic> eJsonMap) =>
+      ejson2buffer(eJsonMap);
 
-  static Map<String, dynamic> extractEJson(BsonBinary buffer,
-      {bool relaxed = false}) {
-    var ret = <String, dynamic>{};
-    buffer.offset += 4;
-    var typeByte = buffer.readByte();
-    while (typeByte != 0) {
-      var key = buffer.readCString();
-      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, buffer)
-          .eJson(relaxed: relaxed);
-      typeByte = buffer.readByte();
-    }
-    return ret;
-  }
-
-  int dataSize() => buffer.byteList.length;
+  int dataSize() => _mapData.length;
 
   @override
-  Map<String, dynamic> get value => extractData(buffer);
+  dynamic get value => _mapData.document;
   @override
-  int byteLength() => dataSize() + 1 + 4;
+  int byteLength() => 4 + dataSize() + 1;
   @override
   int get typeByte => bsonDataObject;
   @override
   void packValue(BsonBinary buffer) {
     buffer.writeInt(byteLength());
 
-    buffer.byteList.setRange(buffer.offset,
-        buffer.offset + this.buffer.byteList.length, this.buffer.byteList);
-    buffer.offset += this.buffer.byteList.length;
+    buffer.byteList.setRange(buffer.offset, buffer.offset + _mapData.length,
+        _mapData.cleanBuffer.byteList);
+    buffer.offset += _mapData.length;
 
     buffer.writeByte(0);
   }
 
-  static BsonBinary _pack(Map<String, dynamic> data) {
+  @override
+  int get hashCode => _mapData.hashCode;
+  @override
+  bool operator ==(other) => other is BsonMap && _mapData == other._mapData;
+
+  static Map<String, dynamic> _buffer2data(BsonMapData mapData) {
+    var ret = <String, dynamic>{};
+    var readBuffer = mapData.readBuffer;
+
+    //readBuffer.offset += 4;
+    var typeByte = readBuffer.readByte();
+    while (typeByte != 0) {
+      var key = readBuffer.readCString();
+      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer).value;
+      if (readBuffer.atEnd()) {
+        break;
+      }
+      typeByte = readBuffer.readByte();
+    }
+    return ret;
+  }
+
+  static BsonMapData data2buffer(Map<String, dynamic> data) {
     var internalBuffer = BsonBinary(_calcDataDimension(data));
+
     for (var entry in data.entries) {
       BsonObject.bsonObjectFrom(entry.value)
           .packElement(entry.key, internalBuffer);
     }
-    return internalBuffer;
-  }
-
-  static BsonBinary _fromEJson(Map<String, dynamic> data) {
-    var internalBuffer = BsonBinary(_calcEJsonDataDimension(data));
-    for (var entry in data.entries) {
-      BsonObject.bsonObjectFromEJson(entry.value)
-          .packElement(entry.key, internalBuffer);
-    }
-    return internalBuffer;
+    print(
+        'Buffer in data2buffer: ${internalBuffer.offset} ${internalBuffer.hexString}');
+    internalBuffer.rewind();
+    return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
   }
 
   static int _calcDataDimension(Map<String, dynamic> data) {
@@ -77,6 +113,41 @@ class BsonMap extends BsonObject {
       dim += BsonObject.elementSize(entry.key, entry.value);
     }
     return dim;
+  }
+
+  static Map<String, dynamic> buffer2ejson(BsonMapData mapData,
+      {bool relaxed = false, int initialOffset = 0}) {
+    var ret = <String, dynamic>{};
+    var readBuffer = mapData.readBuffer;
+
+    // readBuffer.offset += 4;
+    var typeByte = readBuffer.readByte();
+    while (typeByte != 0) {
+      var key = readBuffer.readCString();
+      var bsonObj = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer);
+      ret[key] = bsonObj.eJson(relaxed: relaxed);
+      print('$ret - ${readBuffer.offset}');
+      /* ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer)
+          .eJson(relaxed: relaxed); */
+      if (readBuffer.atEnd()) {
+        break;
+      }
+      typeByte = readBuffer.readByte();
+    }
+    return ret;
+  }
+
+  static BsonMapData ejson2buffer(Map<String, dynamic> ejsonMap) {
+    var internalBuffer = BsonBinary(_calcEJsonDataDimension(ejsonMap));
+    for (var entry in ejsonMap.entries) {
+      BsonObject.bsonObjectFromEJson(entry.value)
+          .packElement(entry.key, internalBuffer);
+    }
+    print(
+        'Buffer in ejson2buffer: ${internalBuffer.offset} ${internalBuffer.hexString}');
+
+    internalBuffer.rewind();
+    return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
   }
 
   static int _calcEJsonDataDimension(Map<String, dynamic> data) {
@@ -88,5 +159,27 @@ class BsonMap extends BsonObject {
   }
 
   @override
-  eJson({bool relaxed = false}) => extractEJson(buffer, relaxed: relaxed);
+  eJson({bool relaxed = false}) => buffer2ejson(_mapData, relaxed: relaxed);
+}
+
+class BsonMapData {
+  BsonMapData(this.binData, this.binOffset, this.length);
+  final BsonBinary binData;
+  final int binOffset;
+  final int length;
+  BsonBinary? _cleanBuffer;
+  Map<String, dynamic>? _document;
+
+  @override
+  int get hashCode => cleanBuffer.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is BsonMapData && cleanBuffer == other.cleanBuffer;
+
+  BsonBinary get cleanBuffer => _cleanBuffer ??= BsonBinary(length)
+    ..byteList.setRange(0, length, binData.byteList, binOffset)
+    ..rewind();
+  BsonBinary get readBuffer =>
+      cleanBuffer.clone..rewind(); //data.clone..offset = offset;
+  dynamic get document => _document ??= BsonMap._buffer2data(this);
 }

@@ -23,7 +23,9 @@ class EJson {
     if (buffer.byteList.length < 5) {
       throw Exception('corrupt bson message < 5 bytes long');
     }
-    return BsonMap.extractEJson(buffer, relaxed: relaxed);
+    return BsonMap.fromBuffer(buffer).eJson(relaxed: relaxed);
+
+    //return BsonMap.buffer2ejson(buffer, relaxed: relaxed);
   }
 
   ///

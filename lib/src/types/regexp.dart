@@ -91,6 +91,13 @@ class BsonRegexp extends BsonObject {
   }
 
   @override
+  int get hashCode => '$pattern-$options'.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is BsonRegexp &&
+      pattern == other.pattern &&
+      options == other.options;
+  @override
   BsonRegexp get value => this;
   @override
   int get typeByte => bsonDataRegExp;

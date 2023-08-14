@@ -29,9 +29,12 @@ class BsonString extends BsonObject {
   }
 
   List<int> get utfData => _utfData ??= utf8.encode(data);
-
   @override
-  String get value => data;
+  int get hashCode => data.hashCode;
+  @override
+  bool operator ==(other) => other is BsonString && data == other.data;
+  @override
+  dynamic get value => data;
   @override
   int byteLength() => utfData.length + 1 + 4;
   @override
@@ -72,7 +75,9 @@ class BsonCode extends BsonString {
         'The received Map is not a valid EJson String representation');
   }
 
-  //get value => this;
+  @override
+  BsonCode get value => this;
+
   @override
   int get typeByte => bsonDataCode;
   @override

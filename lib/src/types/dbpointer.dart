@@ -35,11 +35,8 @@ class DBPointer extends BsonObject {
       throw ArgumentError(
           'The received Map is not a avalid EJson DbPointer representation');
     }
-    if (entry.value is! Map<String, Object>) {
-      throw ArgumentError(
-          'The received Map is not a valid EJson DbPointer representation');
-    }
-    var content = entry.value as Map<String, Object>;
+
+    var content = entry.value;
     if (content.containsKey(type$ref) && content.containsKey(type$id)) {
       String locCollection = content[type$ref] as String;
       var locBsonObjectId =

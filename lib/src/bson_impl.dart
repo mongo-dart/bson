@@ -19,6 +19,6 @@ class BSON {
     if (buffer.byteList.length < 5) {
       throw Exception('corrupt bson message < 5 bytes long');
     }
-    return BsonMap.extractData(buffer);
+    return BsonMap.fromBuffer(buffer).value;
   }
 }

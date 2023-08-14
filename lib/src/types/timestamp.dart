@@ -38,6 +38,11 @@ class BsonTimestamp extends BsonObject {
   }
 
   @override
+  int get hashCode => timestamp.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is BsonTimestamp && timestamp == other.timestamp;
+  @override
   Timestamp get value => timestamp;
   @override
   int get typeByte => bsonDataTimestamp;

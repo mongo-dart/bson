@@ -443,6 +443,170 @@ void main() {
         expect(result, sourceMap);
       });
     });
+    group('Code', () {
+      var code = BsonCode('Function() {}');
+      var sourceMap = {'code': code};
+      var hexBuffer =
+          '1d0000000d636f6465000e00000046756e6374696f6e2829207b7d0000';
+      var eJsonSource = {
+        'code': {type$code: code.data}
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Timestamp', () {
+      var timestamp = Timestamp(129984774, 2);
+      var sourceMap = {'timestamp': timestamp};
+      var hexBuffer = '180000001174696d657374616d7000020000000669bf0700';
+      var eJsonSource = {
+        'timestamp': {
+          type$timestamp: {'t': 129984774, 'i': 2}
+        }
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('Regular Expression', () {
+      var regex = BsonRegexp('^T', options: 'mi');
+      var sourceMap = {'regex': regex};
+      var hexBuffer = '120000000b7265676578005e54006d690000';
+      var eJsonSource = {
+        'regex': {
+          type$regex: {'pattern': '^T', 'options': 'mi'}
+        }
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
+    group('DbPointer', () {
+      var oid = ObjectId.parse('57e193d7a9cc81b4027498b5');
+      var regex = DBPointer('Collection', oid);
+      var sourceMap = {'dbPointer': regex};
+      var hexBuffer =
+          '2b0000000c6462506f696e746572000b000000436f6c6c656374696f6e0057e193d7a9cc81b4027498b500';
+      var eJsonSource = {
+        'dbPointer': {
+          type$dbPointer: {
+            type$ref: 'Collection',
+            type$id: BsonObjectId(oid).eJson()
+          }
+        }
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
     group('DateTime', () {
       var date = DateTime(2012, 10, 6, 10, 15, 20).toUtc();
       var beforeEpoch = DateTime(1012, 10, 6, 10, 15, 20).toUtc();
@@ -590,6 +754,50 @@ void main() {
         expect(result, sourceMapA9);
       });
     });
+    group('DbRef', () {
+      var oid = ObjectId.parse('57e193d7a9cc81b4027498b5');
+      var dbRef = DbRef('Collection', oid);
+      var sourceMap = {'dbRef': dbRef};
+
+      var hexBuffer =
+          '37000000036462526566002b0000000224726566000b000000436f6c6c656374696f6e00072469640057e193d7a9cc81b4027498b50000';
+      var eJsonSource = {
+        'dbRef': {
+          type$ref: 'Collection', //dbRef.collection,
+          type$id: BsonObjectId(oid).eJson()
+        }
+      };
+      test('- canonical', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+      test('- relaxed', () {
+        var buffer = bson.serialize(sourceMap);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        Map result = EJson.deserialize(buffer, relaxed: true);
+        expect(result, eJsonSource);
+
+        buffer = EJson.serialize(eJsonSource);
+        expect(buffer.hexString, hexBuffer);
+
+        buffer.rewind();
+        result = bson.deserialize(buffer);
+        expect(result, sourceMap);
+      });
+    });
     group('Bool', () {
       var boolean = true;
       var sourceMap = {'bool': boolean};
@@ -665,43 +873,78 @@ void main() {
   });
   group('BsonTypesTest:', () {
     test('typeTest', () {
-      expect(
-          BsonObject.bsonObjectFromEJson(
-              {type$objectId: '57e193d7a9cc81b4027498b5'}) is BsonObjectId,
+      Function bTest = BsonObject.bsonObjectFromEJson;
+      expect(bTest({type$objectId: '57e193d7a9cc81b4027498b5'}) is BsonObjectId,
           isTrue);
-      expect(BsonObject.bsonObjectFromEJson('asdfasdf') is BsonString, isTrue);
+      expect(bTest('asdfasdf') is BsonString, isTrue);
+      expect(bTest({type$int32: '1234'}) is BsonInt, isTrue);
+      expect(bTest({type$int64: '1234'}) is BsonLong, isTrue);
+      expect(bTest({type$double: '12.34'}) is BsonDouble, isTrue);
+      expect(bTest({type$double: 'Infinity'}) is BsonDouble, isTrue);
+      expect(bTest({type$decimal128: '12.34'}) is BsonDecimal128, isTrue);
       expect(
-          BsonObject.bsonObjectFromEJson({
+          bTest({
+            type$binary: {"base64": "yO2rw/c4TKO2jauSqRR4ow==", "subType": "00"}
+          }) is BsonBinary,
+          isTrue);
+      expect(
+          bTest({
+            type$binary: {"base64": "yO2rw/c4TKO2jauSqRR4ow==", "subType": "04"}
+          }) is BsonUuid,
+          isTrue);
+      expect(bTest({type$uuid: Uuid().v4()}) is BsonUuid, isTrue);
+
+      expect(bTest({type$code: 'function() {}'}) is BsonCode, isTrue);
+      expect(
+          bTest({
+            'a': {type$int32: '2'},
+            'b': {type$int32: '3'},
+            'c': {type$int32: '4'}
+          }) is BsonMap,
+          isTrue);
+      expect(
+          bTest({
+            type$timestamp: {'t': 1234567, 'i': 1}
+          }) is BsonTimestamp,
+          isTrue);
+
+      expect(
+          bTest({
+            type$regex: {'pattern': '^T', 'options': 'xi'}
+          }) is BsonRegexp,
+          isTrue);
+      expect(
+          bTest({
+            type$dbPointer: {
+              type$ref: 'collection',
+              type$id: {type$objectId: '57e193d7a9cc81b4027498b5'}
+            }
+          }) is DBPointer,
+          isTrue);
+      expect(
+          bTest({
             r'$date': {
               r'$numberLong': DateTime.now().millisecondsSinceEpoch.toString()
             }
           }) is BsonDate,
           isTrue);
-      expect(
-          BsonObject.bsonObjectFromEJson(
-              {r'$date': DateTime.now().toIso8601String()}) is BsonDate,
+      expect(bTest({r'$date': DateTime.now().toIso8601String()}) is BsonDate,
           isTrue);
-
-      expect(BsonObject.bsonObjectFromEJson({type$int32: '1234'}) is BsonInt,
-          isTrue);
-
       expect(
-          BsonObject.bsonObjectFromEJson({type$code: 'function() {}'})
-              is BsonCode,
+          bTest({
+            type$ref: 'collection',
+            type$id: {type$objectId: '57e193d7a9cc81b4027498b5'}
+          }) is DbRef,
           isTrue);
-
       expect(
-          BsonObject.bsonObjectFromEJson([
+          bTest([
             {type$int32: '2'},
             {type$int32: '3'},
             {type$int32: '4'}
           ]) is BsonArray,
           isTrue);
-      expect(BsonObject.bsonObjectFrom(Decimal.fromInt(1)) is BsonDecimal128,
-          isTrue);
-      expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is BsonUuid, isTrue);
-      expect(BsonObject.bsonObjectFromEJson(null) is BsonNull, isTrue);
-      expect(BsonObject.bsonObjectFromEJson(false) is BsonBoolean, isTrue);
+      expect(bTest(false) is BsonBoolean, isTrue);
+      expect(bTest(null) is BsonNull, isTrue);
     });
   });
   group('Misc:', () {

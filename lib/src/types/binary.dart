@@ -119,6 +119,9 @@ class BsonBinary extends BsonObject {
 
   int offset = 0;
 
+  BsonBinary get clone =>
+      BsonBinary.fromHexString(hexString, subType: _subType)..offset = offset;
+
   static BsonBinaryData extractData(BsonBinary buffer) {
     var size = buffer.readInt32();
     var locSubType = buffer.readByte();

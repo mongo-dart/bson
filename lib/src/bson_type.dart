@@ -137,46 +137,47 @@ abstract class BsonObject {
         value.length == 1 &&
         value.keys.first.startsWith(r'$')) {
       var key = value.keys.first;
-      if (value.containsKey(type$objectId)) {
+      if (key == type$objectId) {
         return BsonObjectId.fromEJson(value);
       }
-      if (value.containsKey(type$int64)) {
+      if (key == type$int64) {
         return BsonLong.fromEJson(value);
       }
-      if (value.containsKey(type$int32)) {
+      if (key == type$int32) {
         return BsonInt.fromEJson(value);
       }
-      if (value.containsKey(type$double)) {
+      if (key == type$double) {
         return BsonDouble.fromEJson(value);
       }
-      if (value.containsKey(type$date)) {
+      if (key == type$date) {
         return BsonDate.fromEJson(value);
       }
       if (key == type$decimal128) {
         return BsonDecimal128.fromEJson(value);
       }
-      if (value.containsKey(type$timestamp)) {
+      if (key == type$timestamp) {
         return BsonTimestamp.fromEJson(value);
       }
-      if (value.containsKey(type$uuid)) {
+      if (key == type$uuid) {
         return BsonUuid.fromEJson(value);
       }
-      if (value.containsKey(type$binary)) {
+      if (key == type$binary) {
         return BsonBinary.fromEJson(value);
       }
-      if (value.containsKey(type$code)) {
+      if (key == type$code) {
         return BsonCode.fromEJson(value);
       }
-      if (value.containsKey(type$regex)) {
+      if (key == type$regex) {
         return BsonRegexp.fromEJson(value);
       }
-      if (value.containsKey(type$ref)) {
-        return DbRef.fromEJson(value);
-      }
-      if (value.containsKey(type$dbPointer)) {
+
+      if (key == type$dbPointer) {
         return DBPointer.fromEJson(value);
       }
     } else if (value is Map<String, dynamic>) {
+      /*  if (value.containsKey(type$ref) && value.containsKey(type$id)) {
+        return DbRef.fromEJson(<String, Object>{...value});
+      } */
       return BsonMap.fromEJson(value);
     } else if (value == null) {
       return BsonNull();
@@ -225,7 +226,7 @@ abstract class BsonObject {
       case bsonDataNull:
         return BsonNull.fromBuffer(buffer);
       case bsonDataDbPointer:
-        return DbRef.fromBuffer(buffer);
+        return DBPointer.fromBuffer(buffer);
       case bsonDataBool:
         return BsonBoolean.fromBuffer(buffer);
       case bsonDataBinary:

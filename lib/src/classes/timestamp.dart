@@ -12,5 +12,12 @@ class Timestamp {
   final int increment;
 
   @override
+  int get hashCode => '$seconds-$increment'.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is Timestamp &&
+      seconds == other.seconds &&
+      increment == other.increment;
+  @override
   String toString() => 'Timestamp($seconds, $increment)';
 }

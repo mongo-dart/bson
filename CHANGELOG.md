@@ -3,6 +3,8 @@
 ## 4.0.1-1.2.dev
 
 - added String, Code, Double, Null, Boolean, Binary, UUid and Decimal128 to EJson
+- Removed class DbRefData
+- Redesigned class DbRef. **Breaking Change** It was stored wrongly as DbPointer. Now it is stored as Map
 
 ## 4.0.1-1.1.dev
 
