@@ -109,8 +109,8 @@ class BsonBinary extends BsonObject {
   }
 
   // These values are always initiated
-  Uint8List _byteList;
-  int _subType;
+  final Uint8List _byteList;
+  final int _subType;
 
   // These are initiated on-demand
   // Not used at present, see the getter comment

@@ -1,29 +1,32 @@
 import '../../bson.dart';
 import '../utils/types_def.dart';
 
+// The structure of the "Full Buffer" is:
+// 4 bytes size (comprehending this bytes also)
+//    each element:
+//    1 byte Type byte of the value (the key is always a C String)
+//    C String with the key (zero terminated list of bytes)
+//    Value element (of the type defined above)
+// 1 byte terminator (0)
 class BsonMap extends BsonObject {
   BsonMap(Map<String, dynamic> data) : _mapData = data2buffer(data);
-  BsonMap.fromBsonMapData(this._mapData);
+  BsonMap._fromBsonMapData(this._mapData);
 
   factory BsonMap.fromBuffer(BsonBinary fullBuffer) =>
-      BsonMap._fromBsonMapData(extractData(fullBuffer));
+      BsonMap._analyzeBsonMapData(extractData(fullBuffer));
 
   factory BsonMap.fromEJson(Map<String, dynamic> eJsonMap) =>
-      BsonMap._fromBsonMapData(ejson2buffer(eJsonMap));
+      BsonMap._analyzeBsonMapData(ejson2buffer(eJsonMap));
 
-  factory BsonMap._fromBsonMapData(BsonMapData mapData) {
+  factory BsonMap._analyzeBsonMapData(BsonMapData mapData) {
     var ret = mapData.document;
     if (ret.containsKey(type$ref) && ret.containsKey(type$id)) {
       return DbRef(ret[type$ref], ret[type$id]);
     }
-    return BsonMap.fromBsonMapData(mapData);
+    return BsonMap._fromBsonMapData(mapData);
   }
 
-  //final BsonBinary buffer;
-  //final int initialOffset;
   final BsonMapData _mapData;
-
-  //Map<String, dynamic> get data => _data ??= _buffer2data(_mapData);
 
   /// Extract data from a buffer with leading length and trailing terminator (0)
   static BsonMapData extractData(BsonBinary fullBuffer) {
@@ -35,7 +38,6 @@ class BsonMap extends BsonObject {
 
 /* 
   static Map<String, dynamic> _extractData(BsonBinary buffer) {
-    print('Buffer in _extractData: ${buffer.offset} ${buffer.hexString}');
     var ret = <String, dynamic>{};
     buffer.offset += 4;
     var typeByte = buffer.readByte();
@@ -66,7 +68,7 @@ class BsonMap extends BsonObject {
     buffer.writeInt(byteLength());
 
     buffer.byteList.setRange(buffer.offset, buffer.offset + _mapData.length,
-        _mapData.cleanBuffer.byteList);
+        _mapData.objectBuffer.byteList);
     buffer.offset += _mapData.length;
 
     buffer.writeByte(0);
@@ -101,8 +103,7 @@ class BsonMap extends BsonObject {
       BsonObject.bsonObjectFrom(entry.value)
           .packElement(entry.key, internalBuffer);
     }
-    print(
-        'Buffer in data2buffer: ${internalBuffer.offset} ${internalBuffer.hexString}');
+
     internalBuffer.rewind();
     return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
   }
@@ -124,11 +125,10 @@ class BsonMap extends BsonObject {
     var typeByte = readBuffer.readByte();
     while (typeByte != 0) {
       var key = readBuffer.readCString();
-      var bsonObj = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer);
-      ret[key] = bsonObj.eJson(relaxed: relaxed);
-      print('$ret - ${readBuffer.offset}');
-      /* ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer)
-          .eJson(relaxed: relaxed); */
+      // var bsonObj = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer);
+      // ret[key] = bsonObj.eJson(relaxed: relaxed);
+      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer)
+          .eJson(relaxed: relaxed);
       if (readBuffer.atEnd()) {
         break;
       }
@@ -143,8 +143,6 @@ class BsonMap extends BsonObject {
       BsonObject.bsonObjectFromEJson(entry.value)
           .packElement(entry.key, internalBuffer);
     }
-    print(
-        'Buffer in ejson2buffer: ${internalBuffer.offset} ${internalBuffer.hexString}');
 
     internalBuffer.rewind();
     return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
@@ -167,19 +165,20 @@ class BsonMapData {
   final BsonBinary binData;
   final int binOffset;
   final int length;
-  BsonBinary? _cleanBuffer;
+  BsonBinary? _objectBuffer;
   Map<String, dynamic>? _document;
 
   @override
-  int get hashCode => cleanBuffer.hashCode;
+  int get hashCode => objectBuffer.hashCode;
   @override
   bool operator ==(other) =>
-      other is BsonMapData && cleanBuffer == other.cleanBuffer;
+      other is BsonMapData && objectBuffer == other.objectBuffer;
 
-  BsonBinary get cleanBuffer => _cleanBuffer ??= BsonBinary(length)
-    ..byteList.setRange(0, length, binData.byteList, binOffset)
+  BsonBinary get objectBuffer => (_objectBuffer ??=
+      BsonBinary(length)
+        ..byteList.setRange(0, length, binData.byteList, binOffset))
     ..rewind();
   BsonBinary get readBuffer =>
-      cleanBuffer.clone..rewind(); //data.clone..offset = offset;
+      objectBuffer.clone..rewind(); //data.clone..offset = offset;
   dynamic get document => _document ??= BsonMap._buffer2data(this);
 }

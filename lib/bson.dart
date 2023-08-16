@@ -19,7 +19,6 @@ import 'src/types/string.dart';
 import 'src/types/null.dart';
 import 'src/types/boolean.dart';
 import 'src/types/regexp.dart';
-import 'src/types/dbref.dart';
 import 'src/types/dbpointer.dart';
 
 export 'src/types/decimal_128.dart';

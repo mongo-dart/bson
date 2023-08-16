@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.0-1.0.dev
+
+Completed ejson creation. Still missin tests and docs.
+Some base classes have revisited, and there can be som breaking changes, this is the reason of the change in release number.
+
 ## 4.0.1-1.2.dev
 
 - added String, Code, Double, Null, Boolean, Binary, UUid and Decimal128 to EJson
