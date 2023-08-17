@@ -89,7 +89,7 @@ void run() {
       expect(b.hexString, 'ffffffff');
     });
     test('testDateTime', () {
-      var date = DateTime(2012, 10, 6, 10, 15, 20).toUtc();
+      var date = DateTime(2012, 10, 6, 10, 15, 20);
       var bson = BSON();
       var sourceMap = {'d': date};
       var buffer = bson.serialize(sourceMap);

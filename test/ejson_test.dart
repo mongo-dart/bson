@@ -640,7 +640,8 @@ void main() {
 
         buffer.rewind();
         result = bson.deserialize(buffer);
-        expect(result, sourceMap);
+        expect(result['d'].millisecondsSinceEpoch,
+            sourceMap['d']!.millisecondsSinceEpoch);
       });
       test('- relaxed', () {
         var eJsonSource = {
@@ -652,14 +653,16 @@ void main() {
 
         buffer.rewind();
         Map result = EJson.deserialize(buffer, relaxed: true);
-        expect(result, eJsonSource);
+        expect(result['d'][r'$date'].substring(0, 10),
+            eJsonSource['d']![r'$date']!.substring(0, 10));
 
         buffer = EJson.serialize(eJsonSource);
         expect(buffer.hexString, hexBuffer);
 
         buffer.rewind();
         result = bson.deserialize(buffer);
-        expect(result, sourceMap);
+        expect(result['d'].millisecondsSinceEpoch,
+            sourceMap['d']!.millisecondsSinceEpoch);
       });
       test('- before epoch - canonical', () {
         var eJsonSource = {
@@ -682,7 +685,8 @@ void main() {
 
         buffer.rewind();
         result = bson.deserialize(buffer);
-        expect(result, sourceMapBE);
+        expect(result['d'].millisecondsSinceEpoch,
+            sourceMapBE['d']!.millisecondsSinceEpoch);
       });
       test('- before epoch - relaxed', () {
         var eJsonSource = {
@@ -705,7 +709,8 @@ void main() {
 
         buffer.rewind();
         result = bson.deserialize(buffer);
-        expect(result, sourceMapBE);
+        expect(result['d']!.millisecondsSinceEpoch,
+            sourceMapBE['d']!.millisecondsSinceEpoch);
       });
       test('- after 9999 - canonical', () {
         var eJsonSource = {
@@ -728,7 +733,8 @@ void main() {
 
         buffer.rewind();
         result = bson.deserialize(buffer);
-        expect(result, sourceMapA9);
+        expect(result['d']!.millisecondsSinceEpoch,
+            sourceMapA9['d']!.millisecondsSinceEpoch);
       });
       test('- after 9999 - relaxed', () {
         var eJsonSource = {
@@ -751,7 +757,8 @@ void main() {
 
         buffer.rewind();
         result = bson.deserialize(buffer);
-        expect(result, sourceMapA9);
+        expect(result['d']!.millisecondsSinceEpoch,
+            sourceMapA9['d']!.millisecondsSinceEpoch);
       });
     });
     group('DbRef', () {

@@ -56,7 +56,7 @@ const bsonDecimal128 = 19;
 //const _BSON_DATA_MIN_KEY = 0xff; // MinKey BSON Type
 //const _BSON_DATA_MAX_KEY = 0x7f; // MaxKey BSON Type
 
-/// The following data types are not yet implemted
+/// The following data types are not implemented as deprecated
 /// const BSON_DATA_SYMBOL = 14;
 /// const BSON_DATA_CODE_W_SCOPE = 15;
 
