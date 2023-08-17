@@ -1,4 +1,5 @@
 import '../../bson.dart';
+import '../object_serialization/bson_custom.dart';
 import '../utils/types_def.dart';
 
 // The structure of the "Full Buffer" is:
@@ -22,6 +23,9 @@ class BsonMap extends BsonObject {
     var ret = mapData.document;
     if (ret.containsKey(type$ref) && ret.containsKey(type$id)) {
       return DbRef(ret[type$ref], ret[type$id]);
+    }
+    if (ret.containsKey(type$customId) && ret.containsKey(type$customData)) {
+      return BsonCustom(ret[type$customId], ret[type$customData]);
     }
     return BsonMap._fromBsonMapData(mapData);
   }

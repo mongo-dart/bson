@@ -15,3 +15,6 @@ const type$ref = r'$ref';
 const type$id = r'$id';
 const type$minKey = r'$minKey';
 const type$maxKey = r'$maxKey';
+const type$mcustomId = r'$customId';
+const type$customId = r'$customId';
+const type$customData = r'$customData';

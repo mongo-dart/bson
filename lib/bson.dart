@@ -2,6 +2,8 @@ library bson;
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:bson/src/object_serialization/bon_serializable_mixin.dart';
+
 import 'src/classes/timestamp.dart';
 
 import 'package:bson/src/utils/types_def.dart';
@@ -9,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'src/classes/object_id.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:decimal/decimal.dart';
+import 'src/object_serialization/bson_custom.dart';
 import 'src/statics.dart';
 import 'src/types/decimal_128.dart';
 import 'src/types/uuid.dart';
@@ -35,7 +38,7 @@ export 'src/types/regexp.dart';
 export 'src/types/dbref.dart';
 export 'src/types/dbpointer.dart';
 
-part 'src/bson_type.dart';
+part 'src/bson_object.dart';
 part 'src/types/objectid.dart';
 part 'src/types/timestamp.dart';
 part 'src/types/binary.dart';

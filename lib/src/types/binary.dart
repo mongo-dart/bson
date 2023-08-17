@@ -2,40 +2,21 @@ part of bson;
 
 class BsonBinary extends BsonObject {
   static final bool useFixnum = _isIntWorkaroundNeeded();
+
   static const bufferSize = 256;
-  @Deprecated('use "bufferSize"')
-  // ignore: non_constant_identifier_names
-  static final BUFFER_SIZE = bufferSize;
 
   static const subtypeBinary = 0;
-  @Deprecated('use "subtypeBinary"')
-  // ignore: non_constant_identifier_names
-  static final SUBTYPE_DEFAULT = subtypeBinary;
-
+  @Deprecated('Not used in Bson package')
   static const subtypeFunction = 1;
-  @Deprecated('use "subtypeFunction"')
-  // ignore: non_constant_identifier_names
-  static final SUBTYPE_FUNCTION = subtypeFunction;
-
+  @Deprecated('Not used in Bson package')
   static const subtypeBinaryOld = 2;
-  @Deprecated('use "subtypeBinaryOld"')
-  // ignore: non_constant_identifier_names
-  static final SUBTYPE_BYTE_ARRAY = subtypeBinaryOld;
-
+  @Deprecated('Not used in Bson package')
   static const subtypeUuidOld = 3;
-  @Deprecated('use "subtypeUuidOld"')
-  // ignore: non_constant_identifier_names
-  static final SUBTYPE_UUID = subtypeUuidOld;
-
   static const subtypeUuid = 4;
-  @Deprecated('use "subtypeUuid"')
-  // ignore: non_constant_identifier_names
-  static final SUBTYPE_MD5 = subtypeUuid;
+  @Deprecated('Not used in Bson package')
+  static const subtypeMd5 = 5;
 
   static const subtypeUserDefined = 128;
-  @Deprecated('use "subtypeUserDefined"')
-  // ignore: non_constant_identifier_names
-  static final SUBTYPE_USER_DEFINED = subtypeUserDefined;
 
   // Use a list as jump-table. It is faster than switch and if.
   static const int char0 = 48;
@@ -113,8 +94,6 @@ class BsonBinary extends BsonObject {
   final int _subType;
 
   // These are initiated on-demand
-  // Not used at present, see the getter comment
-  //ByteData? _byteArray;
   String? _hexString;
 
   int offset = 0;
@@ -135,7 +114,7 @@ class BsonBinary extends BsonObject {
     var entry = eJsonMap.entries.first;
     if (entry.key != type$binary) {
       throw ArgumentError(
-          'The received Map is not a avalid EJson Binary representation');
+          'The received Map is not a valid EJson Binary representation');
     }
     if (entry.value is! Map<String, Object>) {
       throw ArgumentError(

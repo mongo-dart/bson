@@ -3,69 +3,36 @@ part of bson;
 
 /// Number BSON Type
 const bsonDataNumber = 1;
-@Deprecated('Use bsonDataNumber instead.')
-// ignore: unused_element
-const _BSON_DATA_NUMBER = bsonDataNumber;
 
 /// String BSON Type
 const bsonDataString = 2;
-@Deprecated('Use bsonDataString instead.')
-// ignore: unused_element
-const _BSON_DATA_STRING = bsonDataString;
 
 /// Object BSON Type
 const bsonDataObject = 3;
-@Deprecated('Use bsonDataObject instead.')
-// ignore: unused_element
-const _BSON_DATA_OBJECT = bsonDataObject;
 
 /// Array BSON Type
 const bsonDataArray = 4;
-@Deprecated('Use bsonDataArray instead.')
-// ignore: unused_element
-const _BSON_DATA_ARRAY = bsonDataArray;
 
 /// BsonBinary BSON Type
 const bsonDataBinary = 5;
-@Deprecated('Use bsonDataBinary instead.')
-// ignore: unused_element
-const _BSON_DATA_BINARY = bsonDataBinary;
 
 /// undefined BSON Type
 const bsonDataUndefined = 6;
-@Deprecated('Use bsonDataUndefined instead.')
-// ignore: unused_element
-const _BSON_DATA_UNDEFINED = bsonDataUndefined;
 
 /// ObjectID BSON Type
 const bsonDataObjectId = 7;
-@Deprecated('Use bsonDataObjectId instead.')
-// ignore: unused_element
-const _BSON_DATA_OID = bsonDataObjectId;
 
 /// Bool BSON Type
 const bsonDataBool = 8;
-@Deprecated('Use bsonDataBool instead.')
-// ignore: unused_element
-const _BSON_DATA_BOOLEAN = bsonDataBool;
 
 /// Date BSON Type
 const bsonDataDate = 9;
-@Deprecated('Use bsonDataDate instead.')
-// ignore: unused_element
-const _BSON_DATA_DATE = bsonDataDate;
 
 /// null BSON Type
 const bsonDataNull = 10;
-@Deprecated('Use bsonDataNull instead.')
-// ignore: unused_element
-const _BSON_DATA_NULL = bsonDataNull;
 
 /// RegExp BSON Type
 const bsonDataRegExp = 11;
-@Deprecated('Use bsonDataRegExp instead.')
-// ignore: unused_element
-const _BSON_DATA_REGEXP = bsonDataRegExp;
 
 /// DBPointer BSON Type
 const bsonDataDbPointer = 12;
@@ -96,7 +63,18 @@ const bsonDecimal128 = 19;
 abstract class BsonObject {
   BsonObject();
 
-  factory BsonObject.bsonObjectFrom(var value) {
+  factory BsonObject.bsonObjectFrom(var value) =>
+      getBsonObject(value) ??
+      (throw UnsupportedError('Not implemented for $value'));
+
+  factory BsonObject.bsonObjectFromEJson(var value) =>
+      getBsonObjectFromEJson(value) ??
+      (throw UnsupportedError('Type value not supported for Object $value'));
+
+  static BsonObject? getBsonObject(var value) {
+    if (value is BsonSerializable) {
+      return BsonCustom.fromObject(value);
+    }
     if (value is BsonObject) {
       return value;
     } else if (value is Int64) {
@@ -128,10 +106,10 @@ abstract class BsonObject {
     } else if (value is Timestamp) {
       return BsonTimestamp(value);
     }
-    throw Exception('Not implemented for $value');
+    return null;
   }
 
-  factory BsonObject.bsonObjectFromEJson(var value) {
+  static BsonObject? getBsonObjectFromEJson(var value) {
     /// EJson value
     if (value is Map<String, dynamic> &&
         value.length == 1 &&
@@ -202,7 +180,7 @@ abstract class BsonObject {
       return BsonArray.fromEJson(value);
     }
 
-    throw UnsupportedError('Type value not supported for Object $value');
+    return null;
   }
 
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {
