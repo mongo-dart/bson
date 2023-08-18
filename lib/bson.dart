@@ -12,7 +12,7 @@ import 'src/classes/object_id.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:decimal/decimal.dart';
 import 'src/object_serialization/bson_custom.dart';
-import 'src/statics.dart';
+import 'src/utils/statics.dart';
 import 'src/types/decimal_128.dart';
 import 'src/types/uuid.dart';
 import 'src/types/array.dart';
