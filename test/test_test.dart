@@ -1,4 +1,5 @@
 import 'package:bson/bson.dart';
+import 'package:bson/src/bson_codec.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 
@@ -32,8 +33,7 @@ void main() {
 }
 
 dynamic _deserialize(BsonBinary bsonBinary, Function fromJson) {
-  var bson = BSON();
-  var objMap = bson.deserialize(bsonBinary);
+  var objMap = BsonCodec.deserialize(bsonBinary);
   return fromJson(objMap);
 }
 
@@ -52,7 +52,7 @@ abstract class Serializable {
       }
     }
 
-    return BSON().serialize(newData);
+    return BsonCodec.serialize(newData);
   }
 }
 

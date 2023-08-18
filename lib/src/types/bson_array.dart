@@ -1,6 +1,5 @@
 import '../../bson.dart';
 import 'base/bson_container.dart';
-import 'base/serialization_parameters.dart';
 
 class BsonArray extends BsonContainer {
   BsonArray(List data, SerializationParameters parms)
@@ -77,10 +76,7 @@ class BsonArray extends BsonContainer {
     int dim = 0;
 
     for (var i = 0; i < data.length; i++) {
-      dim += BsonContainer.entrySize(
-        '$i',
-        data[i], parms
-      );
+      dim += BsonContainer.entrySize('$i', data[i], parms);
     }
 
     return dim;

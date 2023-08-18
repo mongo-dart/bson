@@ -1,9 +1,11 @@
-import 'package:bson/src/types/uuid.dart';
+import 'package:bson/src/bson_codec.dart';
+import 'package:bson/src/types/bson_uuid.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 import 'dart:typed_data';
 import 'package:bson/bson.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
 import 'bson_binary_test_lib.dart';
@@ -90,11 +92,10 @@ void run() {
     });
     test('testDateTime', () {
       var date = DateTime(2012, 10, 6, 10, 15, 20);
-      var bson = BSON();
       var sourceMap = {'d': date};
-      var buffer = bson.serialize(sourceMap);
+      var buffer = BsonCodec.serialize(sourceMap);
       buffer.rewind();
-      Map targetMap = bson.deserialize(buffer);
+      Map targetMap = BsonCodec.deserialize(buffer);
       expect(targetMap['d'], sourceMap['d']);
     });
   });
@@ -134,11 +135,11 @@ void run() {
       //oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
       expect(ObjectId.isValidHexId(oid1.toHexString()), isTrue);
-      var b1 = BSON().serialize({'id': oid1});
-      var b2 = BSON().serialize({'id': oid2});
+      var b1 = BsonCodec.serialize({'id': oid1});
+      var b2 = BsonCodec.serialize({'id': oid2});
       b1.rewind();
       b2.rewind();
-      var oid3 = BSON().deserialize(b2)['id'];
+      var oid3 = BsonCodec.deserialize(b2)['id'];
       expect(oid3.id.byteList, orderedEquals(oid1.id.byteList));
     });
     test('testBsonIdClientMode', () {
@@ -147,10 +148,9 @@ void run() {
     });
     test('testBsonDbPointer', () {
       var p1 = DBPointer('Test', ObjectId());
-      var bson = BSON();
-      var b = bson.serialize({'p1': p1});
+      var b = BsonCodec.serialize({'p1': p1});
       b.rewind();
-      var fromBson = bson.deserialize(b);
+      var fromBson = BsonCodec.deserialize(b);
       var p2 = fromBson['p1'];
       expect(p2.collection, p1.collection);
       expect(p2.bsonObjectId.toHexString(), p1.bsonObjectId.toHexString());
@@ -187,35 +187,34 @@ void run() {
 
   group('BsonSerialization:', () {
     test('testSimpleSerializeDeserialize', () {
-      final buffer = BSON().serialize({'id': 42});
+      final buffer = BsonCodec.serialize({'id': 42});
       expect(buffer.hexString, '0d000000106964002a00000000');
-      final root = BSON().deserialize(buffer);
+      final root = BsonCodec.deserialize(buffer);
       expect(root['id'], 42);
     });
 
     test('testSerializeDeserialize', () {
-      var bson = BSON();
       var map = {'_id': 5, 'a': 4};
-      var buffer = bson.serialize(map);
+      var buffer = BsonCodec.serialize(map);
       expect('15000000105f696400050000001061000400000000', buffer.hexString);
       buffer.offset = 0;
-      Map root = bson.deserialize(buffer);
+      Map root = BsonCodec.deserialize(buffer);
       expect(root['a'], 4);
       expect(root['_id'], 5);
       var doc1 = {
         'a': [15]
       };
-      buffer = bson.serialize(doc1);
+      buffer = BsonCodec.serialize(doc1);
       expect('140000000461000c0000001030000f0000000000', buffer.hexString);
       buffer.offset = 0;
 
-      root = bson.deserialize(buffer);
+      root = BsonCodec.deserialize(buffer);
       expect(15, root['a'][0]);
       var doc2 = {
         '_id': 5,
         'a': [2, 3, 5]
       };
-      buffer = bson.serialize(doc2);
+      buffer = BsonCodec.serialize(doc2);
       expect(
           '2b000000105f696400050000000461001a0000001030000200000010310003000000103200050000000000',
           buffer.hexString);
@@ -225,22 +224,21 @@ void run() {
       buffer.readInt32();
       expect(5, buffer.offset);
       buffer.offset = 0;
-      root = bson.deserialize(buffer);
+      root = BsonCodec.deserialize(buffer);
       var doc2A = doc2['a'] as List;
       expect(doc2A[2], root['a'][2]);
     });
 
     group('Full Serialize Deserialize', () {
-      var bson = BSON();
       test('int', () {
         var map = {'_id': 5, 'int': 4, 'int64': Int64(5)};
-        var buffer = bson.serialize(map);
+        var buffer = BsonCodec.serialize(map);
         expect(
             buffer.hexString,
             '26000000105f69640005000000'
             '10696e74000400000012696e74363400050000000000000000');
         buffer.offset = 0;
-        Map root = bson.deserialize(buffer);
+        Map root = BsonCodec.deserialize(buffer);
         expect(root['int'], Int32(4));
         expect(root['int64'], Int64(5));
         expect(root['_id'], 5);
@@ -250,11 +248,11 @@ void run() {
         var doc1 = {
           'list': [15]
         };
-        var buffer = bson.serialize(doc1);
+        var buffer = BsonCodec.serialize(doc1);
         expect(
             buffer.hexString, '17000000046c697374000c0000001030000f0000000000');
         buffer.offset = 0;
-        var root = bson.deserialize(buffer);
+        var root = BsonCodec.deserialize(buffer);
         expect(15, root['list'].first);
       });
 
@@ -263,7 +261,7 @@ void run() {
           '_id': 5,
           'list': [2, 3, 5]
         };
-        var buffer = bson.serialize(doc2);
+        var buffer = BsonCodec.serialize(doc2);
         expect(
             buffer.hexString,
             '2e000000105f69640005000000046c69'
@@ -274,44 +272,44 @@ void run() {
         buffer.readInt32();
         expect(5, buffer.offset);
         buffer.offset = 0;
-        var root = bson.deserialize(buffer);
+        var root = BsonCodec.deserialize(buffer);
         var doc2A = doc2['list'] as List;
         expect(doc2A[2], root['list'][2]);
       });
       test('Null', () {
         int? nullValue;
         var map = {'_id': 5, 'nullValue': nullValue};
-        var buffer = bson.serialize(map);
+        var buffer = BsonCodec.serialize(map);
         expect(buffer.hexString,
             '19000000105f696400050000000a6e756c6c56616c75650000');
         buffer.offset = 0;
-        Map result = bson.deserialize(buffer);
+        Map result = BsonCodec.deserialize(buffer);
         expect(result['nullValue'], isNull);
         expect(result['_id'], 5);
       });
       test('Decimal', () {
         var decimal = Decimal.fromInt(4);
         var map = {'_id': 5, 'rational': decimal};
-        var buffer = bson.serialize(map);
+        var buffer = BsonCodec.serialize(map);
         expect(
             buffer.hexString,
             '28000000105f69640005000000137261'
             '74696f6e616c000400000000000000000000000000403000');
         buffer.offset = 0;
-        Map result = bson.deserialize(buffer);
+        Map result = BsonCodec.deserialize(buffer);
         expect(result['rational'], decimal);
         expect(result['_id'], 5);
       });
       test('Uuid', () {
         var uuid = UuidValue('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
         var map = {'_id': 5, 'uuid': uuid};
-        var buffer = bson.serialize(map);
+        var buffer = BsonCodec.serialize(map);
         expect(
             buffer.hexString,
             '29000000105f69640005000000057575'
             '69640010000000046ba7b8119dad11d180b400c04fd430c800');
         buffer.offset = 0;
-        Map result = bson.deserialize(buffer);
+        Map result = BsonCodec.deserialize(buffer);
         expect(result['uuid'], uuid);
         expect(result['_id'], 5);
       });

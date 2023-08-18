@@ -1,5 +1,4 @@
 import '../../bson.dart';
-import '../utils/types_def.dart';
 
 class DBPointer extends BsonObject {
   DBPointer(this.collection, ObjectId id)

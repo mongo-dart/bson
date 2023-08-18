@@ -1,8 +1,6 @@
-import 'package:bson/src/types/base/serialization_parameters.dart';
 
 import '../../bson.dart';
 import '../classes/dbref.dart';
-import '../utils/types_def.dart';
 
 class BsonDbRef extends BsonMap {
   BsonDbRef(DbRef dbRef)

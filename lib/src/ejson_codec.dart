@@ -1,8 +1,7 @@
-import 'package:bson/src/types/base/serialization_parameters.dart';
-
 import '../bson.dart';
+import 'bson_codec.dart';
 
-class EJson {
+class EJsonCodec {
   /// Serializes a BSON object and returns the data in Extended JSON format.
   // serialize
   // EJSON.serialize( db.<collection>.findOne() )
@@ -26,15 +25,13 @@ class EJson {
       throw Exception('corrupt bson message < 5 bytes long');
     }
     return BsonMap.fromBuffer(buffer).eJson(relaxed: relaxed);
-
-    //return BsonMap.buffer2ejson(buffer, relaxed: relaxed);
   }
 
   ///
   static Map<String, dynamic> eJson2Doc(Map<String, dynamic> ejsonMap) =>
-      BSON().deserialize(EJson.serialize(ejsonMap));
+      BsonCodec.deserialize(EJsonCodec.serialize(ejsonMap));
 
   ///
   static Map<String, dynamic> doc2eJson(Map<String, dynamic> doc) =>
-      EJson.deserialize(BSON().serialize(doc));
+      EJsonCodec.deserialize(BsonCodec.serialize(doc));
 }

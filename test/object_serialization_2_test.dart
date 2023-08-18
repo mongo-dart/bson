@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/object_serialization/bon_serializable_mixin.dart';
-import 'package:bson/src/object_serialization/object_serialization.dart';
+import 'package:bson/src/object_codec.dart';
 import 'package:bson/src/object_serialization/serialization_repository.dart';
 import 'package:test/test.dart';
 
@@ -99,7 +98,7 @@ class Point with BsonSerializable {
         y = dataMap['y'];
 
   static Point deserialize(BsonBinary bsonBinary) =>
-      ObjectSerialization.deserialize(bsonBinary) as Point;
+      ObjectCodec.deserialize(bsonBinary) as Point;
 
   @override
   Map<String, dynamic> get toBson => {'pressure': pressure, 'x': x, 'y': y};
@@ -133,7 +132,7 @@ class Stroke with BsonSerializable {
       points.first == other.points.first;
 
   static Stroke deserialize(BsonBinary bsonBinary) =>
-      ObjectSerialization.deserialize(bsonBinary) as Stroke;
+      ObjectCodec.deserialize(bsonBinary) as Stroke;
 
   @override
   Map<String, dynamic> get toBson => {'points': points};
@@ -163,7 +162,7 @@ class Page with BsonSerializable {
       strokes.first == other.strokes.first;
 
   static Page deserialize(BsonBinary bsonBinary) =>
-      ObjectSerialization.deserialize(bsonBinary) as Page;
+      ObjectCodec.deserialize(bsonBinary) as Page;
 
   @override
   Map<String, dynamic> get toBson => {'w': w, 'h': h, 'strokes': strokes};
@@ -188,7 +187,7 @@ class SBNNote with BsonSerializable {
       pages.first == other.pages.first;
 
   static SBNNote deserialize(BsonBinary bsonBinary) =>
-      ObjectSerialization.deserialize(bsonBinary) as SBNNote;
+      ObjectCodec.deserialize(bsonBinary) as SBNNote;
 
   @override
   Map<String, dynamic> get toBson => {'pages': pages};

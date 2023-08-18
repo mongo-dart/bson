@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import '../utils/statics.dart';
 import '../../bson.dart';
 
 const String _charMatcherPattern = r'^[a-fA-F0-9]{24}$';

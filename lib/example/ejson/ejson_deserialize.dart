@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/ejson.dart';
-import 'package:bson/src/utils/types_def.dart';
+import 'package:bson/src/ejson_codec.dart';
 
 void main() {
   var objectId = ObjectId.parse('51c87a81a58a563d1304f4ed');
@@ -34,7 +33,7 @@ void main() {
       '000000123100020000000000000012320003000000000000000000046c697374002900'
       '00001030000100000010310002000000103200030000000333000c0000001062001d00'
       '0000000000';
-  var result = EJson.deserialize(BsonBinary.fromHexString(checkBinary));
+  var result = EJsonCodec.deserialize(BsonBinary.fromHexString(checkBinary));
 
   var checkValue = result['list'][3]['b'][type$int32] ==
       ejsonMap['list'][3]['b'][type$int32];

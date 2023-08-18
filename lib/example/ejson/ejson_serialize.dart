@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/ejson.dart';
-import 'package:bson/src/utils/types_def.dart';
+import 'package:bson/src/ejson_codec.dart';
 
 void main() {
   var objectId = ObjectId.parse('51c87a81a58a563d1304f4ed');
@@ -29,7 +28,7 @@ void main() {
     ]
   };
 
-  var bsonBinary = EJson.serialize(ejsonMap);
+  var bsonBinary = EJsonCodec.serialize(ejsonMap);
 
   var checkBinary = 'ad000000075f69640051c87a81a58a563d1304f4ed10696e74333200'
       '6a34010012696e74363400ffffffffffffffff09646174650080f92f5e6f010000036d'

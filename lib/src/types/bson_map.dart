@@ -1,9 +1,7 @@
-import 'package:bson/src/types/base/serialization_parameters.dart';
 
 import '../../bson.dart';
 import '../classes/dbref.dart';
 import '../object_serialization/bson_custom.dart';
-import '../utils/types_def.dart';
 import 'base/bson_container.dart';
 
 // The structure of the "Full Buffer" is:

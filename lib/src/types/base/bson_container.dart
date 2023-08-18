@@ -1,7 +1,4 @@
-import 'package:bson/src/types/base/serialization_parameters.dart';
-
 import '../../../bson.dart';
-import '../../utils/statics.dart';
 
 abstract class BsonContainer extends BsonObject {
   static int entrySize(String? name, value, SerializationParameters parms) {

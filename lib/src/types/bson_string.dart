@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import '../../bson.dart';
-import '../utils/statics.dart';
-import '../utils/types_def.dart';
 
 class BsonString extends BsonObject {
   BsonString(this.data);

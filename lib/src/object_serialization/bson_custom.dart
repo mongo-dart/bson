@@ -1,9 +1,6 @@
-import 'package:bson/src/object_serialization/bon_serializable_mixin.dart';
 import 'package:bson/src/object_serialization/serialization_repository.dart';
-import 'package:bson/src/types/base/serialization_parameters.dart';
 
 import '../../bson.dart';
-import '../utils/types_def.dart';
 
 class BsonCustom extends BsonMap {
   static SerializationRepository? repository;

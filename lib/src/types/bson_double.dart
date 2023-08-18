@@ -1,7 +1,4 @@
-//part of bson;
-
 import '../../bson.dart';
-import '../utils/types_def.dart';
 
 class BsonDouble extends BsonObject {
   BsonDouble(this.data);

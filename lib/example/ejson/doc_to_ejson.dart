@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/ejson.dart';
-import 'package:bson/src/utils/types_def.dart';
+import 'package:bson/src/ejson_codec.dart';
 import 'package:fixnum/fixnum.dart';
 
 void main() {
@@ -22,7 +21,7 @@ void main() {
     ]
   };
 
-  var ejson = EJson.doc2eJson(document);
+  var ejson = EJsonCodec.doc2eJson(document);
   print('The map | subList element is '
       '${ejson['map']['subList'].first[type$int64] == '1' ? 'correct' : 'uncorrect'}');
   print('The list | 3 | b element is '

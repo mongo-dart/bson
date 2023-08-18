@@ -1,4 +1,4 @@
-part of bson;
+import '../../bson.dart';
 
 class BsonTimestamp extends BsonObject {
   BsonTimestamp([Timestamp? parmTimestamp])

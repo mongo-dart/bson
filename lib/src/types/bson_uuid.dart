@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:bson/src/utils/types_def.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../bson.dart';
 

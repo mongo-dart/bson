@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/ejson.dart';
-import 'package:bson/src/utils/types_def.dart';
+import 'package:bson/src/ejson_codec.dart';
 
 void main() {
   var objectId = ObjectId.parse('51c87a81a58a563d1304f4ed');
@@ -29,7 +28,7 @@ void main() {
     ]
   };
 
-  var document = EJson.eJson2Doc(ejsonMap);
+  var document = EJsonCodec.eJson2Doc(ejsonMap);
 
   print('The result is '
       '${document['list'][3]['b'] == 29 ? 'correct' : 'uncorrect'}');

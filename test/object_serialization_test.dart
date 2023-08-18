@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/object_serialization/bon_serializable_mixin.dart';
-import 'package:bson/src/object_serialization/object_serialization.dart';
+import 'package:bson/src/object_codec.dart';
 import 'package:bson/src/object_serialization/serialization_repository.dart';
 import 'package:test/test.dart';
 
@@ -64,7 +63,7 @@ class Person with BsonSerializable {
         age = dataMap['age'];
 
   static Person deserialize(BsonBinary bsonBinary) =>
-      ObjectSerialization.deserialize(bsonBinary) as Person;
+      ObjectCodec.deserialize(bsonBinary) as Person;
 
   @override
   Map<String, dynamic> get toBson => {'name': name, 'age': age};
@@ -83,7 +82,7 @@ class Marriage with BsonSerializable {
         spouse2 = dataMap['spouse2'];
 
   static Marriage deserialize(BsonBinary bsonBinary) =>
-      ObjectSerialization.deserialize(bsonBinary) as Marriage;
+      ObjectCodec.deserialize(bsonBinary) as Marriage;
 
   @override
   Map<String, dynamic> get toBson => {
