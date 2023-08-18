@@ -15,3 +15,9 @@ const SerializationParameters ejsonSerialization =
 
 const SerializationParameters objectSerialization = SerializationParameters(
     type: SerializationType.bson, serializeObjects: true);
+
+const SerializationParameters all = SerializationParameters(
+    type: SerializationType.any, serializeObjects: true);
+
+const SerializationParameters noObjects =
+    SerializationParameters(type: SerializationType.any);
