@@ -1,6 +1,10 @@
+import 'package:bson/src/types/base/serialization_parameters.dart';
+
 import '../../bson.dart';
+import '../classes/dbref.dart';
 import '../object_serialization/bson_custom.dart';
 import '../utils/types_def.dart';
+import 'base/bson_container.dart';
 
 // The structure of the "Full Buffer" is:
 // 4 bytes size (comprehending this bytes also)
@@ -9,25 +13,40 @@ import '../utils/types_def.dart';
 //    C String with the key (zero terminated list of bytes)
 //    Value element (of the type defined above)
 // 1 byte terminator (0)
-class BsonMap extends BsonObject {
-  BsonMap(Map<String, dynamic> data) : _mapData = data2buffer(data);
-  BsonMap._fromBsonMapData(this._mapData);
+class BsonMap extends BsonContainer {
+  BsonMap.fromBsonMapData(this._mapData);
+
+  factory BsonMap(Map<String, dynamic> data, SerializationParameters parms) =>
+      BsonMap._analyzeBsonMapData(data2buffer(data, parms), isSerialize: true);
 
   factory BsonMap.fromBuffer(BsonBinary fullBuffer) =>
       BsonMap._analyzeBsonMapData(extractData(fullBuffer));
 
+  @Deprecated('To be removed')
   factory BsonMap.fromEJson(Map<String, dynamic> eJsonMap) =>
       BsonMap._analyzeBsonMapData(ejson2buffer(eJsonMap));
 
-  factory BsonMap._analyzeBsonMapData(BsonMapData mapData) {
+  factory BsonMap._analyzeBsonMapData(BsonMapData mapData,
+      {bool isSerialize = false}) {
     var ret = mapData.document;
+
     if (ret.containsKey(type$ref) && ret.containsKey(type$id)) {
-      return DbRef(ret[type$ref], ret[type$id]);
+      if (isSerialize &&
+          (mapData.parms?.type ?? SerializationType.bson) !=
+              SerializationType.ejson) {
+        return BsonDbRef(
+            DbRef(ret[type$ref], BsonObjectId.fromEJson(ret[type$id]).value));
+      }
+      if (!isSerialize) {
+        return BsonDbRef(DbRef(ret[type$ref], ret[type$id]));
+      }
     }
-    if (ret.containsKey(type$customId) && ret.containsKey(type$customData)) {
+    if (!isSerialize &&
+        ret.containsKey(type$customId) &&
+        ret.containsKey(type$customData)) {
       return BsonCustom(ret[type$customId], ret[type$customData]);
     }
-    return BsonMap._fromBsonMapData(mapData);
+    return BsonMap.fromBsonMapData(mapData);
   }
 
   final BsonMapData _mapData;
@@ -100,22 +119,25 @@ class BsonMap extends BsonObject {
     return ret;
   }
 
-  static BsonMapData data2buffer(Map<String, dynamic> data) {
-    var internalBuffer = BsonBinary(_calcDataDimension(data));
+  static BsonMapData data2buffer(
+      Map<String, dynamic> data, SerializationParameters parms) {
+    var internalBuffer = BsonBinary(_calcDataDimension(data, parms));
 
     for (var entry in data.entries) {
-      BsonObject.bsonObjectFrom(entry.value)
+      BsonObject.from(entry.value, parms)
           .packElement(entry.key, internalBuffer);
     }
 
     internalBuffer.rewind();
-    return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
+    return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length,
+        document: data, parms: parms);
   }
 
-  static int _calcDataDimension(Map<String, dynamic> data) {
+  static int _calcDataDimension(
+      Map<String, dynamic> data, SerializationParameters parms) {
     int dim = 0;
     for (var entry in data.entries) {
-      dim += BsonObject.elementSize(entry.key, entry.value);
+      dim += BsonContainer.entrySize(entry.key, entry.value, parms);
     }
     return dim;
   }
@@ -141,6 +163,7 @@ class BsonMap extends BsonObject {
     return ret;
   }
 
+  @Deprecated('To be removed')
   static BsonMapData ejson2buffer(Map<String, dynamic> ejsonMap) {
     var internalBuffer = BsonBinary(_calcEJsonDataDimension(ejsonMap));
     for (var entry in ejsonMap.entries) {
@@ -152,10 +175,11 @@ class BsonMap extends BsonObject {
     return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
   }
 
+  @Deprecated('To be removed')
   static int _calcEJsonDataDimension(Map<String, dynamic> data) {
     int dim = 0;
     for (var entry in data.entries) {
-      dim += BsonObject.eJsonElementSize(entry.key, entry.value);
+      dim += BsonContainer.eJsonElementSize(entry.key, entry.value);
     }
     return dim;
   }
@@ -165,10 +189,14 @@ class BsonMap extends BsonObject {
 }
 
 class BsonMapData {
-  BsonMapData(this.binData, this.binOffset, this.length);
+  BsonMapData(this.binData, this.binOffset, this.length,
+      {Map<String, dynamic>? document, SerializationParameters? parms})
+      : _document = document,
+        _parms = parms;
   final BsonBinary binData;
   final int binOffset;
   final int length;
+  final SerializationParameters? _parms;
   BsonBinary? _objectBuffer;
   Map<String, dynamic>? _document;
 
@@ -185,4 +213,5 @@ class BsonMapData {
   BsonBinary get readBuffer =>
       objectBuffer.clone..rewind(); //data.clone..offset = offset;
   dynamic get document => _document ??= BsonMap._buffer2data(this);
+  SerializationParameters? get parms => _parms;
 }

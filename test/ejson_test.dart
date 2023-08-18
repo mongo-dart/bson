@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bson/src/classes/dbref.dart';
 import 'package:bson/src/ejson.dart';
 import 'package:bson/src/types/uuid.dart';
 import 'package:bson/src/utils/types_def.dart';
@@ -941,7 +942,7 @@ void main() {
           bTest({
             type$ref: 'collection',
             type$id: {type$objectId: '57e193d7a9cc81b4027498b5'}
-          }) is DbRef,
+          }) is BsonDbRef,
           isTrue);
       expect(
           bTest([

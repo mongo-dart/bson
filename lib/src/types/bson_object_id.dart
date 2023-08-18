@@ -2,12 +2,12 @@ part of bson;
 
 class BsonObjectId extends BsonObject {
   BsonObjectId(ObjectId parmId) : id = createBsonBinaryFromObjectId(parmId);
-
   BsonObjectId.fromBsonBinary(this.id);
-
-  BsonObjectId.fromBuffer(BsonBinary buffer) : id = extractData(buffer);
   BsonObjectId.fromEJson(Map<String, dynamic> eJsonMap)
       : id = extractEJson(eJsonMap);
+
+  BsonObjectId.fromBuffer(BsonBinary buffer) : id = extractData(buffer);
+
   BsonBinary id;
 
   static BsonBinary extractData(BsonBinary buffer) {

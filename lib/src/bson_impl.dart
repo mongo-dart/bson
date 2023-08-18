@@ -5,7 +5,7 @@ class BSON {
     if (!((object is Map) || (object is List))) {
       throw Exception('Invalid value for BSON serialize: $object');
     }
-    var bsonObject = BsonObject.bsonObjectFrom(object);
+    var bsonObject = BsonObject.from(object, bsonSerialization);
     var buffer = BsonBinary(bsonObject.byteLength() + offset);
     buffer.offset = offset;
     //BsonObject.bsonObjectFrom(object).packValue(buffer);

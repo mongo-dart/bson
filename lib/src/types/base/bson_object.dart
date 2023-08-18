@@ -65,17 +65,15 @@ enum SerializationType { bson, ejson, any }
 abstract class BsonObject {
   BsonObject();
 
-  factory BsonObject.from(var value,
-      {SerializationType serializationType = SerializationType.any,
-      bool serializedObjects = false}) {
+  factory BsonObject.from(var value, SerializationParameters parms) {
     // If we have to consider also serialized objects
-    if (serializedObjects) {
+    if (parms.serializeObjects) {
       if (value is BsonSerializable) {
-        return BsonCustom.fromObject(value);
+        return BsonCustom.fromObject(value, parms);
       }
     }
     // If we have to consider ejson
-    if (serializationType != SerializationType.bson) {
+    if (parms.type != SerializationType.bson) {
       if (value is Map<String, dynamic> &&
           value.length == 1 &&
           value.keys.first.startsWith(r'$')) {
@@ -118,9 +116,11 @@ abstract class BsonObject {
           return DBPointer.fromEJson(value);
         }
       }
+      if (value is List) {
+        return BsonArray.fromEJson(value);
+      }
     }
     // any case
-
     if (value == null) {
       return BsonNull();
     }
@@ -143,19 +143,10 @@ abstract class BsonObject {
       return BsonString(value);
     }
 
-    if (value is List) {
-      return BsonArray.fromEJson(value);
-    }
-    if (value is List) {
-      return BsonArray(value);
-    }
     if (value is Map<String, dynamic>) {
-      return BsonMap.fromEJson(value);
+      return BsonMap(Map<String, dynamic>.from(value), parms);
     }
-    if (value is Map) {
-      return BsonMap(Map<String, dynamic>.from(value));
-    }
-    if (serializationType != SerializationType.ejson) {
+    if (parms.type != SerializationType.ejson) {
       if (value is BsonObject) {
         return value;
       }
@@ -175,6 +166,12 @@ abstract class BsonObject {
       if (value is Timestamp) {
         return BsonTimestamp(value);
       }
+      if (value is DbRef) {
+        return BsonDbRef(value);
+      }
+      if (value is List) {
+        return BsonArray(value, parms);
+      }
     }
 
     throw UnsupportedError('Not implemented for $value');
@@ -190,7 +187,7 @@ abstract class BsonObject {
 
   static BsonObject? getBsonObject(var value) {
     if (value is BsonSerializable) {
-      return BsonCustom.fromObject(value);
+      return BsonCustom.fromObject(value, SerializationParameters());
     }
     if (value is BsonObject) {
       return value;
@@ -207,9 +204,10 @@ abstract class BsonObject {
     } else if (value is ObjectId) {
       return BsonObjectId(value);
     } else if (value is Map) {
-      return BsonMap(Map<String, dynamic>.from(value));
+      return BsonMap(
+          Map<String, dynamic>.from(value), SerializationParameters());
     } else if (value is List) {
-      return BsonArray(value);
+      return BsonArray(value, SerializationParameters());
     } else if (value == null) {
       return BsonNull();
     } else if (value is DateTime) {
@@ -340,7 +338,7 @@ abstract class BsonObject {
         throw Exception('Not implemented for BSON TYPE $typeByte');
     }
   }
-
+/* 
   static int elementSize(String? name, value) {
     var size = 1;
     if (name != null) {
@@ -348,14 +346,14 @@ abstract class BsonObject {
     }
     return size + BsonObject.bsonObjectFrom(value).byteLength();
   }
-
+ */ /* 
   static int eJsonElementSize(String? name, value) {
     var size = 1;
     if (name != null) {
       size += Statics.getKeyUtf8(name).length + 1;
     }
     return size + BsonObject.bsonObjectFromEJson(value).byteLength();
-  }
+  } */
 
   int get typeByte;
 

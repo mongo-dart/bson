@@ -1,3 +1,5 @@
+import 'package:bson/src/types/base/serialization_parameters.dart';
+
 import '../bson.dart';
 
 class EJson {
@@ -5,7 +7,7 @@ class EJson {
   // serialize
   // EJSON.serialize( db.<collection>.findOne() )
   static BsonBinary serialize(Map<String, dynamic> eJsonMap, {int offset = 0}) {
-    var bsonMap = BsonMap.fromEJson(eJsonMap);
+    var bsonMap = BsonMap(eJsonMap, ejsonSerialization);
 
     var buffer = BsonBinary(bsonMap.byteLength() + offset);
     buffer.offset = offset;

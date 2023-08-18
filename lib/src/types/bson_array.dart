@@ -1,7 +1,10 @@
 import '../../bson.dart';
+import 'base/bson_container.dart';
+import 'base/serialization_parameters.dart';
 
-class BsonArray extends BsonObject {
-  BsonArray(List data) : buffer = _pack(data);
+class BsonArray extends BsonContainer {
+  BsonArray(List data, SerializationParameters parms)
+      : buffer = data2buffer(data, parms);
   BsonArray.fromBuffer(this.buffer);
   BsonArray.fromEJson(List eJsonList) : buffer = _fromEJson(eJsonList);
 
@@ -53,10 +56,10 @@ class BsonArray extends BsonObject {
     buffer.writeByte(0);
   }
 
-  static BsonBinary _pack(List data) {
-    var internalBuffer = BsonBinary(_calcDataDimension(data));
+  static BsonBinary data2buffer(List data, SerializationParameters parms) {
+    var internalBuffer = BsonBinary(_calcDataDimension(data, parms));
     for (var i = 0; i < data.length; i++) {
-      BsonObject.bsonObjectFrom(data[i]).packElement('$i', internalBuffer);
+      BsonObject.from(data[i], parms).packElement('$i', internalBuffer);
     }
     return internalBuffer;
   }
@@ -70,11 +73,14 @@ class BsonArray extends BsonObject {
     return internalBuffer;
   }
 
-  static int _calcDataDimension(List data) {
+  static int _calcDataDimension(List data, SerializationParameters parms) {
     int dim = 0;
 
     for (var i = 0; i < data.length; i++) {
-      dim += BsonObject.elementSize('$i', data[i]);
+      dim += BsonContainer.entrySize(
+        '$i',
+        data[i], parms
+      );
     }
 
     return dim;
@@ -83,7 +89,7 @@ class BsonArray extends BsonObject {
   static int _calcEJsonDataDimension(List data) {
     int dim = 0;
     for (var i = 0; i < data.length; i++) {
-      dim += BsonObject.eJsonElementSize('$i', data[i]);
+      dim += BsonContainer.eJsonElementSize('$i', data[i]);
     }
 
     return dim;
