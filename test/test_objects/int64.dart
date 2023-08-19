@@ -2,17 +2,26 @@ import 'package:bson/bson.dart';
 import 'package:bson/src/bson_codec.dart';
 import 'package:bson/src/codec.dart';
 import 'package:bson/src/ejson_codec.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 
-groupString() {
-  var string = 'string type';
-  var sourceMap = {'string': string};
-  var hexBuffer = '1d00000002737472696e67000c000000737472696e6720747970650000';
-  var hexObjBuffer = '0c000000737472696e67207479706500';
-  var arrayBuffer = '380000000230000c000000737472696e6720747970650002310019'
-      '0000003537653139336437613963633831623430323734393862350000';
-  var eJsonSource = {'string': string};
-  var sourceArray = [string, '57e193d7a9cc81b4027498b5'];
+groupInt64() {
+  var int64 = 1593275430567;
+  var sourceMap = {'int64': Int64(int64)};
+  var hexBuffer = '1400000012696e74363400a7b69df67201000000';
+  var eJsonSource = {
+    'int64': {type$int64: '1593275430567'}
+  };
+
+  var hexObjBuffer = 'a7b69df672010000';
+  var arrayBuffer = '26000000123000a7b69df672010000123100a7b69df67201000012'
+      '3200a7b69df67201000000';
+
+  var sourceArray = [
+    int64,
+    Int64(1593275430567),
+    {type$int64: '1593275430567'}
+  ];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -28,19 +37,24 @@ groupString() {
   });
   // ******** Object
   test('Bson Serialize - object', () {
-    var buffer = Codec.serialize(string, bsonSerialization);
+    var buffer = Codec.serialize(int64, bsonSerialization);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Ejson Serialize - map', () {
-    var buffer = Codec.serialize(string, ejsonSerialization);
+    var buffer =
+        Codec.serialize({type$int64: '1593275430567'}, ejsonSerialization);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Any Serialize - object', () {
-    var buffer = Codec.serialize(string, noObjects);
+    var buffer = Codec.serialize(int64, noObjects);
+    expect(buffer.hexString, hexObjBuffer);
+  });
+  test('Any Serialize - Int64', () {
+    var buffer = Codec.serialize(Int64(1593275430567), noObjects);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Any Serialize - map', () {
-    var buffer = Codec.serialize(string, noObjects);
+    var buffer = Codec.serialize({type$int64: '1593275430567'}, noObjects);
     expect(buffer.hexString, hexObjBuffer);
   });
 }

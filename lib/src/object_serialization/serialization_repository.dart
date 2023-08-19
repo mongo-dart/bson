@@ -6,24 +6,18 @@ class SerializationRepository {
   static final Map<int, Type> _repositoryId = <int, Type>{};
   static final Map<Type, int> _repositoryType = <Type, int>{};
 
-  static void addType(Type type, BsonConstructor constructor,
-      {int? suggestedId}) {
+  static void addType(Type type, BsonConstructor constructor, int uniqueId) {
     if (_repository.containsKey(type)) {
       throw ArgumentError(
           'Type $type already defined in the Object repository');
     }
     _repository[type] = constructor;
-    var id = _getAvailableId(suggestedId: suggestedId);
-    _repositoryId[id] = type;
-    _repositoryType[type] = id;
-  }
-
-  static int _getAvailableId({int? suggestedId}) {
-    suggestedId ??= _repositoryId.isEmpty ? 0 : _repositoryId.keys.last + 1;
-    while (_repositoryId.containsKey(suggestedId)) {
-      suggestedId = suggestedId! + 1;
+    if (_repositoryId.containsKey(uniqueId)) {
+      throw ArgumentError('UniqueId $uniqueId already defined '
+          'for Type "${_repositoryId[uniqueId]}"');
     }
-    return suggestedId!;
+    _repositoryId[uniqueId] = type;
+    _repositoryType[type] = uniqueId;
   }
 
   static Type getType(int typeId) =>

@@ -17,7 +17,7 @@ abstract class BsonContainer extends BsonObject {
     }
     return size + BsonObject.bsonObjectFrom(value).byteLength();
   } */
-
+/* 
   @Deprecated('To be removed')
   static int eJsonElementSize(String? name, value) {
     var size = 1;
@@ -25,5 +25,5 @@ abstract class BsonContainer extends BsonObject {
       size += Statics.getKeyUtf8(name).length + 1;
     }
     return size + BsonObject.bsonObjectFromEJson(value).byteLength();
-  }
+  } */
 }

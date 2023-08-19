@@ -6,11 +6,11 @@ import 'package:test/test.dart';
 // Example on how to use BSON to serialize-deserialize
 void main() {
   group('Run', () {
-    SerializationRepository.addType(Point, Point.fromBson, suggestedId: 500);
-    SerializationRepository.addType(Stroke, Stroke.fromBson, suggestedId: 600);
-    SerializationRepository.addType(Page, Page.fromBson, suggestedId: 700);
-    SerializationRepository.addType(SBNNote, SBNNote.fromBson,
-        suggestedId: 800);
+    SerializationRepository.addType(Point, Point.fromBson, Point.uniqueId);
+    SerializationRepository.addType(Stroke, Stroke.fromBson, Stroke.uniqueId);
+    SerializationRepository.addType(Page, Page.fromBson, Page.uniqueId);
+    SerializationRepository.addType(
+        SBNNote, SBNNote.fromBson, SBNNote.uniqueId);
 
     var point1 = Point(0.1, 0.0, 0.0);
     var stroke1 = Stroke([point1]);
@@ -18,9 +18,8 @@ void main() {
     var note1 = SBNNote([page1]);
 
     test('Point', () {
-      String hexCheck = '4e0000001024637573746f6d496400f40100000324637573746f'
-          '6d44617461002d000000017072657373757265009a9999999999b93f0178000000'
-          '00000000000001790000000000000000000000';
+      String hexCheck =
+          '4e0000001024637573746f6d496400010000000324637573746f6d44617461002d000000017072657373757265009a9999999999b93f017800000000000000000001790000000000000000000000';
 
       BsonBinary result = point1.serialize();
       expect(result.hexString, hexCheck);
@@ -32,11 +31,8 @@ void main() {
     });
 
     test('Stroke', () {
-      String hexCheck = '840000001024637573746f6d496400580200000324637573746f'
-          '6d44617461006300000004706f696e747300560000000330004e00000010246375'
-          '73746f6d496400f40100000324637573746f6d44617461002d0000000170726573'
-          '73757265009a9999999999b93f0178000000000000000000017900000000000000'
-          '00000000000000';
+      String hexCheck =
+          '840000001024637573746f6d496400020000000324637573746f6d44617461006300000004706f696e747300560000000330004e0000001024637573746f6d496400010000000324637573746f6d44617461002d000000017072657373757265009a9999999999b93f017800000000000000000001790000000000000000000000000000';
 
       BsonBinary result = stroke1.serialize();
       expect(result.hexString, hexCheck);
@@ -47,13 +43,7 @@ void main() {
     });
     test('Page', () {
       String hexCheck =
-          'd10000001024637573746f6d496400bc0200000324637573746f6d4461746100b0'
-          '0000000177000000000000408f400168000000000000e09540047374726f6b6573'
-          '008c000000033000840000001024637573746f6d49640058020000032463757374'
-          '6f6d44617461006300000004706f696e747300560000000330004e000000102463'
-          '7573746f6d496400f40100000324637573746f6d44617461002d00000001707265'
-          '7373757265009a9999999999b93f01780000000000000000000179000000000000'
-          '0000000000000000000000';
+          'd10000001024637573746f6d496400030000000324637573746f6d4461746100b00000000177000000000000408f400168000000000000e09540047374726f6b6573008c000000033000840000001024637573746f6d496400020000000324637573746f6d44617461006300000004706f696e747300560000000330004e0000001024637573746f6d496400010000000324637573746f6d44617461002d000000017072657373757265009a9999999999b93f017800000000000000000001790000000000000000000000000000000000';
 
       BsonBinary result = page1.serialize();
       expect(result.hexString, hexCheck);
@@ -65,15 +55,8 @@ void main() {
       expect(pageCloneFromBson.h, page1.h);
     });
     test('SBN Note', () {
-      String hexCheck = '060100001024637573746f6d496400200300000324637573746f6'
-          'd4461746100e500000004706167657300d9000000033000d1000000102463757374'
-          '6f6d496400bc0200000324637573746f6d4461746100b0000000017700000000000'
-          '0408f400168000000000000e09540047374726f6b6573008c000000033000840000'
-          '001024637573746f6d496400580200000324637573746f6d4461746100630000000'
-          '4706f696e747300560000000330004e0000001024637573746f6d496400f4010000'
-          '0324637573746f6d44617461002d000000017072657373757265009a9999999999b'
-          '93f0178000000000000000000017900000000000000000000000000000000000000'
-          '00';
+      String hexCheck =
+          '060100001024637573746f6d496400040000000324637573746f6d4461746100e500000004706167657300d9000000033000d10000001024637573746f6d496400030000000324637573746f6d4461746100b00000000177000000000000408f400168000000000000e09540047374726f6b6573008c000000033000840000001024637573746f6d496400020000000324637573746f6d44617461006300000004706f696e747300560000000330004e0000001024637573746f6d496400010000000324637573746f6d44617461002d000000017072657373757265009a9999999999b93f017800000000000000000001790000000000000000000000000000000000000000';
 
       BsonBinary result = note1.serialize();
       expect(result.hexString, hexCheck);
@@ -86,11 +69,15 @@ void main() {
 }
 
 class Point with BsonSerializable {
+  const Point(this.pressure, this.x, this.y);
+
   final double pressure;
   final double x;
   final double y;
+  @override
+  int get classId => uniqueId;
 
-  const Point(this.pressure, this.x, this.y);
+  static int get uniqueId => 1;
 
   Point.fromBson(Map<String, dynamic> dataMap)
       : pressure = dataMap['pressure'],
@@ -115,9 +102,13 @@ class Point with BsonSerializable {
 }
 
 class Stroke with BsonSerializable {
+  const Stroke(this.points);
+
   final List<Point> points;
 
-  const Stroke(this.points);
+  @override
+  int get classId => uniqueId;
+  static int get uniqueId => 2;
 
   Stroke.fromBson(Map<String, dynamic> dataMap)
       : points = [...?dataMap['points']];
@@ -142,6 +133,9 @@ class Page with BsonSerializable {
   final double w;
   final double h;
   final List<Stroke> strokes;
+  @override
+  int get classId => uniqueId;
+  static int get uniqueId => 3;
 
   const Page(this.w, this.h, this.strokes);
 
@@ -169,9 +163,12 @@ class Page with BsonSerializable {
 }
 
 class SBNNote with BsonSerializable {
-  final List<Page> pages;
-
   const SBNNote(this.pages);
+
+  final List<Page> pages;
+  @override
+  int get classId => uniqueId;
+  static int get uniqueId => 4;
 
   SBNNote.fromBson(Map<String, dynamic> dataMap)
       : pages = [...?dataMap['pages']];

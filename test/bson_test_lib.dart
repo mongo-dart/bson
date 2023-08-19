@@ -101,13 +101,19 @@ void run() {
   });
   group('BsonTypesTest:', () {
     test('typeTest', () {
-      expect(BsonObject.bsonObjectFrom(1234) is BsonInt, isTrue);
-      expect(BsonObject.bsonObjectFrom('asdfasdf') is BsonString, isTrue);
-      expect(BsonObject.bsonObjectFrom(DateTime.now()) is BsonDate, isTrue);
-      expect(BsonObject.bsonObjectFrom([2, 3, 4]) is BsonArray, isTrue);
-      expect(BsonObject.bsonObjectFrom(Decimal.fromInt(1)) is BsonDecimal128,
+      expect(BsonObject.from(1234, bsonSerialization) is BsonInt, isTrue);
+      expect(
+          BsonObject.from('asdfasdf', bsonSerialization) is BsonString, isTrue);
+      expect(BsonObject.from(DateTime.now(), bsonSerialization) is BsonDate,
           isTrue);
-      expect(BsonObject.bsonObjectFrom(Uuid().v4obj()) is BsonUuid, isTrue);
+      expect(
+          BsonObject.from([2, 3, 4], bsonSerialization) is BsonArray, isTrue);
+      expect(
+          BsonObject.from(Decimal.fromInt(1), bsonSerialization)
+              is BsonDecimal128,
+          isTrue);
+      expect(BsonObject.from(Uuid().v4obj(), bsonSerialization) is BsonUuid,
+          isTrue);
     });
   });
   group('ObjectId:', () {

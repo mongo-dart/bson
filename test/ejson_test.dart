@@ -880,45 +880,57 @@ void main() {
   });
   group('BsonTypesTest:', () {
     test('typeTest', () {
-      Function bTest = BsonObject.bsonObjectFromEJson;
-      expect(bTest({type$objectId: '57e193d7a9cc81b4027498b5'}) is BsonObjectId,
+      Function bTest = BsonObject.from;
+      expect(
+          bTest({type$objectId: '57e193d7a9cc81b4027498b5'}, ejsonSerialization)
+              is BsonObjectId,
           isTrue);
-      expect(bTest('asdfasdf') is BsonString, isTrue);
-      expect(bTest({type$int32: '1234'}) is BsonInt, isTrue);
-      expect(bTest({type$int64: '1234'}) is BsonLong, isTrue);
-      expect(bTest({type$double: '12.34'}) is BsonDouble, isTrue);
-      expect(bTest({type$double: 'Infinity'}) is BsonDouble, isTrue);
-      expect(bTest({type$decimal128: '12.34'}) is BsonDecimal128, isTrue);
+      expect(bTest('asdfasdf', ejsonSerialization) is BsonString, isTrue);
+      expect(
+          bTest({type$int32: '1234'}, ejsonSerialization) is BsonInt, isTrue);
+      expect(
+          bTest({type$int64: '1234'}, ejsonSerialization) is BsonLong, isTrue);
+      expect(bTest({type$double: '12.34'}, ejsonSerialization) is BsonDouble,
+          isTrue);
+      expect(bTest({type$double: 'Infinity'}, ejsonSerialization) is BsonDouble,
+          isTrue);
+      expect(
+          bTest({type$decimal128: '12.34'}, ejsonSerialization)
+              is BsonDecimal128,
+          isTrue);
       expect(
           bTest({
             type$binary: {"base64": "yO2rw/c4TKO2jauSqRR4ow==", "subType": "00"}
-          }) is BsonBinary,
+          }, ejsonSerialization) is BsonBinary,
           isTrue);
       expect(
           bTest({
             type$binary: {"base64": "yO2rw/c4TKO2jauSqRR4ow==", "subType": "04"}
-          }) is BsonUuid,
+          }, ejsonSerialization) is BsonUuid,
           isTrue);
-      expect(bTest({type$uuid: Uuid().v4()}) is BsonUuid, isTrue);
+      expect(bTest({type$uuid: Uuid().v4()}, ejsonSerialization) is BsonUuid,
+          isTrue);
 
-      expect(bTest({type$code: 'function() {}'}) is BsonCode, isTrue);
+      expect(
+          bTest({type$code: 'function() {}'}, ejsonSerialization) is BsonCode,
+          isTrue);
       expect(
           bTest({
             'a': {type$int32: '2'},
             'b': {type$int32: '3'},
             'c': {type$int32: '4'}
-          }) is BsonMap,
+          }, ejsonSerialization) is BsonMap,
           isTrue);
       expect(
           bTest({
             type$timestamp: {'t': 1234567, 'i': 1}
-          }) is BsonTimestamp,
+          }, ejsonSerialization) is BsonTimestamp,
           isTrue);
 
       expect(
           bTest({
             type$regex: {'pattern': '^T', 'options': 'xi'}
-          }) is BsonRegexp,
+          }, ejsonSerialization) is BsonRegexp,
           isTrue);
       expect(
           bTest({
@@ -926,32 +938,34 @@ void main() {
               type$ref: 'collection',
               type$id: {type$objectId: '57e193d7a9cc81b4027498b5'}
             }
-          }) is DBPointer,
+          }, ejsonSerialization) is DBPointer,
           isTrue);
       expect(
           bTest({
             r'$date': {
               r'$numberLong': DateTime.now().millisecondsSinceEpoch.toString()
             }
-          }) is BsonDate,
+          }, ejsonSerialization) is BsonDate,
           isTrue);
-      expect(bTest({r'$date': DateTime.now().toIso8601String()}) is BsonDate,
+      expect(
+          bTest({r'$date': DateTime.now().toIso8601String()},
+              ejsonSerialization) is BsonDate,
           isTrue);
       expect(
           bTest({
             type$ref: 'collection',
             type$id: {type$objectId: '57e193d7a9cc81b4027498b5'}
-          }) is BsonDbRef,
+          }, ejsonSerialization) is BsonDbRef,
           isTrue);
       expect(
           bTest([
             {type$int32: '2'},
             {type$int32: '3'},
             {type$int32: '4'}
-          ]) is BsonArray,
+          ], ejsonSerialization) is BsonArray,
           isTrue);
-      expect(bTest(false) is BsonBoolean, isTrue);
-      expect(bTest(null) is BsonNull, isTrue);
+      expect(bTest(false, ejsonSerialization) is BsonBoolean, isTrue);
+      expect(bTest(null, ejsonSerialization) is BsonNull, isTrue);
     });
   });
   group('Misc:', () {

@@ -1,4 +1,4 @@
-part of bson;
+import '../../bson.dart';
 
 class BsonDate extends BsonObject {
   BsonDate(this.data);

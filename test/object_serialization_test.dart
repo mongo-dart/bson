@@ -6,14 +6,14 @@ import 'package:test/test.dart';
 // Example on how to use BSON to serialize-deserialize
 void main() {
   group('Run', () {
-    SerializationRepository.addType(Person, Person.fromBson);
-    SerializationRepository.addType(Marriage, Marriage.fromBson);
+    SerializationRepository.addType(Person, Person.fromBson, Person.uniqueId);
+    SerializationRepository.addType(
+        Marriage, Marriage.fromBson, Marriage.uniqueId);
 
     test('with simple class', () {
       final john = Person('John', 30);
-      String hexCheck = '3e0000001024637573746f6d496400000000000324637573746f'
-          '6d44617461001d000000026e616d6500050000004a6f686e0010616765001e0000'
-          '000000';
+      String hexCheck =
+          '3e0000001024637573746f6d496400010000000324637573746f6d44617461001d000000026e616d6500050000004a6f686e0010616765001e0000000000';
 
       BsonBinary result = john.serialize();
       expect(result.hexString, hexCheck);
@@ -28,13 +28,8 @@ void main() {
       final john = Person('John', 30);
       final jane = Person('Jane', 31);
       final marriage = Marriage(DateTime(1990, 5, 22), john, jane);
-      String hexCheck = 'c20000001024637573746f6d496400010000000324637573746f'
-          '6d4461746100a1000000096461746500000b4ac9950000000373706f7573653100'
-          '3e0000001024637573746f6d496400000000000324637573746f6d44617461001d'
-          '000000026e616d6500050000004a6f686e0010616765001e00000000000373706f'
-          '75736532003e0000001024637573746f6d496400000000000324637573746f6d44'
-          '617461001d000000026e616d6500050000004a616e650010616765001f00000000'
-          '000000';
+      String hexCheck =
+          'c20000001024637573746f6d496400020000000324637573746f6d4461746100a1000000096461746500000b4ac9950000000373706f75736531003e0000001024637573746f6d496400010000000324637573746f6d44617461001d000000026e616d6500050000004a6f686e0010616765001e00000000000373706f75736532003e0000001024637573746f6d496400010000000324637573746f6d44617461001d000000026e616d6500050000004a616e650010616765001f00000000000000';
 
       BsonBinary result = marriage.serialize();
       expect(result.hexString, hexCheck);
@@ -53,10 +48,13 @@ void main() {
 
 /// Example class that implements toJson and fromJson
 class Person with BsonSerializable {
+  const Person(this.name, this.age);
+
   final String name;
   final int age;
-
-  const Person(this.name, this.age);
+  @override
+  int get classId => uniqueId;
+  static int get uniqueId => 1;
 
   Person.fromBson(Map<String, dynamic> dataMap)
       : name = dataMap['name'],
@@ -70,11 +68,14 @@ class Person with BsonSerializable {
 }
 
 class Marriage with BsonSerializable {
+  const Marriage(this.date, this.spouse1, this.spouse2);
+
   final DateTime date;
   final Person spouse1;
   final Person spouse2;
-
-  const Marriage(this.date, this.spouse1, this.spouse2);
+  @override
+  int get classId => uniqueId;
+  static int get uniqueId => 2;
 
   Marriage.fromBson(Map<String, dynamic> dataMap)
       : date = dataMap['date'],

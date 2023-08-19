@@ -1,4 +1,3 @@
-
 import '../../bson.dart';
 import '../classes/dbref.dart';
 import '../object_serialization/bson_custom.dart';
@@ -20,10 +19,10 @@ class BsonMap extends BsonContainer {
   factory BsonMap.fromBuffer(BsonBinary fullBuffer) =>
       BsonMap._analyzeBsonMapData(extractData(fullBuffer));
 
-  @Deprecated('To be removed')
+  /* @Deprecated('To be removed')
   factory BsonMap.fromEJson(Map<String, dynamic> eJsonMap) =>
       BsonMap._analyzeBsonMapData(ejson2buffer(eJsonMap));
-
+ */
   factory BsonMap._analyzeBsonMapData(BsonMapData mapData,
       {bool isSerialize = false}) {
     var ret = mapData.document;
@@ -31,7 +30,7 @@ class BsonMap extends BsonContainer {
     if (ret.containsKey(type$ref) && ret.containsKey(type$id)) {
       if (isSerialize &&
           (mapData.parms?.type ?? SerializationType.bson) !=
-              SerializationType.ejson) {
+              SerializationType.bson) {
         return BsonDbRef(
             DbRef(ret[type$ref], BsonObjectId.fromEJson(ret[type$id]).value));
       }
@@ -72,10 +71,10 @@ class BsonMap extends BsonContainer {
     }
     return ret;
   }
- */
+ */ /* 
   static BsonMapData extractEJson(Map<String, dynamic> eJsonMap) =>
       ejson2buffer(eJsonMap);
-
+ */
   int dataSize() => _mapData.length;
 
   @override
@@ -161,7 +160,7 @@ class BsonMap extends BsonContainer {
     return ret;
   }
 
-  @Deprecated('To be removed')
+  /* @Deprecated('To be removed')
   static BsonMapData ejson2buffer(Map<String, dynamic> ejsonMap) {
     var internalBuffer = BsonBinary(_calcEJsonDataDimension(ejsonMap));
     for (var entry in ejsonMap.entries) {
@@ -171,16 +170,16 @@ class BsonMap extends BsonContainer {
 
     internalBuffer.rewind();
     return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length);
-  }
+  } */
 
-  @Deprecated('To be removed')
+  /*  @Deprecated('To be removed')
   static int _calcEJsonDataDimension(Map<String, dynamic> data) {
     int dim = 0;
     for (var entry in data.entries) {
       dim += BsonContainer.eJsonElementSize(entry.key, entry.value);
     }
     return dim;
-  }
+  } */
 
   @override
   eJson({bool relaxed = false}) => buffer2ejson(_mapData, relaxed: relaxed);

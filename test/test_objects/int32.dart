@@ -2,17 +2,25 @@ import 'package:bson/bson.dart';
 import 'package:bson/src/bson_codec.dart';
 import 'package:bson/src/codec.dart';
 import 'package:bson/src/ejson_codec.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 
-groupString() {
-  var string = 'string type';
-  var sourceMap = {'string': string};
-  var hexBuffer = '1d00000002737472696e67000c000000737472696e6720747970650000';
-  var hexObjBuffer = '0c000000737472696e67207479706500';
-  var arrayBuffer = '380000000230000c000000737472696e6720747970650002310019'
-      '0000003537653139336437613963633831623430323734393862350000';
-  var eJsonSource = {'string': string};
-  var sourceArray = [string, '57e193d7a9cc81b4027498b5'];
+groupInt32() {
+  var int32 = 30567;
+  var sourceMap = {'int32': int32};
+  var hexBuffer = '1000000010696e743332006777000000';
+  var eJsonSource = {
+    'int32': {type$int32: '30567'}
+  };
+
+  var hexObjBuffer = '67770000';
+  var arrayBuffer = '1a00000010300067770000103100677700001032006777000000';
+
+  var sourceArray = [
+    int32,
+    Int32(30567),
+    {type$int32: '30567'}
+  ];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -28,19 +36,23 @@ groupString() {
   });
   // ******** Object
   test('Bson Serialize - object', () {
-    var buffer = Codec.serialize(string, bsonSerialization);
+    var buffer = Codec.serialize(int32, bsonSerialization);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Ejson Serialize - map', () {
-    var buffer = Codec.serialize(string, ejsonSerialization);
+    var buffer = Codec.serialize({type$int32: '30567'}, ejsonSerialization);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Any Serialize - object', () {
-    var buffer = Codec.serialize(string, noObjects);
+    var buffer = Codec.serialize(int32, noObjects);
+    expect(buffer.hexString, hexObjBuffer);
+  });
+  test('Any Serialize - Int32', () {
+    var buffer = Codec.serialize(Int32(30567), noObjects);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Any Serialize - map', () {
-    var buffer = Codec.serialize(string, noObjects);
+    var buffer = Codec.serialize({type$int32: '30567'}, noObjects);
     expect(buffer.hexString, hexObjBuffer);
   });
 }

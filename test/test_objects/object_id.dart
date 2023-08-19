@@ -9,9 +9,16 @@ groupObjectId() {
   var sourceMap = {'_id': oid};
   var hexBuffer = '16000000075f69640057e193d7a9cc81b4027498b500';
   var hexObjBuffer = '57e193d7a9cc81b4027498b5';
+  var arrayBuffer = '2300000007300057e193d7a9cc81b4027498b507310057e193d7a9'
+      'cc81b4027498b500';
+
   var eJsonSource = {
     '_id': {r'$oid': '57e193d7a9cc81b4027498b5'}
   };
+  var sourceArray = [
+    oid,
+    {r'$oid': '57e193d7a9cc81b4027498b5'}
+  ];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -21,13 +28,9 @@ groupObjectId() {
     var buffer = EJsonCodec.serialize(eJsonSource);
     expect(buffer.hexString, hexBuffer);
   });
-  test('Any - serialize from object', () {
-    var buffer = Codec.serialize(sourceMap, noObjects);
-    expect(buffer.hexString, hexBuffer);
-  });
-  test('Any - serialize from ejson', () {
-    var buffer = Codec.serialize(eJsonSource, noObjects);
-    expect(buffer.hexString, hexBuffer);
+  test('Any - serialize from array', () {
+    var buffer = Codec.serialize(sourceArray, noObjects);
+    expect(buffer.hexString, arrayBuffer);
   });
   // ******** Object
   test('Bson Serialize - object', () {

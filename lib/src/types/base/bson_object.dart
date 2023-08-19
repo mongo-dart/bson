@@ -116,9 +116,6 @@ abstract class BsonObject {
           return DBPointer.fromEJson(value);
         }
       }
-      if (value is List) {
-        return BsonArray.fromEJson(value);
-      }
     }
     // any case
     if (value == null) {
@@ -142,7 +139,9 @@ abstract class BsonObject {
     if (value is String) {
       return BsonString(value);
     }
-
+    if (value is List) {
+      return BsonArray(value, parms);
+    }
     if (value is Map<String, dynamic>) {
       return BsonMap(Map<String, dynamic>.from(value), parms);
     }
@@ -176,15 +175,15 @@ abstract class BsonObject {
 
     throw UnsupportedError('Not implemented for $value');
   }
-
+/* 
   factory BsonObject.bsonObjectFrom(var value) =>
       getBsonObject(value) ??
       (throw UnsupportedError('Not implemented for $value'));
-
+ */ /* 
   factory BsonObject.bsonObjectFromEJson(var value) =>
       getBsonObjectFromEJson(value) ??
       (throw UnsupportedError('Type value not supported for Object $value'));
-
+ */ /* 
   static BsonObject? getBsonObject(var value) {
     if (value is BsonSerializable) {
       return BsonCustom.fromObject(value, SerializationParameters());
@@ -223,7 +222,7 @@ abstract class BsonObject {
     }
     return null;
   }
-
+ */ /* 
   static BsonObject? getBsonObjectFromEJson(var value) {
     /// EJson value
     if (value is Map<String, dynamic> &&
@@ -271,7 +270,7 @@ abstract class BsonObject {
       /*  if (value.containsKey(type$ref) && value.containsKey(type$id)) {
         return DbRef.fromEJson(<String, Object>{...value});
       } */
-      return BsonMap.fromEJson(value);
+      //return BsonMap.fromEJson(value);
     } else if (value == null) {
       return BsonNull();
     } else if (value is bool) {
@@ -297,7 +296,7 @@ abstract class BsonObject {
 
     return null;
   }
-
+ */
   factory BsonObject.fromTypeByteAndBuffer(int typeByte, BsonBinary buffer) {
     switch (typeByte) {
       case bsonDataInt:

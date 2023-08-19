@@ -1,4 +1,10 @@
-part of bson;
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:fixnum/fixnum.dart';
+
+import '../../bson.dart';
+import 'bson_uuid.dart';
 
 class BsonBinary extends BsonObject {
   static final bool useFixnum = _isIntWorkaroundNeeded();
