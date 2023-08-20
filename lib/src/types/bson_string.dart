@@ -50,7 +50,7 @@ class BsonString extends BsonObject {
   eJson({bool relaxed = false}) => data;
 }
 
-class BsonCode extends BsonString {
+/* class BsonCode extends BsonString {
   BsonCode(super.dataValue) : super();
   BsonCode.fromBuffer(super.buffer) : super.fromBuffer();
   BsonCode.fromEJson(Map<String, dynamic> eJsonMap)
@@ -83,7 +83,7 @@ class BsonCode extends BsonString {
 
   @override
   eJson({bool relaxed = false}) => {type$code: data};
-}
+} */
 
 class BsonCString extends BsonString {
   BsonCString(super.data, {this.useKeyCash = false}) : super();

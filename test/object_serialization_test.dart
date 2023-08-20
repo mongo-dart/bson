@@ -52,8 +52,7 @@ class Person with BsonSerializable {
 
   final String name;
   final int age;
-  @override
-  int get classId => uniqueId;
+
   static int get uniqueId => 1;
 
   Person.fromBson(Map<String, dynamic> dataMap)
@@ -73,8 +72,7 @@ class Marriage with BsonSerializable {
   final DateTime date;
   final Person spouse1;
   final Person spouse2;
-  @override
-  int get classId => uniqueId;
+
   static int get uniqueId => 2;
 
   Marriage.fromBson(Map<String, dynamic> dataMap)

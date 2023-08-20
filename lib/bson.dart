@@ -1,10 +1,11 @@
 library bson;
 
 import 'package:bson/src/classes/dbref.dart';
+import 'src/classes/js_code.dart';
 import 'src/classes/object_id.dart';
 import 'src/classes/timestamp.dart';
 
-import 'package:bson/src/object_serialization/bon_serializable_mixin.dart';
+import 'package:bson/src/object_serialization/bson_serializable_mixin.dart';
 import 'package:bson/src/types/base/serialization_parameters.dart';
 
 import 'src/utils/types_def.dart';
@@ -29,6 +30,7 @@ import 'src/types/bson_timestamp.dart';
 import 'src/types/bson_date.dart';
 import 'src/types/bson_object_id.dart';
 import 'src/types/bson_binary.dart';
+import 'src/types/bson_code.dart';
 
 export 'src/classes/object_id.dart';
 export 'src/classes/timestamp.dart';
@@ -50,11 +52,12 @@ export 'src/types/base/serialization_parameters.dart';
 export 'src/types/bson_date.dart';
 export 'src/types/bson_object_id.dart';
 export 'src/types/bson_binary.dart';
+export 'src/types/bson_code.dart';
 
 export 'src/utils/statics.dart';
 export 'src/utils/types_def.dart';
 
-export 'src/object_serialization/bon_serializable_mixin.dart';
+export 'src/object_serialization/bson_serializable_mixin.dart';
 
 part 'src/types/base/bson_object.dart';
 part 'src/types/min_max_keys.dart';

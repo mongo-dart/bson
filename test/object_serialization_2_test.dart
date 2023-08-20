@@ -74,8 +74,6 @@ class Point with BsonSerializable {
   final double pressure;
   final double x;
   final double y;
-  @override
-  int get classId => uniqueId;
 
   static int get uniqueId => 1;
 
@@ -106,8 +104,6 @@ class Stroke with BsonSerializable {
 
   final List<Point> points;
 
-  @override
-  int get classId => uniqueId;
   static int get uniqueId => 2;
 
   Stroke.fromBson(Map<String, dynamic> dataMap)
@@ -133,8 +129,7 @@ class Page with BsonSerializable {
   final double w;
   final double h;
   final List<Stroke> strokes;
-  @override
-  int get classId => uniqueId;
+
   static int get uniqueId => 3;
 
   const Page(this.w, this.h, this.strokes);
@@ -166,8 +161,7 @@ class SBNNote with BsonSerializable {
   const SBNNote(this.pages);
 
   final List<Page> pages;
-  @override
-  int get classId => uniqueId;
+
   static int get uniqueId => 4;
 
   SBNNote.fromBson(Map<String, dynamic> dataMap)

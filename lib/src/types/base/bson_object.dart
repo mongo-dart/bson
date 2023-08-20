@@ -168,6 +168,9 @@ abstract class BsonObject {
       if (value is DbRef) {
         return BsonDbRef(value);
       }
+      if (value is JsCode) {
+        return BsonCode(value);
+      }
       if (value is List) {
         return BsonArray(value, parms);
       }

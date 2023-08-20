@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bson/src/bson_codec.dart';
 import 'package:bson/src/classes/dbref.dart';
+import 'package:bson/src/classes/js_code.dart';
 import 'package:bson/src/ejson_codec.dart';
 import 'package:bson/src/types/bson_uuid.dart';
 import 'package:decimal/decimal.dart';
@@ -444,12 +445,12 @@ void main() {
       });
     });
     group('Code', () {
-      var code = BsonCode('Function() {}');
-      var sourceMap = {'code': code};
+      var jsCode = JsCode('Function() {}');
+      var sourceMap = {'code': jsCode};
       var hexBuffer =
           '1d0000000d636f6465000e00000046756e6374696f6e2829207b7d0000';
       var eJsonSource = {
-        'code': {type$code: code.data}
+        'code': {type$code: jsCode.code}
       };
       test('- canonical', () {
         var buffer = BsonCodec.serialize(sourceMap);
