@@ -1,5 +1,6 @@
 import '../../bson.dart';
 
+@Deprecated('Use DbRef instead')
 class DBPointer extends BsonObject {
   DBPointer(this.collection, ObjectId id)
       : bsonCollection = BsonString(collection),

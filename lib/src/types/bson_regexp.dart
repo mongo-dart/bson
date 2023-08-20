@@ -6,16 +6,26 @@ class BsonRegexp extends BsonObject {
       bool? caseInsensitive,
       bool? dotAll,
       bool? extended,
+      bool? matchUnicode,
+      bool? localeDependent,
       String? options})
       : options = createOptionsString(
             options: options,
             multiLine: multiLine,
             caseInsensitive: caseInsensitive,
             dotAll: dotAll,
-            extended: extended) {
+            extended: extended,
+            matchUnicode: matchUnicode,
+            localeDependent: localeDependent) {
     bsonPattern = BsonCString(pattern);
     bsonOptions = BsonCString(this.options);
   }
+  BsonRegexp.fromRegExp(RegExp regexp)
+      : this(regexp.pattern,
+            multiLine: regexp.isMultiLine,
+            caseInsensitive: regexp.isCaseSensitive,
+            dotAll: regexp.isDotAll,
+            matchUnicode: regexp.isUnicode);
 
   BsonRegexp.fromBuffer(BsonBinary buffer) {
     var data = extractData(buffer);
@@ -69,7 +79,9 @@ class BsonRegexp extends BsonObject {
       bool? multiLine,
       bool? caseInsensitive,
       bool? dotAll,
-      bool? extended}) {
+      bool? extended,
+      bool? matchUnicode,
+      bool? localeDependent}) {
     if (options != null && options.isNotEmpty) {
       return options;
     }
@@ -77,11 +89,17 @@ class BsonRegexp extends BsonObject {
     if (caseInsensitive ?? false) {
       buffer.write('i');
     }
+    if (localeDependent ?? false) {
+      buffer.write('l');
+    }
     if (multiLine ?? false) {
       buffer.write('m');
     }
     if (dotAll ?? false) {
       buffer.write('s');
+    }
+    if (matchUnicode ?? false) {
+      buffer.write('u');
     }
     if (extended ?? false) {
       buffer.write('x');
@@ -97,7 +115,12 @@ class BsonRegexp extends BsonObject {
       pattern == other.pattern &&
       options == other.options;
   @override
-  BsonRegexp get value => this;
+  RegExp get value => RegExp(pattern,
+      multiLine: options.contains('m'),
+      caseSensitive: options.contains('i'),
+      dotAll: options.contains('s'),
+      unicode: options.contains('u'));
+
   @override
   int get typeByte => bsonDataRegExp;
   @override

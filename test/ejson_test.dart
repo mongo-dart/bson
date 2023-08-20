@@ -524,12 +524,12 @@ void main() {
       });
     });
     group('Regular Expression', () {
-      var regex = BsonRegexp('^T', options: 'mi');
+      var regex = RegExp('^T', multiLine: true, caseSensitive: true);
       var sourceMap = {'regex': regex};
-      var hexBuffer = '120000000b7265676578005e54006d690000';
+      var hexBuffer = '120000000b7265676578005e5400696d0000';
       var eJsonSource = {
         'regex': {
-          type$regex: {'pattern': '^T', 'options': 'mi'}
+          type$regex: {'pattern': '^T', 'options': 'im'}
         }
       };
       test('- canonical', () {

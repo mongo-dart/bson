@@ -111,7 +111,6 @@ abstract class BsonObject {
         if (key == type$regex) {
           return BsonRegexp.fromEJson(value);
         }
-
         if (key == type$dbPointer) {
           return DBPointer.fromEJson(value);
         }
@@ -170,6 +169,9 @@ abstract class BsonObject {
       }
       if (value is JsCode) {
         return BsonCode(value);
+      }
+      if (value is RegExp) {
+        return BsonRegexp.fromRegExp(value);
       }
       if (value is List) {
         return BsonArray(value, parms);
