@@ -1,6 +1,4 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/object_codec.dart';
-import 'package:bson/src/object_serialization/serialization_repository.dart';
 import 'package:test/test.dart';
 
 // Example on how to use BSON to serialize-deserialize

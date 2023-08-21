@@ -1,5 +1,4 @@
 import '../bson.dart';
-import 'bson_codec.dart';
 
 class EJsonCodec {
   /// Serializes a BSON object and returns the data in Extended JSON format.

@@ -1,5 +1,4 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/bson_codec.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';
 

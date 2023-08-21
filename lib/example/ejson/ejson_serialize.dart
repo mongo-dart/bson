@@ -1,5 +1,4 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/ejson_codec.dart';
 
 void main() {
   var objectId = ObjectId.parse('51c87a81a58a563d1304f4ed');

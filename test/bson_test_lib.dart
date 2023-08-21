@@ -1,4 +1,3 @@
-import 'package:bson/src/bson_codec.dart';
 import 'package:bson/src/types/bson_uuid.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';

@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:bson/src/bson_codec.dart';
 import 'package:bson/src/classes/dbref.dart';
 import 'package:bson/src/classes/js_code.dart';
-import 'package:bson/src/ejson_codec.dart';
 import 'package:bson/src/types/bson_uuid.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';

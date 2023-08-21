@@ -1,5 +1,4 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/ejson_codec.dart';
 import 'package:fixnum/fixnum.dart';
 
 void main() {

@@ -1,5 +1,3 @@
-import 'package:bson/src/object_serialization/serialization_repository.dart';
-
 import '../../bson.dart';
 
 class BsonCustom extends BsonMap {

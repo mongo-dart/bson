@@ -1,7 +1,4 @@
 import 'package:bson/bson.dart';
-import 'package:bson/src/bson_codec.dart';
-import 'package:bson/src/codec.dart';
-import 'package:bson/src/ejson_codec.dart';
 import 'package:test/test.dart';
 
 groupString() {

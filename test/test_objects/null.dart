@@ -1,24 +1,14 @@
 import 'package:bson/bson.dart';
-import 'package:decimal/decimal.dart';
 import 'package:test/test.dart';
 
-groupDecimal128() {
-  var dec = Decimal.fromInt(230);
-  var sourceMap = {'decimal': dec};
-  var hexBuffer =
-      '1e00000013646563696d616c001700000000000000000000000000423000';
-  var eJsonSource = {
-    'decimal': {type$decimal128: dec.toString()}
-  };
-
-  var hexObjBuffer = '17000000000000000000000000004230';
-  var arrayBuffer = '2b0000001330001700000000000000000000000000423013310017'
-      '00000000000000000000000000423000';
-
-  var sourceArray = [
-    dec,
-    {type$decimal128: dec.toString()}
-  ];
+groupNull() {
+  Null nullValue;
+  var sourceMap = {'null': nullValue};
+  var hexBuffer = '0b0000000a6e756c6c0000';
+  var eJsonSource = {'null': nullValue};
+  var hexObjBuffer = '';
+  var arrayBuffer = '0b0000000a30000a310000';
+  var sourceArray = [nullValue, null];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -34,20 +24,19 @@ groupDecimal128() {
   });
   // ******** Object
   test('Bson Serialize - object', () {
-    var buffer = Codec.serialize(dec, bsonSerialization);
+    var buffer = Codec.serialize(nullValue, bsonSerialization);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Ejson Serialize - map', () {
-    var buffer =
-        Codec.serialize({type$decimal128: dec.toString()}, ejsonSerialization);
+    var buffer = Codec.serialize(nullValue, ejsonSerialization);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Any Serialize - object', () {
-    var buffer = Codec.serialize(dec, noObjects);
+    var buffer = Codec.serialize(nullValue, noObjects);
     expect(buffer.hexString, hexObjBuffer);
   });
   test('Any Serialize - map', () {
-    var buffer = Codec.serialize({type$decimal128: dec.toString()}, noObjects);
+    var buffer = Codec.serialize(nullValue, noObjects);
     expect(buffer.hexString, hexObjBuffer);
   });
 }
