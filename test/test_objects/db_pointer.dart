@@ -29,6 +29,10 @@ groupDbPointer() {
       }
     }
   ];
+  var deserializeSourceArray = [
+    dbpointer,
+    dbpointer,
+  ];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -68,5 +72,54 @@ groupDbPointer() {
       }
     }, noObjects);
     expect(buffer.hexString, hexObjBuffer);
+  });
+
+  // Deserialize
+  test('Bson Deserialize', () {
+    var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, sourceMap);
+  });
+  test('Ejson Deserialize', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, eJsonSource);
+  });
+  test('Ejson Deserialize Rx', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
+        relaxed: true);
+    expect(value, eJsonSource);
+  });
+  test('Any - Deserialize from array', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
+        typeByte: bsonDataArray);
+    expect(value, deserializeSourceArray);
+  });
+  // ******** Object
+  test('Bson Deserialize - object', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        typeByte: bsonDataDbPointer);
+    expect(value, dbpointer);
+  });
+  test('Ejson Deserialize - map', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        typeByte: bsonDataDbPointer);
+    expect(value, {
+      type$dbPointer: {
+        type$ref: 'Collection',
+        type$id: BsonObjectId(oid).eJson()
+      }
+    });
+  });
+  test('Ejson Deserialize - map Rx', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        relaxed: true,
+        typeByte: bsonDataDbPointer);
+    expect(value, {
+      type$dbPointer: {
+        type$ref: 'Collection',
+        type$id: BsonObjectId(oid).eJson()
+      }
+    });
   });
 }

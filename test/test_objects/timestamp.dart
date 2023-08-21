@@ -19,6 +19,7 @@ groupTimestamp() {
       type$timestamp: {'t': 129984774, 'i': 2}
     }
   ];
+  var deserializeSourceArray = [timestamp, timestamp];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -52,5 +53,48 @@ groupTimestamp() {
       type$timestamp: {'t': 129984774, 'i': 2}
     }, noObjects);
     expect(buffer.hexString, hexObjBuffer);
+  });
+
+  // Deserialize
+  test('Bson Deserialize', () {
+    var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, sourceMap);
+  });
+  test('Ejson Deserialize', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, eJsonSource);
+  });
+  test('Ejson Deserialize Rx', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
+        relaxed: true);
+    expect(value, eJsonSource);
+  });
+  test('Any - Deserialize from array', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
+        typeByte: bsonDataArray);
+    expect(value, deserializeSourceArray);
+  });
+  // ******** Object
+  test('Bson Deserialize - object', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        typeByte: bsonDataTimestamp);
+    expect(value, timestamp);
+  });
+  test('Ejson Deserialize - map', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        typeByte: bsonDataTimestamp);
+    expect(value, {
+      type$timestamp: {'t': 129984774, 'i': 2}
+    });
+  });
+  test('Ejson Deserialize - map Rx', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        relaxed: true,
+        typeByte: bsonDataTimestamp);
+    expect(value, {
+      type$timestamp: {'t': 129984774, 'i': 2}
+    });
   });
 }

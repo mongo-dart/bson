@@ -20,6 +20,8 @@ groupDecimal128() {
     {type$decimal128: dec.toString()}
   ];
 
+  var deserializeSourceArray = [dec, dec];
+
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
     expect(buffer.hexString, hexBuffer);
@@ -49,5 +51,44 @@ groupDecimal128() {
   test('Any Serialize - map', () {
     var buffer = Codec.serialize({type$decimal128: dec.toString()}, noObjects);
     expect(buffer.hexString, hexObjBuffer);
+  });
+
+  // Deserialize
+  test('Bson Deserialize', () {
+    var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, sourceMap);
+  });
+  test('Ejson Deserialize', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, eJsonSource);
+  });
+  test('Ejson Deserialize Rx', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
+        relaxed: true);
+    expect(value, eJsonSource);
+  });
+  test('Any - Deserialize from array', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
+        typeByte: bsonDataArray);
+    expect(value, deserializeSourceArray);
+  });
+  // ******** Object
+  test('Bson Deserialize - object', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        typeByte: bsonDataDecimal128);
+    expect(value, dec);
+  });
+  test('Ejson Deserialize - map', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        typeByte: bsonDataDecimal128);
+    expect(value, {type$decimal128: dec.toString()});
+  });
+  test('Ejson Deserialize - map Rx', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        relaxed: true,
+        typeByte: bsonDataDecimal128);
+    expect(value, {type$decimal128: dec.toString()});
   });
 }

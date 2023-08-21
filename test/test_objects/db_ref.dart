@@ -23,6 +23,7 @@ groupDbRef() {
     dbRef,
     {type$ref: 'Collection', type$id: BsonObjectId(oid).eJson()}
   ];
+  var deserializeSurceArray = [dbRef, dbRef];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -56,5 +57,43 @@ groupDbRef() {
         {type$ref: 'Collection', type$id: BsonObjectId(oid).eJson()},
         noObjects);
     expect(buffer.hexString, hexObjBuffer);
+  });
+
+  // Deserialize
+  test('Bson Deserialize', () {
+    var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, sourceMap);
+  });
+  test('Ejson Deserialize', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, eJsonSource);
+  });
+  test('Ejson Deserialize Rx', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
+        relaxed: true);
+    expect(value, eJsonSource);
+  });
+  test('Any - Deserialize from array', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
+        typeByte: bsonDataArray);
+    expect(value, deserializeSurceArray);
+  });
+  // ******** Object
+  test('Bson Deserialize - object', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        typeByte: bsonDataObject);
+    expect(value, dbRef);
+  });
+  test('Ejson Deserialize - map', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson, typeByte: bsonDataObject);
+    expect(value, {type$ref: 'Collection', type$id: BsonObjectId(oid).eJson()});
+  });
+  test('Ejson Deserialize - map Rx', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        relaxed: true,
+        typeByte: bsonDataObject);
+    expect(value, {type$ref: 'Collection', type$id: BsonObjectId(oid).eJson()});
   });
 }

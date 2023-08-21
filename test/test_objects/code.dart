@@ -11,13 +11,16 @@ groupCode() {
   };
   var hexObjBuffer = '0e00000046756e6374696f6e2829207b7d00';
   var arrayBuffer =
-      '3a0000000d30000e00000046756e6374696f6e2829207b7d000331001d0000000d636f6465000e00000046756e6374696f6e2829207b7d000000';
+      '2f0000000d30000e00000046756e6374696f6e2829207b7d000d31000e00000046756e6374696f6e2829207b7d0000';
 
   var sourceArray = [
     jsCode,
-    {
-      'code': {type$code: jsCode.code}
-    }
+    {type$code: jsCode.code}
+  ];
+
+  var deserializeSourceArray = [
+    jsCode,
+    jsCode,
   ];
 
   test('Bson Serialize', () {
@@ -48,5 +51,43 @@ groupCode() {
   test('Any Serialize - map', () {
     var buffer = Codec.serialize({type$code: jsCode.code}, noObjects);
     expect(buffer.hexString, hexObjBuffer);
+  });
+
+  // Deserialize
+  test('Bson Deserialize', () {
+    var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, sourceMap);
+  });
+  test('Ejson Deserialize', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, eJsonSource);
+  });
+  test('Ejson Deserialize Rx', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
+        relaxed: true);
+    expect(value, eJsonSource);
+  });
+  test('Any - Deserialize from array', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
+        typeByte: bsonDataArray);
+    expect(value, deserializeSourceArray);
+  });
+  // ******** Object
+  test('Bson Deserialize - object', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        typeByte: bsonDataCode);
+    expect(value, jsCode);
+  });
+  test('Ejson Deserialize - map', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson, typeByte: bsonDataCode);
+    expect(value, {type$code: jsCode.code});
+  });
+  test('Ejson Deserialize - map Rx', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        relaxed: true,
+        typeByte: bsonDataCode);
+    expect(value, {type$code: jsCode.code});
   });
 }

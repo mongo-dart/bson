@@ -7,4 +7,16 @@ class Codec {
     bsonObject.packValue(buffer);
     return buffer;
   }
+
+  static dynamic deserialize(BsonBinary buffer,
+      {SerializationType serializationType = SerializationType.bson,
+      typeByte = bsonDataObject,
+      bool relaxed = false}) {
+    buffer.offset = 0;
+    var bsonObject = BsonObject.fromTypeByteAndBuffer(typeByte, buffer);
+    if (serializationType == SerializationType.ejson) {
+      return bsonObject.eJson(relaxed: relaxed);
+    }
+    return bsonObject.value;
+  }
 }

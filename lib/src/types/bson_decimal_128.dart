@@ -132,7 +132,7 @@ class BsonDecimal128 extends BsonObject {
   String toString() => 'BsonDecimal128("${bin.hexString}")';
   String toHexString() => bin.hexString;
   @override
-  int get typeByte => bsonDecimal128;
+  int get typeByte => bsonDataDecimal128;
   @override
   Decimal? get value => convertBinaryToDecimal(bin);
   @override

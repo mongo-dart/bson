@@ -50,7 +50,7 @@ const bsonDataTimestamp = 17;
 const bsonDataLong = 18;
 
 /// Decimal128 Type (0x13)
-const bsonDecimal128 = 19;
+const bsonDataDecimal128 = 19;
 
 /// The following types are implemented partially /
 //const _BSON_DATA_MIN_KEY = 0xff; // MinKey BSON Type
@@ -215,7 +215,7 @@ abstract class BsonObject {
         return BsonRegexp.fromBuffer(buffer);
       case bsonDataTimestamp:
         return BsonTimestamp.fromBuffer(buffer);
-      case bsonDecimal128:
+      case bsonDataDecimal128:
         return BsonDecimal128.fromBuffer(buffer);
       default:
         throw Exception('Not implemented for BSON TYPE $typeByte');
