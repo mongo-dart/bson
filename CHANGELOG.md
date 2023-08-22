@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.0-3.0.dev
+
+- Added tests
+- Moved back Date to UTC, it is a BSON requirement.
+
 ## 5.0.0-2.0.dev
 
 - Reviewed the codecs. Now we have three codecs: Bson, Ejson and Object. There is also a generic one simply called Codec, that can be customized to run serialization and deserialization with specific parameters.

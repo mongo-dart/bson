@@ -10,6 +10,7 @@ groupString() {
       '0000003537653139336437613963633831623430323734393862350000';
   var eJsonSource = {'string': string};
   var sourceArray = [string, '57e193d7a9cc81b4027498b5'];
+  var deserializeSourceArray = [string, '57e193d7a9cc81b4027498b5'];
 
   test('Bson Serialize', () {
     var buffer = BsonCodec.serialize(sourceMap);
@@ -39,5 +40,43 @@ groupString() {
   test('Any Serialize - map', () {
     var buffer = Codec.serialize(string, noObjects);
     expect(buffer.hexString, hexObjBuffer);
+  });
+
+  // Deserialize
+  test('Bson Deserialize', () {
+    var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, sourceMap);
+  });
+  test('Ejson Deserialize', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
+    expect(value, eJsonSource);
+  });
+  test('Ejson Deserialize Rx', () {
+    var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
+        relaxed: true);
+    expect(value, sourceMap);
+  });
+  test('Any - Deserialize from array', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
+        typeByte: bsonDataArray);
+    expect(value, deserializeSourceArray);
+  });
+  // ******** Object
+  test('Bson Deserialize - object', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        typeByte: bsonDataString);
+    expect(value, string);
+  });
+  test('Ejson Deserialize - map', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson, typeByte: bsonDataString);
+    expect(value, string);
+  });
+  test('Ejson Deserialize - map Rx', () {
+    var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
+        serializationType: SerializationType.ejson,
+        relaxed: true,
+        typeByte: bsonDataString);
+    expect(value, string);
   });
 }

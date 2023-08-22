@@ -1,17 +1,20 @@
 import 'package:bson/bson.dart';
 import 'package:test/test.dart';
 
-// TODO toUtc() or not?
 groupDate() {
   var date = DateTime(2012, 10, 6, 10, 15, 20);
-  var beforeEpoch = DateTime(1012, 10, 6, 10, 15, 20);
-  var after9999 = DateTime(10000);
+  var dateUtc = date.toUtc();
+  var beforeEpoch = DateTime.utc(1012, 10, 6, 10, 15, 20);
+  var after9999 = DateTime.utc(10000);
 
   var sourceMap = {'d': date};
+  var sourceMapUtc = {'d': dateUtc};
   var sourceMapBE = {'d': beforeEpoch};
   var sourceMapA9 = {'d': after9999};
 
   var ejsonSourceRx = {r'$date': date.toIso8601String()};
+  var ejsonSourceRxUtc = {r'$date': dateUtc.toIso8601String()};
+
   var ejsonSourceRxBE = {
     r'$date': {r'$numberLong': beforeEpoch.millisecondsSinceEpoch.toString()}
   };
@@ -30,15 +33,15 @@ groupDate() {
   };
 
   var hexBuffer = '10000000096400c09124353a01000000';
-  var hexBufferBE = '10000000096400c05da7c586e4ffff00';
-  var hexBufferA9 = '1000000009640080ede8d177e6000000';
+  var hexBufferBE = '10000000096400c03a15c686e4ffff00';
+  var hexBufferA9 = '1000000009640000dc1fd277e6000000';
 
   var hexObjBuffer = 'c09124353a010000';
-  var hexObjBufferBE = 'c05da7c586e4ffff';
-  var hexObjBufferA9 = '80ede8d177e60000';
+  var hexObjBufferBE = 'c03a15c686e4ffff';
+  var hexObjBufferA9 = '00dc1fd277e60000';
 
   var arrayBuffer =
-      '98000000093000c09124353a010000093100c05da7c586e4ffff09320080ede8d177e6000003330010000000096400c09124353a0100000003340010000000096400c05da7c586e4ffff000335001000000009640080ede8d177e600000003360010000000096400c09124353a0100000003370010000000096400c05da7c586e4ffff000338001000000009640080ede8d177e600000000';
+      '98000000093000c09124353a010000093100c03a15c686e4ffff09320000dc1fd277e6000003330010000000096400c09124353a0100000003340010000000096400c03a15c686e4ffff000335001000000009640000dc1fd277e600000003360010000000096400c09124353a0100000003370010000000096400c03a15c686e4ffff000338001000000009640000dc1fd277e600000000';
 
   var sourceArray = [
     date,
@@ -52,13 +55,13 @@ groupDate() {
     {'d': ejsonSourceRxA9},
   ];
   var deserializeSourceArray = [
-    date,
+    dateUtc,
     beforeEpoch,
     after9999,
-    {'d': date},
+    {'d': dateUtc},
     {'d': beforeEpoch},
     {'d': after9999},
-    {'d': date},
+    {'d': dateUtc},
     {'d': beforeEpoch},
     {'d': after9999}
   ];
@@ -183,7 +186,7 @@ groupDate() {
   // Deserialize
   test('Bson Deserialize', () {
     var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
-    expect(value, sourceMap);
+    expect(value, sourceMapUtc);
   });
   test('Ejson Deserialize', () {
     var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
@@ -192,7 +195,7 @@ groupDate() {
   test('Ejson Deserialize Rx', () {
     var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
         relaxed: true);
-    expect(value, {'d': ejsonSourceRx});
+    expect(value, {'d': ejsonSourceRxUtc});
   });
   test('Bson Deserialize BE', () {
     var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBufferBE));
@@ -230,7 +233,7 @@ groupDate() {
   test('Bson Deserialize - object', () {
     var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
         typeByte: bsonDataDate);
-    expect(value, date);
+    expect(value, dateUtc);
   });
   test('Ejson Deserialize - map', () {
     var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
@@ -242,6 +245,6 @@ groupDate() {
         serializationType: SerializationType.ejson,
         relaxed: true,
         typeByte: bsonDataDate);
-    expect(value, ejsonSourceRx);
+    expect(value, ejsonSourceRxUtc);
   });
 }

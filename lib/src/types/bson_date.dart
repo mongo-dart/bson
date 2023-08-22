@@ -1,16 +1,15 @@
 import '../../bson.dart';
 
 class BsonDate extends BsonObject {
-  BsonDate(this.data);
+  BsonDate(DateTime date) : data = date.toUtc();
   BsonDate.fromBuffer(BsonBinary buffer) : data = extractData(buffer);
   BsonDate.fromEJson(Map<String, dynamic> eJsonMap)
       : data = extractEJson(eJsonMap);
 
-  DateTime data;
+  final DateTime data;
 
   static DateTime extractData(BsonBinary buffer) =>
-      DateTime.fromMillisecondsSinceEpoch(
-          buffer.readInt64() /* , isUtc: true */);
+      DateTime.fromMillisecondsSinceEpoch(buffer.readInt64(), isUtc: true);
 
   static DateTime extractEJson(Map<String, dynamic> eJsonMap) {
     var entry = eJsonMap.entries.first;
@@ -30,7 +29,8 @@ class BsonDate extends BsonObject {
       throw ArgumentError(
           'The received Map is not a avalid EJson Date representation');
     }
-    return DateTime.fromMillisecondsSinceEpoch(int.parse(subEntry.value));
+    return DateTime.fromMillisecondsSinceEpoch(int.parse(subEntry.value),
+        isUtc: true);
   }
 
   @override
@@ -46,8 +46,9 @@ class BsonDate extends BsonObject {
   @override
   eJson({bool relaxed = false}) {
     if (relaxed) {
-      var minLimit = DateTime(1969, 12, 3);
-      var maxLimit = DateTime(10000, 1, 1);
+      var minLimit =
+          DateTime.utc(1970, 1, 1).subtract(Duration(milliseconds: 1));
+      var maxLimit = DateTime.utc(10000, 1, 1);
       if (data.isAfter(minLimit) && data.isBefore(maxLimit)) {
         return {type$date: data.toIso8601String()};
       }

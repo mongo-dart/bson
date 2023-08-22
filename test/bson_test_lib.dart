@@ -92,10 +92,12 @@ void run() {
     test('testDateTime', () {
       var date = DateTime(2012, 10, 6, 10, 15, 20);
       var sourceMap = {'d': date};
+      var checkMap = {'d': date.toUtc()};
+
       var buffer = BsonCodec.serialize(sourceMap);
       buffer.rewind();
       Map targetMap = BsonCodec.deserialize(buffer);
-      expect(targetMap['d'], sourceMap['d']);
+      expect(targetMap, checkMap);
     });
   });
   group('BsonTypesTest:', () {
