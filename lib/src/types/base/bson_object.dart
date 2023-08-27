@@ -69,7 +69,7 @@ abstract class BsonObject {
     // If we have to consider also serialized objects
     if (parms.serializeObjects) {
       if (value is BsonSerializable) {
-        return BsonCustom.fromObject(value, parms);
+        return BsonCustom.fromObject(value);
       }
     }
     // If we have to consider ejson

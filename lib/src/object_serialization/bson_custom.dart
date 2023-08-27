@@ -1,8 +1,12 @@
 import '../../bson.dart';
 
 class BsonCustom extends BsonMap {
-  static SerializationRepository? repository;
-  BsonCustom(int id, Map<String, dynamic> data)
+  BsonCustom.fromBsonMapData(super._mapData) : super.fromBsonMapData();
+
+  /// Constructs a BsonCustom instance with the class unique Id and the
+  /// a map with the rela data (normally coming from the bson method of the
+  /// object to be serialized)
+  BsonCustom(dynamic id, Map<String, dynamic> data)
       : super.fromBsonMapData(BsonMap.data2buffer(
             {type$customId: id, type$customData: data},
             SerializationParameters(
@@ -11,8 +15,8 @@ class BsonCustom extends BsonMap {
   factory BsonCustom.fromBuffer(BsonBinary fullBuffer) =>
       BsonMap.fromBuffer(fullBuffer) as BsonCustom;
 
-  factory BsonCustom.fromObject(
-      BsonSerializable value, SerializationParameters parms) {
+  /// Constructs a BsonCustom object from the object to be serialized
+  factory BsonCustom.fromObject(BsonSerializable value) {
     var id = SerializationRepository.getId(value.runtimeType);
     return BsonCustom(id, value.toBson);
   }
@@ -27,10 +31,14 @@ class BsonCustom extends BsonMap {
   } */
 
   int? _id;
-  int get id => _id ??= super.value[type$customId];
+  /*  int get id => _id ??= (super.value[type$customId] is int
+      ? super.value[type$customId]
+      : int.parse(super.value[type$customId][type$int32])); */
+  int get id => _id ??= mapData.metaDocument[type$customId]!.value;
 
   Map<String, dynamic>? _data;
-  Map<String, dynamic> get data => _data ??= super.value[type$customData];
+  Map<String, dynamic> get data =>
+      _data ??= mapData.metaDocument[type$customData]!.value;
 
   @override
   BsonSerializable get value =>

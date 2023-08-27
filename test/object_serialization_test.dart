@@ -1,6 +1,9 @@
 import 'package:bson/bson.dart';
 import 'package:test/test.dart';
 
+import 'classes/marriage.dart';
+import 'classes/person.dart';
+
 // Example on how to use BSON to serialize-deserialize
 void main() {
   group('Run', () {
@@ -42,49 +45,4 @@ void main() {
       expect(marriageCloneFromBson.spouse2.age, marriage.spouse2.age);
     });
   });
-}
-
-/// Example class that implements toJson and fromJson
-class Person with BsonSerializable {
-  const Person(this.name, this.age);
-
-  final String name;
-  final int age;
-
-  static int get uniqueId => 1;
-
-  Person.fromBson(Map<String, dynamic> dataMap)
-      : name = dataMap['name'],
-        age = dataMap['age'];
-
-  static Person deserialize(BsonBinary bsonBinary) =>
-      ObjectCodec.deserialize(bsonBinary) as Person;
-
-  @override
-  Map<String, dynamic> get toBson => {'name': name, 'age': age};
-}
-
-class Marriage with BsonSerializable {
-  const Marriage(this.date, this.spouse1, this.spouse2);
-
-  final DateTime date;
-  final Person spouse1;
-  final Person spouse2;
-
-  static int get uniqueId => 2;
-
-  Marriage.fromBson(Map<String, dynamic> dataMap)
-      : date = dataMap['date'],
-        spouse1 = dataMap['spouse1'],
-        spouse2 = dataMap['spouse2'];
-
-  static Marriage deserialize(BsonBinary bsonBinary) =>
-      ObjectCodec.deserialize(bsonBinary) as Marriage;
-
-  @override
-  Map<String, dynamic> get toBson => {
-        'date': date,
-        'spouse1': spouse1,
-        'spouse2': spouse2,
-      };
 }

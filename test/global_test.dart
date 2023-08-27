@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 import 'test_objects/binary.dart';
 import 'test_objects/boolean.dart';
 import 'test_objects/code.dart';
+import 'test_objects/custom_object.dart';
 import 'test_objects/date.dart';
 import 'test_objects/db_pointer.dart';
 import 'test_objects/db_ref.dart';
@@ -35,5 +36,6 @@ void main() {
     group('DbRef', groupDbRef);
     group('Boolean', groupBoolean);
     group('Null', groupNull);
+    group('Custom', groupCustomObject);
   });
 }
