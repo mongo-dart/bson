@@ -1,4 +1,5 @@
 import '../../bson.dart';
+import 'base/bson_object.dart';
 
 class BsonDate extends BsonObject {
   BsonDate(DateTime date) : data = date.toUtc();

@@ -4,6 +4,7 @@ import 'package:packages_extensions/decimal_extension.dart';
 import 'package:rational/rational.dart';
 
 import '../../bson.dart';
+import 'base/bson_object.dart';
 
 /// mask for Sign (10000000)
 final signMask = Int64.parseHex('8000000000000000');

@@ -1,4 +1,4 @@
-import 'package:bson/bson.dart';
+import 'bson_object.dart';
 
 class SerializationParameters {
   const SerializationParameters(

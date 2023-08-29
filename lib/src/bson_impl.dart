@@ -1,4 +1,7 @@
-part of bson;
+import 'types/base/bson_object.dart';
+import 'types/base/serialization_parameters.dart';
+import 'types/bson_binary.dart';
+import 'types/bson_map.dart';
 
 class BSON {
   @Deprecated('Use BsonCodec.serialize instead')

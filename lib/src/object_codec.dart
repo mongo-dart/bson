@@ -1,6 +1,7 @@
 import 'package:bson/src/object_serialization/bson_custom.dart';
 
 import '../bson.dart';
+import 'types/base/bson_object.dart';
 
 class ObjectCodec {
   static BsonBinary serialize(BsonSerializable object) {

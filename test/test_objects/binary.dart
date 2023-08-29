@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bson/bson.dart';
+import 'package:bson/src/types/base/bson_object.dart';
 import 'package:test/test.dart';
 
 groupBinary() {

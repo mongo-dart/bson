@@ -1,5 +1,35 @@
-part of bson;
 // ignore_for_file: constant_identifier_names
+
+import 'package:decimal/decimal.dart';
+import 'package:fixnum/fixnum.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../classes/dbref.dart';
+import '../../classes/js_code.dart';
+import '../../classes/object_id.dart';
+import '../../classes/timestamp.dart';
+import '../../object_serialization/bson_custom.dart';
+import '../../object_serialization/bson_serializable_mixin.dart';
+import '../../utils/types_def.dart';
+import '../bson_array.dart';
+import '../bson_binary.dart';
+import '../bson_boolean.dart';
+import '../bson_code.dart';
+import '../bson_date.dart';
+import '../bson_db_ref.dart';
+import '../bson_decimal_128.dart';
+import '../bson_double.dart';
+import '../bson_int.dart';
+import '../bson_long.dart';
+import '../bson_map.dart';
+import '../bson_null.dart';
+import '../bson_object_id.dart';
+import '../bson_regexp.dart';
+import '../bson_string.dart';
+import '../bson_timestamp.dart';
+import '../bson_uuid.dart';
+import '../dbpointer.dart';
+import 'serialization_parameters.dart';
 
 /// Number BSON Type
 const bsonDataNumber = 1;

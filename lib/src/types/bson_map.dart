@@ -2,6 +2,7 @@ import '../../bson.dart';
 import '../classes/dbref.dart';
 import '../object_serialization/bson_custom.dart';
 import 'base/bson_container.dart';
+import 'base/bson_object.dart';
 
 // The structure of the "Full Buffer" is:
 // 4 bytes size (comprehending this bytes also)
@@ -14,7 +15,7 @@ class BsonMap extends BsonContainer {
   BsonMap.fromBsonMapData(this._mapData);
 
   factory BsonMap(Map<String, dynamic> data, SerializationParameters parms) =>
-      BsonMap._analyzeBsonMapData(_data2metaData(data, parms),
+      BsonMap._analyzeBsonMapData(data2metaData(data, parms),
           isSerialize: true);
 
   factory BsonMap.fromBuffer(BsonBinary fullBuffer) =>
@@ -80,7 +81,7 @@ class BsonMap extends BsonContainer {
   int get hashCode => _mapData.hashCode;
   @override
   bool operator ==(other) => other is BsonMap && _mapData == other._mapData;
-
+/* 
   static BsonMapData data2buffer(
       Map<String, dynamic> data, SerializationParameters parms) {
     var internalBuffer = BsonBinary(_calcDataDimension(data, parms));
@@ -92,7 +93,7 @@ class BsonMap extends BsonContainer {
 
     internalBuffer.rewind();
     return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length,
-        /*  document: realData, */ parms: parms);
+        parms: parms);
   }
 
   static int _calcDataDimension(
@@ -103,7 +104,7 @@ class BsonMap extends BsonContainer {
     }
     return dim;
   }
-
+ */ /* 
   static Map<String, dynamic> buffer2ejson(BsonMapData mapData,
       {bool relaxed = false, int initialOffset = 0}) {
     var ret = <String, dynamic>{};
@@ -121,7 +122,7 @@ class BsonMap extends BsonContainer {
     }
     return ret;
   }
-
+ */
   @override
   eJson({bool relaxed = false}) => _metaData2Ejson(_mapData, relaxed: relaxed);
 
@@ -143,7 +144,7 @@ class BsonMap extends BsonContainer {
           entry.key: entry.value.eJson(relaxed: relaxed)
       };
 
-  static BsonMapData _data2metaData(
+  static BsonMapData data2metaData(
       Map<String, dynamic> data, SerializationParameters parms) {
     Map<String, BsonObject> metaData = <String, BsonObject>{};
     int length = 0;
@@ -163,8 +164,7 @@ class BsonMap extends BsonContainer {
 class BsonMapData {
   BsonMapData(this._binData, this.binOffset, this.length,
       {Map<String, dynamic>? document, SerializationParameters? parms})
-      : /*  _document = document, */
-        _parms = parms;
+      : _parms = parms;
   BsonMapData.fromData(this._metaDocument, this.length, this._parms)
       : binOffset = 0;
 
@@ -173,7 +173,6 @@ class BsonMapData {
   final int length;
   final SerializationParameters? _parms;
   BsonBinary? _objectBuffer;
-  // Map<String, dynamic>? _document;
 
   /// This is intended to be an intermediate status, made only of BsonObjects
   /// From which then generate both Bson or ejson formats.

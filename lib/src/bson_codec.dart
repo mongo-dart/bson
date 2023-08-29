@@ -1,4 +1,5 @@
 import '../bson.dart';
+import 'types/base/bson_object.dart';
 
 class BsonCodec {
   static BsonBinary serialize(var object, [int offset = 0]) {

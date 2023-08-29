@@ -1,6 +1,7 @@
 import 'package:fixnum/fixnum.dart';
 
 import '../../bson.dart';
+import 'base/bson_object.dart';
 
 class BsonLong extends BsonObject {
   BsonLong(this.data);

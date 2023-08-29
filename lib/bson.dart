@@ -1,37 +1,5 @@
 library bson;
 
-import 'package:bson/src/classes/dbref.dart';
-import 'src/classes/js_code.dart';
-import 'src/classes/object_id.dart';
-import 'src/classes/timestamp.dart';
-
-import 'package:bson/src/object_serialization/bson_serializable_mixin.dart';
-import 'package:bson/src/types/base/serialization_parameters.dart';
-
-import 'src/utils/types_def.dart';
-import 'package:uuid/uuid.dart';
-import 'package:fixnum/fixnum.dart';
-import 'package:decimal/decimal.dart';
-import 'src/object_serialization/bson_custom.dart';
-import 'src/types/bson_db_ref.dart';
-import 'src/types/bson_int.dart';
-import 'src/types/bson_long.dart';
-import 'src/types/bson_decimal_128.dart';
-import 'src/types/bson_uuid.dart';
-import 'src/types/bson_array.dart';
-import 'src/types/bson_map.dart';
-import 'src/types/bson_double.dart';
-import 'src/types/bson_string.dart';
-import 'src/types/bson_null.dart';
-import 'src/types/bson_boolean.dart';
-import 'src/types/bson_regexp.dart';
-import 'src/types/dbpointer.dart';
-import 'src/types/bson_timestamp.dart';
-import 'src/types/bson_date.dart';
-import 'src/types/bson_object_id.dart';
-import 'src/types/bson_binary.dart';
-import 'src/types/bson_code.dart';
-
 export 'src/classes/object_id.dart';
 export 'src/classes/timestamp.dart';
 
@@ -64,7 +32,3 @@ export 'src/utils/types_def.dart';
 
 export 'src/object_serialization/bson_serializable_mixin.dart';
 export 'src/object_serialization/serialization_repository.dart';
-
-part 'src/types/base/bson_object.dart';
-part 'src/types/min_max_keys.dart';
-part 'src/bson_impl.dart';

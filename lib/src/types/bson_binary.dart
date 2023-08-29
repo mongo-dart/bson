@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:fixnum/fixnum.dart';
 
 import '../../bson.dart';
+import 'base/bson_object.dart';
 import 'bson_uuid.dart';
 
 class BsonBinary extends BsonObject {

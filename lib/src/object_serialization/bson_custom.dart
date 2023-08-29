@@ -1,4 +1,5 @@
 import '../../bson.dart';
+import '../types/base/bson_object.dart';
 
 class BsonCustom extends BsonMap {
   BsonCustom.fromBsonMapData(super._mapData) : super.fromBsonMapData();
@@ -7,7 +8,7 @@ class BsonCustom extends BsonMap {
   /// a map with the rela data (normally coming from the bson method of the
   /// object to be serialized)
   BsonCustom(dynamic id, Map<String, dynamic> data)
-      : super.fromBsonMapData(BsonMap.data2buffer(
+      : super.fromBsonMapData(BsonMap.data2metaData(
             {type$customId: id, type$customData: data},
             SerializationParameters(
                 type: SerializationType.bson, serializeObjects: true)));
@@ -20,20 +21,8 @@ class BsonCustom extends BsonMap {
     var id = SerializationRepository.getId(value.runtimeType);
     return BsonCustom(id, value.toBson);
   }
-/* 
-  static BsonMapData extractEJson(Map<String, Object> eJsonMap) {
-    if (eJsonMap.containsKey(type$customId) &&
-        eJsonMap.containsKey(type$customData)) {
-      return BsonMap.extractEJson(eJsonMap);
-    }
-    throw ArgumentError(
-        'The received Map is not a valid EJson BsonCustom representation');
-  } */
 
   int? _id;
-  /*  int get id => _id ??= (super.value[type$customId] is int
-      ? super.value[type$customId]
-      : int.parse(super.value[type$customId][type$int32])); */
   int get id => _id ??= mapData.metaDocument[type$customId]!.value;
 
   Map<String, dynamic>? _data;

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import '../../bson.dart';
+import 'base/bson_object.dart';
 
 class BsonObjectId extends BsonObject {
   BsonObjectId(ObjectId parmId) : id = createBsonBinaryFromObjectId(parmId);

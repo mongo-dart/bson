@@ -1,9 +1,12 @@
-import '../../bson.dart';
 import '../classes/dbref.dart';
+import '../classes/object_id.dart';
+import '../utils/types_def.dart';
+import 'base/serialization_parameters.dart';
+import 'bson_map.dart';
 
 class BsonDbRef extends BsonMap {
   BsonDbRef(DbRef dbRef)
-      : super.fromBsonMapData(BsonMap.data2buffer(
+      : super.fromBsonMapData(BsonMap.data2metaData(
             {type$ref: dbRef.collection, type$id: dbRef.objectId},
             bsonSerialization));
 

@@ -1,4 +1,5 @@
 import '../../bson.dart';
+import 'base/bson_object.dart';
 
 class BsonNull extends BsonObject {
   BsonNull();

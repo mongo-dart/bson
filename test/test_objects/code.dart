@@ -1,5 +1,6 @@
 import 'package:bson/bson.dart';
 import 'package:bson/src/classes/js_code.dart';
+import 'package:bson/src/types/base/bson_object.dart';
 import 'package:test/test.dart';
 
 groupCode() {

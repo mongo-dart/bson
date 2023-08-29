@@ -1,11 +1,12 @@
 import '../../bson.dart';
 import 'base/bson_container.dart';
+import 'base/bson_object.dart';
 
 class BsonArray extends BsonContainer {
   BsonArray.fromBsonArrayData(this._arrayData);
 
   factory BsonArray(List data, SerializationParameters parms) =>
-      BsonArray._analyzeBsonArrayData(_data2metaData(data, parms),
+      BsonArray._analyzeBsonArrayData(data2metaData(data, parms),
           isSerialize: true);
 
   factory BsonArray.fromBuffer(BsonBinary fullBuffer) =>
@@ -21,19 +22,7 @@ class BsonArray extends BsonContainer {
   }
 
   final BsonArrayData _arrayData;
-
-  /*  static List extractData(BsonBinary buffer) {
-    var ret = [];
-    buffer.offset += 4;
-    var typeByte = buffer.readByte();
-    while (typeByte != 0) {
-      // Consume the name (for arrays it is the index)
-      buffer.readCString();
-      ret.add(BsonObject.fromTypeByteAndBuffer(typeByte, buffer).value);
-      typeByte = buffer.readByte();
-    }
-    return ret;
-  } */
+  BsonArrayData get arrayData => _arrayData;
 
   /// Extract data from a buffer with leading length and trailing terminator (0)
   static BsonArrayData extractData(BsonBinary fullBuffer) {
@@ -61,26 +50,12 @@ class BsonArray extends BsonContainer {
 
     buffer.writeByte(0);
   }
-/* 
-  static BsonArrayData data2buffer(List data, SerializationParameters parms) {
-    var internalBuffer = BsonBinary(_calcDataDimension(data, parms));
-    for (var i = 0; i < data.length; i++) {
-      BsonObject.from(data[i], parms).packElement('$i', internalBuffer);
-    }
-    internalBuffer.rewind();
-    return BsonArrayData(internalBuffer, 0, internalBuffer.byteList.length,
-        parms: parms);
-  }
-//  */
-//   static int _calcDataDimension(List data, SerializationParameters parms) {
-//     int dim = 0;
 
-//     for (var i = 0; i < data.length; i++) {
-//       dim += BsonContainer.entrySize('$i', data[i], parms);
-//     }
-
-//     return dim;
-//   }
+  @override
+  int get hashCode => _arrayData.hashCode;
+  @override
+  bool operator ==(other) =>
+      other is BsonArray && _arrayData == other._arrayData;
 
   @override
   eJson({bool relaxed = false}) =>
@@ -99,8 +74,7 @@ class BsonArray extends BsonContainer {
         for (var element in arrayData.metaArray) element.eJson(relaxed: relaxed)
       ];
 
-  static BsonArrayData _data2metaData(
-      List data, SerializationParameters parms) {
+  static BsonArrayData data2metaData(List data, SerializationParameters parms) {
     List<BsonObject> metaData = <BsonObject>[];
     int length = 0;
     for (var i = 0; i < data.length; i++) {

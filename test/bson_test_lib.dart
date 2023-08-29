@@ -1,3 +1,4 @@
+import 'package:bson/src/types/base/bson_object.dart';
 import 'package:bson/src/types/bson_uuid.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';
@@ -60,18 +61,14 @@ void run() {
           hex = '0$hex';
         }
         var b = BsonBinary.fromHexString(hex);
-        //b.makeByteList();
         expect(b.byteList[0], n);
       }
       var b = BsonBinary.fromHexString('0301');
-      //b.makeByteList();
       expect(b.byteArray.getInt16(0, Endian.little), 259);
       b = BsonBinary.fromHexString('0301ad0c1ad34f1d');
-      //b.makeByteList();
       expect(b.hexString, '0301ad0c1ad34f1d');
       var oid1 = ObjectId();
       var oid2 = ObjectId.fromHexString(oid1.toHexString());
-      //oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
     });
     test('test64Int', () {
@@ -139,7 +136,6 @@ void run() {
     test('testBsonIdFromHexString', () {
       var oid1 = ObjectId();
       var oid2 = ObjectId.fromHexString(oid1.toHexString());
-      //oid2.id.makeByteList();
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
       expect(ObjectId.isValidHexId(oid1.toHexString()), isTrue);
       var b1 = BsonCodec.serialize({'id': oid1});

@@ -1,3 +1,5 @@
+import 'package:bson/src/types/base/bson_object.dart';
+
 import '../../bson.dart';
 
 @Deprecated('Use DbRef instead')
