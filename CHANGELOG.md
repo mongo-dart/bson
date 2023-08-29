@@ -4,6 +4,7 @@
 
 - Added tests
 - Moved back Date to UTC, it is a BSON requirement.
+- dataSize() and byteLength() methods changed into getters
 
 ## 5.0.0-2.0.dev
 

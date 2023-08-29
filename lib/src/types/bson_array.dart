@@ -32,17 +32,18 @@ class BsonArray extends BsonContainer {
     return BsonArrayData(fullBuffer, offset + 4, length - 5);
   }
 
-  int dataSize() => _arrayData.length;
+  @override
+  int get dataSize => _arrayData.length;
 
   @override
   List get value => _metaData2Data(_arrayData);
   @override
-  int byteLength() => 4 + dataSize() + 1;
+  int get byteLength => 4 + dataSize + 1;
   @override
   int get typeByte => bsonDataArray;
   @override
   void packValue(BsonBinary buffer) {
-    buffer.writeInt(byteLength());
+    buffer.writeInt(byteLength);
 
     buffer.byteList.setRange(buffer.offset, buffer.offset + _arrayData.length,
         _arrayData.objectBuffer.byteList);
@@ -81,7 +82,7 @@ class BsonArray extends BsonContainer {
       metaData.add(BsonObject.from(data[i], parms));
       // Element type Byte - Element name cString (element number for array)
       // - cString termonator (1 byte) - Element data
-      length += 1 + '$i'.length + 1 + metaData[i].byteLength();
+      length += 1 + '$i'.length + 1 + metaData[i].byteLength;
     }
     return BsonArrayData.fromData(metaData, length, parms);
   }

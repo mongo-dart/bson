@@ -254,7 +254,7 @@ abstract class BsonObject {
 
   int get typeByte;
 
-  int byteLength() => 0;
+  int get byteLength => 0;
 
   void packElement(String? name, BsonBinary buffer) {
     buffer.writeByte(typeByte);

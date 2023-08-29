@@ -27,7 +27,7 @@ void runTimestamp() {
 
       test('Regular Constructor - debug values', () {
         var bsonTimestamp = BsonTimestamp(Timestamp(1, 2));
-        var buffer = BsonBinary(bsonTimestamp.byteLength());
+        var buffer = BsonBinary(bsonTimestamp.byteLength);
 
         bsonTimestamp.packValue(buffer);
         expect(bsonTimestamp.timestamp.seconds, 1);

@@ -58,17 +58,18 @@ class BsonMap extends BsonContainer {
     return BsonMapData(fullBuffer, offset + 4, length - 5);
   }
 
-  int dataSize() => _mapData.length;
+  @override
+  int get dataSize => _mapData.length;
 
   @override
   dynamic get value => _metaData2Data(_mapData);
   @override
-  int byteLength() => 4 + dataSize() + 1;
+  int get byteLength => 4 + dataSize + 1;
   @override
   int get typeByte => bsonDataObject;
   @override
   void packValue(BsonBinary buffer) {
-    buffer.writeInt(byteLength());
+    buffer.writeInt(byteLength);
 
     buffer.byteList.setRange(buffer.offset, buffer.offset + _mapData.length,
         _mapData.objectBuffer.byteList);
@@ -155,7 +156,7 @@ class BsonMap extends BsonContainer {
       length += 1 +
           Statics.getKeyUtf8(entry.key).length +
           1 +
-          metaData[entry.key]!.byteLength();
+          metaData[entry.key]!.byteLength;
     }
     return BsonMapData.fromData(metaData, length, parms);
   }

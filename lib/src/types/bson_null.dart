@@ -19,7 +19,7 @@ class BsonNull extends BsonObject {
   // ignore: prefer_void_to_null
   Null get value => null;
   @override
-  int byteLength() => 0;
+  int get byteLength => 0;
   @override
   int get typeByte => bsonDataNull;
   @override

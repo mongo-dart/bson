@@ -125,7 +125,7 @@ class BsonRegexp extends BsonObject {
   @override
   int get typeByte => bsonDataRegExp;
   @override
-  int byteLength() => bsonPattern.byteLength() + bsonOptions.byteLength();
+  int get byteLength => bsonPattern.byteLength + bsonOptions.byteLength;
 
   @override
   String toString() => "BsonRegexp('$pattern',options:'$options')";
