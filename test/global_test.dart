@@ -17,6 +17,7 @@ import 'test_objects/regexp.dart';
 import 'test_objects/string.dart';
 import 'test_objects/timestamp.dart';
 import 'test_objects/uuid.dart';
+import 'test_objects/array.dart';
 
 void main() {
   group('Global', () {
@@ -38,4 +39,5 @@ void main() {
     group('Null', groupNull);
     group('Custom', groupCustomObject);
   });
+  group('Array', groupArray);
 }

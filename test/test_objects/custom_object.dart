@@ -36,7 +36,13 @@ groupCustomObject() {
   var sourceArray = [john, ejsonSourceObj, ejsonSourceObjRx];
   var deserializeSourceArray = [
     john,
-    john,
+    {
+      type$customId: {type$int32: '1'},
+      type$customData: {
+        'name': 'John',
+        'age': {type$int32: '30'}
+      }
+    },
     john,
   ];
 

@@ -14,7 +14,8 @@ class BsonMap extends BsonContainer {
   BsonMap.fromBsonMapData(this._mapData);
 
   factory BsonMap(Map<String, dynamic> data, SerializationParameters parms) =>
-      BsonMap._analyzeBsonMapData(data2buffer(data, parms), isSerialize: true);
+      BsonMap._analyzeBsonMapData(_data2metaData(data, parms),
+          isSerialize: true);
 
   factory BsonMap.fromBuffer(BsonBinary fullBuffer) =>
       BsonMap._analyzeBsonMapData(extractData(fullBuffer));
@@ -37,9 +38,9 @@ class BsonMap extends BsonContainer {
             DbRef(metaMap[type$ref]!.value, metaMap[type$id]!.value));
       }
     }
-    if (/*!isSerialize && */
-        metaMap.containsKey(type$customId) &&
-            metaMap.containsKey(type$customData)) {
+    if (metaMap.containsKey(type$customId) &&
+        metaMap[type$customId] is BsonInt &&
+        metaMap.containsKey(type$customData)) {
       return BsonCustom.fromBsonMapData(mapData);
     }
     return BsonMap.fromBsonMapData(mapData);
@@ -56,22 +57,6 @@ class BsonMap extends BsonContainer {
     return BsonMapData(fullBuffer, offset + 4, length - 5);
   }
 
-/* 
-  static Map<String, dynamic> _extractData(BsonBinary buffer) {
-    var ret = <String, dynamic>{};
-    buffer.offset += 4;
-    var typeByte = buffer.readByte();
-    while (typeByte != 0) {
-      var key = buffer.readCString();
-      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, buffer).value;
-      if (buffer.atEnd()) {
-        break;
-      }
-      typeByte = buffer.readByte();
-    }
-    return ret;
-  }
- */
   int dataSize() => _mapData.length;
 
   @override
@@ -95,48 +80,6 @@ class BsonMap extends BsonContainer {
   int get hashCode => _mapData.hashCode;
   @override
   bool operator ==(other) => other is BsonMap && _mapData == other._mapData;
-
-  @Deprecated('Pass through meta data instead')
-  static Map<String, dynamic> _buffer2data(BsonMapData mapData) {
-    var ret = <String, dynamic>{};
-    var readBuffer = mapData.readBuffer;
-    var typeByte = readBuffer.readByte();
-    while (typeByte != 0) {
-      var key = readBuffer.readCString();
-      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer).value;
-      if (readBuffer.atEnd()) {
-        break;
-      }
-      typeByte = readBuffer.readByte();
-    }
-    return ret;
-  }
-
-  /// This methods create the metadata (a Map with intermediate status
-  /// BsonObjects) starting from a buffer
-  static Map<String, BsonObject> _buffer2metaData(BsonMapData mapData) {
-    var ret = <String, BsonObject>{};
-    var readBuffer = mapData.readBuffer;
-    var typeByte = readBuffer.readByte();
-    while (typeByte != 0) {
-      var key = readBuffer.readCString();
-      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer);
-      if (readBuffer.atEnd()) {
-        break;
-      }
-      typeByte = readBuffer.readByte();
-    }
-    return ret;
-  }
-
-  /// This methods create the metadata (a Map with intermediate status
-  /// BsonObjects) starting from a buffer
-  static Map<String, dynamic> _metaData2Data(BsonMapData mapData) {
-    return {
-      for (var entry in mapData.metaDocument.entries)
-        entry.key: entry.value.value
-    };
-  }
 
   static BsonMapData data2buffer(
       Map<String, dynamic> data, SerializationParameters parms) {
@@ -166,12 +109,9 @@ class BsonMap extends BsonContainer {
     var ret = <String, dynamic>{};
     var readBuffer = mapData.readBuffer;
 
-    // readBuffer.offset += 4;
     var typeByte = readBuffer.readByte();
     while (typeByte != 0) {
       var key = readBuffer.readCString();
-      // var bsonObj = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer);
-      // ret[key] = bsonObj.eJson(relaxed: relaxed);
       ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer)
           .eJson(relaxed: relaxed);
       if (readBuffer.atEnd()) {
@@ -183,8 +123,16 @@ class BsonMap extends BsonContainer {
   }
 
   @override
-  eJson({bool relaxed = false}) => _metaData2Ejson(_mapData,
-      relaxed: relaxed); //buffer2ejson(_mapData, relaxed: relaxed);
+  eJson({bool relaxed = false}) => _metaData2Ejson(_mapData, relaxed: relaxed);
+
+  /// This methods create the metadata (a Map with intermediate status
+  /// BsonObjects) starting from a buffer
+  static Map<String, dynamic> _metaData2Data(BsonMapData mapData) {
+    return {
+      for (var entry in mapData.metaDocument.entries)
+        entry.key: entry.value.value
+    };
+  }
 
   /// This methods create the data array (real objects) from the metaData
   ///  Array (BsonObjects)
@@ -194,19 +142,38 @@ class BsonMap extends BsonContainer {
         for (var entry in mapData.metaDocument.entries)
           entry.key: entry.value.eJson(relaxed: relaxed)
       };
+
+  static BsonMapData _data2metaData(
+      Map<String, dynamic> data, SerializationParameters parms) {
+    Map<String, BsonObject> metaData = <String, BsonObject>{};
+    int length = 0;
+    for (var entry in data.entries) {
+      metaData[entry.key] = BsonObject.from(entry.value, parms);
+      // Element type Byte - Element name cString (element number for array)
+      // - cString termonator (1 byte) - Element data
+      length += 1 +
+          Statics.getKeyUtf8(entry.key).length +
+          1 +
+          metaData[entry.key]!.byteLength();
+    }
+    return BsonMapData.fromData(metaData, length, parms);
+  }
 }
 
 class BsonMapData {
-  BsonMapData(this.binData, this.binOffset, this.length,
+  BsonMapData(this._binData, this.binOffset, this.length,
       {Map<String, dynamic>? document, SerializationParameters? parms})
-      : _document = document,
+      : /*  _document = document, */
         _parms = parms;
-  final BsonBinary binData;
+  BsonMapData.fromData(this._metaDocument, this.length, this._parms)
+      : binOffset = 0;
+
+  BsonBinary? _binData;
   final int binOffset;
   final int length;
   final SerializationParameters? _parms;
   BsonBinary? _objectBuffer;
-  Map<String, dynamic>? _document;
+  // Map<String, dynamic>? _document;
 
   /// This is intended to be an intermediate status, made only of BsonObjects
   /// From which then generate both Bson or ejson formats.
@@ -222,13 +189,42 @@ class BsonMapData {
       BsonBinary(length)
         ..byteList.setRange(0, length, binData.byteList, binOffset))
     ..rewind();
-  BsonBinary get readBuffer =>
-      objectBuffer.clone..rewind(); //data.clone..offset = offset;
-  @Deprecated('Do not use temporarily')
-  dynamic get document => _document ??= BsonMap._buffer2data(this);
+  BsonBinary get readBuffer => objectBuffer.clone..rewind();
 
   Map<String, BsonObject> get metaDocument =>
-      _metaDocument ??= BsonMap._buffer2metaData(this);
+      _metaDocument ??= _buffer2metaData;
+
+  BsonBinary get binData => _binData ??= _metaData2buffer;
 
   SerializationParameters? get parms => _parms;
+
+  // ************* Converters
+  /// This methods creates a buffer starting from the metadata array
+  /// (a List with intermediate status BsonObjects)
+  BsonBinary get _metaData2buffer {
+    var internalBuffer = BsonBinary(length);
+
+    for (var entry in metaDocument.entries) {
+      entry.value.packElement(entry.key, internalBuffer);
+    }
+
+    return internalBuffer..rewind();
+  }
+
+  /// This methods create the metadata (a Map with intermediate status
+  /// BsonObjects) starting from a buffer
+  Map<String, BsonObject> get _buffer2metaData {
+    var ret = <String, BsonObject>{};
+    var locReadBuffer = readBuffer;
+    var typeByte = locReadBuffer.readByte();
+    while (typeByte != 0) {
+      var key = locReadBuffer.readCString();
+      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, locReadBuffer);
+      if (locReadBuffer.atEnd()) {
+        break;
+      }
+      typeByte = locReadBuffer.readByte();
+    }
+    return ret;
+  }
 }

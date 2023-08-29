@@ -3,20 +3,13 @@ import 'base/bson_container.dart';
 
 class BsonArray extends BsonContainer {
   BsonArray.fromBsonArrayData(this._arrayData);
-/* 
-  BsonArray(List data, SerializationParameters parms)
-      : buffer = data2buffer(data, parms); */
 
   factory BsonArray(List data, SerializationParameters parms) =>
-      BsonArray._analyzeBsonArrayData(data2buffer(data, parms),
+      BsonArray._analyzeBsonArrayData(_data2metaData(data, parms),
           isSerialize: true);
-/* 
-  BsonArray.fromBuffer(this.buffer); */
 
   factory BsonArray.fromBuffer(BsonBinary fullBuffer) =>
       BsonArray._analyzeBsonArrayData(extractData(fullBuffer));
-
-  //BsonBinary buffer;
 
   factory BsonArray._analyzeBsonArrayData(BsonArrayData arrayData,
       {bool isSerialize = false}) {
@@ -49,25 +42,11 @@ class BsonArray extends BsonContainer {
     fullBuffer.offset = offset + length;
     return BsonArrayData(fullBuffer, offset + 4, length - 5);
   }
-/* 
-  static List extractEJson(BsonBinary buffer, {bool relaxed = false}) {
-    var ret = [];
-    buffer.offset += 4;
-    var typeByte = buffer.readByte();
-    while (typeByte != 0) {
-      // Consume the name (for arrays it is the index)
-      buffer.readCString();
-      ret.add(BsonObject.fromTypeByteAndBuffer(typeByte, buffer)
-          .eJson(relaxed: relaxed));
-      typeByte = buffer.readByte();
-    }
-    return ret;
-  } */
 
-  int dataSize() => _arrayData.length; //buffer.byteList.length;
+  int dataSize() => _arrayData.length;
 
   @override
-  List get value => _metaData2Data(_arrayData); //extractData(buffer);
+  List get value => _metaData2Data(_arrayData);
   @override
   int byteLength() => 4 + dataSize() + 1;
   @override
@@ -82,7 +61,7 @@ class BsonArray extends BsonContainer {
 
     buffer.writeByte(0);
   }
-
+/* 
   static BsonArrayData data2buffer(List data, SerializationParameters parms) {
     var internalBuffer = BsonBinary(_calcDataDimension(data, parms));
     for (var i = 0; i < data.length; i++) {
@@ -92,39 +71,20 @@ class BsonArray extends BsonContainer {
     return BsonArrayData(internalBuffer, 0, internalBuffer.byteList.length,
         parms: parms);
   }
+//  */
+//   static int _calcDataDimension(List data, SerializationParameters parms) {
+//     int dim = 0;
 
-  static int _calcDataDimension(List data, SerializationParameters parms) {
-    int dim = 0;
+//     for (var i = 0; i < data.length; i++) {
+//       dim += BsonContainer.entrySize('$i', data[i], parms);
+//     }
 
-    for (var i = 0; i < data.length; i++) {
-      dim += BsonContainer.entrySize('$i', data[i], parms);
-    }
-
-    return dim;
-  }
+//     return dim;
+//   }
 
   @override
-  eJson({bool relaxed = false}) => _metaData2Ejson(_arrayData,
-      relaxed: relaxed); //extractEJson(buffer, relaxed: relaxed);
-
-  /// This methods create the metadata (a Map with intermediate status
-  /// BsonObjects) starting from a buffer
-  static List<BsonObject> _buffer2metaData(BsonArrayData arrayData) {
-    var ret = <BsonObject>[];
-    var readBuffer = arrayData.readBuffer;
-    var typeByte = readBuffer.readByte();
-    while (typeByte != 0) {
-      // Consume the name (for arrays it is the index)
-
-      readBuffer.readCString();
-      ret.add(BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer));
-      if (readBuffer.atEnd()) {
-        break;
-      }
-      typeByte = readBuffer.readByte();
-    }
-    return ret;
-  }
+  eJson({bool relaxed = false}) =>
+      _metaData2Ejson(_arrayData, relaxed: relaxed);
 
   /// This methods create the data array (real objects) from the metaData
   ///  Array (BsonObjects)
@@ -138,13 +98,29 @@ class BsonArray extends BsonContainer {
       [
         for (var element in arrayData.metaArray) element.eJson(relaxed: relaxed)
       ];
+
+  static BsonArrayData _data2metaData(
+      List data, SerializationParameters parms) {
+    List<BsonObject> metaData = <BsonObject>[];
+    int length = 0;
+    for (var i = 0; i < data.length; i++) {
+      metaData.add(BsonObject.from(data[i], parms));
+      // Element type Byte - Element name cString (element number for array)
+      // - cString termonator (1 byte) - Element data
+      length += 1 + '$i'.length + 1 + metaData[i].byteLength();
+    }
+    return BsonArrayData.fromData(metaData, length, parms);
+  }
 }
 
 class BsonArrayData {
-  BsonArrayData(this.binData, this.binOffset, this.length,
+  BsonArrayData(this._binData, this.binOffset, this.length,
       {SerializationParameters? parms})
       : _parms = parms;
-  final BsonBinary binData;
+  BsonArrayData.fromData(this._metaArray, this.length, this._parms)
+      : binOffset = 0;
+
+  BsonBinary? _binData;
   final int binOffset;
   final int length;
   final SerializationParameters? _parms;
@@ -166,8 +142,39 @@ class BsonArrayData {
     ..rewind();
   BsonBinary get readBuffer => objectBuffer.clone..rewind();
 
-  List<BsonObject> get metaArray =>
-      _metaArray ??= BsonArray._buffer2metaData(this);
+  List<BsonObject> get metaArray => _metaArray ??= _buffer2metaData;
+
+  BsonBinary get binData => _binData ??= _metaData2buffer;
 
   SerializationParameters? get parms => _parms;
+
+  // ************* Converters
+  /// This methods creates a buffer starting from the metadata array
+  /// (a List with intermediate status BsonObjects)
+  BsonBinary get _metaData2buffer {
+    var internalBuffer = BsonBinary(length);
+    for (var i = 0; i < metaArray.length; i++) {
+      metaArray[i].packElement('$i', internalBuffer);
+    }
+    return internalBuffer..rewind();
+  }
+
+  /// This methods creatse the metadata (a List with intermediate status
+  /// BsonObjects) starting from a buffer
+  List<BsonObject> get _buffer2metaData {
+    var ret = <BsonObject>[];
+    var locReadBuffer = readBuffer;
+    var typeByte = locReadBuffer.readByte();
+    while (typeByte != 0) {
+      // Consume the name (for arrays it is the index)
+
+      locReadBuffer.readCString();
+      ret.add(BsonObject.fromTypeByteAndBuffer(typeByte, locReadBuffer));
+      if (locReadBuffer.atEnd()) {
+        break;
+      }
+      typeByte = locReadBuffer.readByte();
+    }
+    return ret;
+  }
 }
