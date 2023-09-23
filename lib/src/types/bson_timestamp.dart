@@ -50,7 +50,7 @@ class BsonTimestamp extends BsonObject {
   @override
   String toString() => '$timestamp';
   @override
-  int get byteLength => 8;
+  int get totalByteLength => 8;
   @override
   void packValue(BsonBinary buffer) {
     buffer.writeInt(timestamp.increment);

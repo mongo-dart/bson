@@ -38,7 +38,7 @@ class BsonDouble extends BsonObject {
   @override
   double get value => data;
   @override
-  int get byteLength => 8;
+  int get totalByteLength => 8;
   @override
   int get typeByte => bsonDataNumber;
   @override

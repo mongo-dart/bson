@@ -324,7 +324,7 @@ class BsonBinary extends BsonObject {
   }
 
   @override
-  int get byteLength => byteList.length + 4 + 1;
+  int get totalByteLength => byteList.length + 4 + 1;
   bool atEnd() => offset == byteList.length;
   void rewind() => offset = 0;
 

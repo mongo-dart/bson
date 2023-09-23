@@ -7,7 +7,7 @@ class EJsonCodec {
   static BsonBinary serialize(Map<String, dynamic> eJsonMap, {int offset = 0}) {
     var bsonMap = BsonMap(eJsonMap, ejsonSerialization);
 
-    var buffer = BsonBinary(bsonMap.byteLength + offset);
+    var buffer = BsonBinary(bsonMap.totalByteLength + offset);
     buffer.offset = offset;
     bsonMap.packValue(buffer);
     return buffer;

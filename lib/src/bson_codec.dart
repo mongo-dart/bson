@@ -7,7 +7,7 @@ class BsonCodec {
       throw Exception('Invalid value for BSON serialize: $object');
     }
     var bsonObject = BsonObject.from(object, bsonSerialization);
-    var buffer = BsonBinary(bsonObject.byteLength + offset);
+    var buffer = BsonBinary(bsonObject.totalByteLength + offset);
     buffer.offset = offset;
     bsonObject.packValue(buffer);
 

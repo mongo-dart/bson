@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, deprecated_member_use_from_same_package
 
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';
@@ -254,7 +254,10 @@ abstract class BsonObject {
 
   int get typeByte;
 
-  int get byteLength => 0;
+  @Deprecated('use totalByteLength instead')
+  int byteLength() => totalByteLength;
+
+  int get totalByteLength => 0;
 
   void packElement(String? name, BsonBinary buffer) {
     buffer.writeByte(typeByte);

@@ -37,7 +37,7 @@ class BsonDate extends BsonObject {
   @override
   DateTime get value => data;
   @override
-  int get byteLength => 8;
+  int get totalByteLength => 8;
   @override
   int get typeByte => bsonDataDate;
   @override

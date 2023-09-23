@@ -1,5 +1,7 @@
 library bson;
 
+export 'src/classes/dbref.dart';
+export 'src/classes/js_code.dart';
 export 'src/classes/object_id.dart';
 export 'src/classes/timestamp.dart';
 

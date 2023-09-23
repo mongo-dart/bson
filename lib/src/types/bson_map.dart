@@ -1,5 +1,4 @@
 import '../../bson.dart';
-import '../classes/dbref.dart';
 import '../object_serialization/bson_custom.dart';
 import 'base/bson_container.dart';
 import 'base/bson_object.dart';
@@ -59,17 +58,17 @@ class BsonMap extends BsonContainer {
   }
 
   @override
-  int get dataSize => _mapData.length;
+  int get contentLength => _mapData.length;
 
   @override
   dynamic get value => _metaData2Data(_mapData);
   @override
-  int get byteLength => 4 + dataSize + 1;
+  int get totalByteLength => 4 + contentLength + 1;
   @override
   int get typeByte => bsonDataObject;
   @override
   void packValue(BsonBinary buffer) {
-    buffer.writeInt(byteLength);
+    buffer.writeInt(totalByteLength);
 
     buffer.byteList.setRange(buffer.offset, buffer.offset + _mapData.length,
         _mapData.objectBuffer.byteList);
@@ -156,7 +155,7 @@ class BsonMap extends BsonContainer {
       length += 1 +
           Statics.getKeyUtf8(entry.key).length +
           1 +
-          metaData[entry.key]!.byteLength;
+          metaData[entry.key]!.totalByteLength;
     }
     return BsonMapData.fromData(metaData, length, parms);
   }

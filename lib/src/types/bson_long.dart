@@ -29,7 +29,7 @@ class BsonLong extends BsonObject {
   @override
   Int64 get value => data;
   @override
-  int get byteLength => 8;
+  int get totalByteLength => 8;
   @override
   int get typeByte => bsonDataLong;
   @override

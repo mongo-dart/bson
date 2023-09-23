@@ -137,7 +137,7 @@ class BsonDecimal128 extends BsonObject {
   @override
   Decimal? get value => convertBinaryToDecimal(bin);
   @override
-  int get byteLength => 16;
+  int get totalByteLength => 16;
 
   @override
   void packValue(BsonBinary buffer) {

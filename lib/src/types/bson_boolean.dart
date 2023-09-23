@@ -20,7 +20,7 @@ class BsonBoolean extends BsonObject {
   @override
   bool get value => data;
   @override
-  int get byteLength => 1;
+  int get totalByteLength => 1;
   @override
   int get typeByte => bsonDataBool;
   @override

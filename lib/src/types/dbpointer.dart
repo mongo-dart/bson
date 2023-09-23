@@ -56,7 +56,8 @@ class DBPointer extends BsonObject {
   @override
   int get typeByte => bsonDataDbPointer;
   @override
-  int get byteLength => bsonCollection.byteLength + bsonObjectId.byteLength;
+  int get totalByteLength =>
+      bsonCollection.totalByteLength + bsonObjectId.totalByteLength;
 
   @override
   String toString() =>

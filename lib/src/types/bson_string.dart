@@ -35,7 +35,7 @@ class BsonString extends BsonObject {
   @override
   dynamic get value => data;
   @override
-  int get byteLength => utfData.length + 1 + 4;
+  int get totalByteLength => utfData.length + 1 + 4;
   @override
   int get typeByte => bsonDataString;
   @override
@@ -82,7 +82,7 @@ class BsonCString extends BsonString {
   }
 
   @override
-  int get byteLength => utfData.length + 1;
+  int get totalByteLength => utfData.length + 1;
 
   @override
   void packValue(BsonBinary buffer) {

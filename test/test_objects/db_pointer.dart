@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:bson/bson.dart';
 import 'package:bson/src/types/base/bson_object.dart';
 import 'package:test/test.dart';

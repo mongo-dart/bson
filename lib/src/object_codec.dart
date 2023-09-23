@@ -7,7 +7,7 @@ class ObjectCodec {
   static BsonBinary serialize(BsonSerializable object) {
     var bsonObject = BsonObject.from(
         object, SerializationParameters(serializeObjects: true));
-    var buffer = BsonBinary(bsonObject.byteLength);
+    var buffer = BsonBinary(bsonObject.totalByteLength);
     bsonObject.packValue(buffer);
     return buffer;
   }
