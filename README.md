@@ -24,12 +24,33 @@ This is the most important converter. It converts from a document of objects int
 | double | BsonDouble | 1 / 0x01 | BsonDouble | double ||
 | String | BsonString | 2 / 0x02 | BsonString | String ||
 | Map | BsonMap | 3 / 0x03 | BsonMap | Map ||
+| DbRef | BsonDbRef | Map convention | BsonDbRef | DbRef | Map containing keys "$id" and "$ref" |
 | List | BsonArray | 4 / 0x04 | BsonArray | List ||
+| UuidValue | BsonUuid | 5 / 0x05 | BsonUuid | UuidValue | Sub Type 4 / 0x04 |
+| ObjectId | BsonObjectId | 7 / 0x07 | BsonObjectId | ObjectId ||
 | bool | BsonBoolean | 8 / 0x08 | BsonBoolean | bool ||
+| DateTime | BsonDate | 9 / 0x09 | BsonDate | DateTime ||
 | Null | BsonNull | 10 / 0x0A | BsonNull| Null ||
+| RegExp | BsonRegexp | 11 / 0x0B | BsonRegexp| RegExp ||
+| DBPointer | DBPointer | 12 / 0x0C | DBPointer| DBPointer | @Deprecated |
+| JsCode | BsonCode | 13 / 0x0D | BsonCode| JsCode ||
 | int | BsonInt | 16 / 0x10 | BsonInt | int | when bitLength <= 31|
 | Int32 | BsonInt | 16 / 0x10 | BsonInt | int ||
+| Timestamp | BsonTimestamp | 17 / 0x11 | BsonTimestamp | Timestamp | |
 | int | BsonLong | 18 / 0x12 | BsonLong | Int64 | when bitLength > 31 |
 | Int64 | BsonLong | 18 / 0x12 | BsonLong | Int64 ||
+| Decimal | BsonDecimal128 | 19 / 0x13 | BsonDecimal128 | Decimal ||
 
-|  | :heavy_check_mark: | | :heavy_check_mark: | ||
+The objects expected are those of the column "Dart Type", while the objectr returnd are those of the column "Returned Dart". The other types are intended to be used internally. The Bson Types are eventually accepted in input instead of the corresponding Dart types.
+Most of the types expected are from the Dart language itself, with these exceptions:
+| Class | Package |
+| :-: | :-: |
+| DbRef | Bson |
+| UuidValue | Uuid |
+| ObjectId | Bson |
+| DBPointer | Bson |
+| JsCode | Bson |
+| Timestamp | Bson |
+| Int32 | Fixnum |
+| Int64 | Fixnum |
+| Decimal | Decimal |

@@ -4,6 +4,11 @@
 
 - dataSize() and byteLenght() have been deprecated in favor of contentLength and totalByteLength getters.
 
+## 5.0.0-4.0.dev
+
+- code clean-up
+- updated README
+
 ## 5.0.0-3.0.dev
 
 - Added tests
