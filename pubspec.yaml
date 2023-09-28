@@ -11,7 +11,7 @@ dependencies:
   fixnum: ^1.0.0
   decimal: ^2.3.0
   rational: ^2.2.0
-  uuid: ^3.0.0
+  uuid: ^4.0.0
   packages_extensions: ^0.1.0
   power_extensions: ^0.2.0
 

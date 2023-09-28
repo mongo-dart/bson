@@ -304,7 +304,7 @@ void run() {
         expect(result['_id'], 5);
       });
       test('Uuid', () {
-        var uuid = UuidValue('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var uuid = UuidValue.fromString('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
         var map = {'_id': 5, 'uuid': uuid};
         var buffer = BsonCodec.serialize(map);
         expect(

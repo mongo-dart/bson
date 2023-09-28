@@ -7,7 +7,7 @@ void runUuid() {
   group('UUID:', () {
     group('Reading Uuid', () {
       test('Regular Constructor', () {
-        var uuid = UuidValue('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var uuid = UuidValue.fromString('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
         var bsonUuid = BsonUuid(uuid);
         var value = bsonUuid.value;
         expect(value, uuid);
