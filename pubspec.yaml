@@ -8,15 +8,15 @@ environment:
   sdk: ">=2.17.0 <4.0.0"
 
 dependencies:
-  fixnum: ^1.0.0
-  decimal: ^2.3.0
-  rational: ^2.2.0
-  uuid: ^4.0.0
+  fixnum: ^1.1.0
+  decimal: ^2.3.3
+  rational: ^2.2.2
+  uuid: ^4.1.0
   packages_extensions: ^0.1.0
   power_extensions: ^0.2.0
 
 
 dev_dependencies:
   test: ^1.24.6
-  lints: ^2.0.0
+  lints: ^2.1.1
 

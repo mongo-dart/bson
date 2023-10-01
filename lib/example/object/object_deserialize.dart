@@ -5,7 +5,10 @@ import 'classes/person.dart';
 
 void main() {
   /// Before starting to use the Object codec, we have to register the classes
-  /// in the repository
+  /// in the repository.
+  /// The unique id can best directly .addType(Person, Person.fromBson, 1),
+  /// but I guess that it is better to store it in the class to be sure
+  /// not to change it from one execution to the other.
   SerializationRepository.addType(Person, Person.fromBson, Person.uniqueId);
   SerializationRepository.addType(
       Marriage, Marriage.fromBson, Marriage.uniqueId);
