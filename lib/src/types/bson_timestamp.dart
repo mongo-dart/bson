@@ -23,7 +23,7 @@ class BsonTimestamp extends BsonObject {
       throw ArgumentError(
           'The received Map is not a avalid EJson Timestamp representation');
     }
-    if (entry.value is! Map<String, Object>) {
+    if (entry.value['t'] is! int || entry.value['i'] is! int) {
       throw ArgumentError(
           'The received Map is not a valid EJson Timestamp representation');
     }

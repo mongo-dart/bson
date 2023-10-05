@@ -1,20 +1,20 @@
-import '../../bson.dart';
-
 class DbRef {
-  DbRef(this.collection, this.objectId);
+  DbRef(this.collection, this.id, {this.db});
 
   final String collection;
-  final ObjectId objectId;
+  final Object id;
+  final String? db;
 
   @override
-  int get hashCode => Object.hash(collection, objectId);
+  int get hashCode => Object.hash(collection, id, db);
   @override
   bool operator ==(other) =>
       other is DbRef &&
       collection == other.collection &&
-      objectId == other.objectId;
+      id == other.id &&
+      db == other.db;
 
   @override
-  String toString() =>
-      'DbRef(collection: $collection, id: ${objectId.toHexString()})';
+  String toString() => 'DbRef(collection: $collection, id: $id, '
+      '${db == null ? '' : 'db: $db'}})';
 }

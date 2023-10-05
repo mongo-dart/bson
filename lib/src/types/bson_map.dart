@@ -29,13 +29,13 @@ class BsonMap extends BsonContainer {
           (mapData.parms?.type ?? SerializationType.bson) !=
               SerializationType.bson) {
         return BsonDbRef(DbRef(
-            metaMap[type$ref]!.value,
-            metaMap[type$id]!
-                .value /*  BsonObjectId.fromEJson(ret[type$id]).value */));
+            metaMap[type$ref]!.value, metaMap[type$id]!.value,
+            db: metaMap[type$db]?.value));
       }
       if (!isSerialize) {
-        return BsonDbRef(
-            DbRef(metaMap[type$ref]!.value, metaMap[type$id]!.value));
+        return BsonDbRef(DbRef(
+            metaMap[type$ref]!.value, metaMap[type$id]!.value,
+            db: metaMap[type$db]?.value));
       }
     }
     if (metaMap.containsKey(type$customId) &&

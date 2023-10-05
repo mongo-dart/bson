@@ -37,5 +37,5 @@ class BsonLong extends BsonObject {
 
   @override
   eJson({bool relaxed = false}) =>
-      relaxed ? data : {type$int64: data.toString()};
+      relaxed ? data.toInt() : {type$int64: data.toString()};
 }

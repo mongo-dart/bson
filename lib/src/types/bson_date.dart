@@ -21,15 +21,15 @@ class BsonDate extends BsonObject {
     if (entry.value is String) {
       return DateTime.parse(entry.value);
     }
-    if (entry.value is! Map<String, String>) {
+    if (entry.value[type$int64] is! String) {
       throw ArgumentError(
           'The received Map is not a valid EJson Date representation');
     }
     var subEntry = entry.value.entries.first;
-    if (subEntry.key != type$int64) {
+    /* if (subEntry.key != type$int64) {
       throw ArgumentError(
           'The received Map is not a avalid EJson Date representation');
-    }
+    } */
     return DateTime.fromMillisecondsSinceEpoch(int.parse(subEntry.value),
         isUtc: true);
   }

@@ -1,9 +1,9 @@
+import 'dart:convert';
+
 import '../bson.dart';
 
 class EJsonCodec {
-  /// Serializes a BSON object and returns the data in Extended JSON format.
-  // serialize
-  // EJSON.serialize( db.<collection>.findOne() )
+  /// Serializes a ejson format document into a BSON binary object
   static BsonBinary serialize(Map<String, dynamic> eJsonMap, {int offset = 0}) {
     var bsonMap = BsonMap(eJsonMap, ejsonSerialization);
 
@@ -13,10 +13,7 @@ class EJsonCodec {
     return buffer;
   }
 
-  /// Converts a serialized document to field and value pairs.
-  /// The values have BSON types.
-  // deserialize
-  // EJSON.deserialize( <serialized object> )
+  /// Converts a serialized document to ejson format map.
   static Map<String, dynamic> deserialize(BsonBinary buffer,
       {bool relaxed = false}) {
     buffer.offset = 0;
@@ -26,11 +23,19 @@ class EJsonCodec {
     return BsonMap.fromBuffer(buffer).eJson(relaxed: relaxed);
   }
 
-  ///
+  /// Converts an ejson document into a Dart objects document
   static Map<String, dynamic> eJson2Doc(Map<String, dynamic> ejsonMap) =>
       BsonCodec.deserialize(EJsonCodec.serialize(ejsonMap));
 
-  ///
+  /// Converts a Dart objects document into an ejson document.
   static Map<String, dynamic> doc2eJson(Map<String, dynamic> doc) =>
       EJsonCodec.deserialize(BsonCodec.serialize(doc));
+
+  /// Converts the element and type pairs in a deserialized object to strings.
+  static String stringify(Map<String, dynamic> ejsonMap) =>
+      json.encode(ejsonMap);
+
+  /// Converts strings into element and type pairs.
+  static Map<String, dynamic> parse(String ejsonString) =>
+      json.decode(ejsonString);
 }

@@ -7,6 +7,7 @@
 5.0.0-5.0.beta
 
 - Added `EJson.stringify()` method.
+- Added `EJson.parse()` method.
 
 ## 5.0.0-4.0.dev
 

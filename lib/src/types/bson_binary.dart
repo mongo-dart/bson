@@ -123,7 +123,7 @@ class BsonBinary extends BsonObject {
       throw ArgumentError(
           'The received Map is not a valid EJson Binary representation');
     }
-    if (entry.value is! Map<String, Object>) {
+    if (entry.value['base64'] is! String || entry.value['subType'] is! String) {
       throw ArgumentError(
           'The received Map is not a valid EJson Binary representation');
     }

@@ -13,6 +13,7 @@ const type$regex = r'$regularExpression';
 const type$dbPointer = r'$dbPointer';
 const type$ref = r'$ref';
 const type$id = r'$id';
+const type$db = r'$db';
 const type$minKey = r'$minKey';
 const type$maxKey = r'$maxKey';
 const type$mcustomId = r'$customId';

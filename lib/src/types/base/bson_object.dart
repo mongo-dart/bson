@@ -171,7 +171,7 @@ abstract class BsonObject {
     if (value is List) {
       return BsonArray(value, parms);
     }
-    if (value is Map<String, dynamic>) {
+    if (value is Map && value.keys.first is String) {
       return BsonMap(Map<String, dynamic>.from(value), parms);
     }
     if (parms.type != SerializationType.ejson) {

@@ -8,11 +8,6 @@ import 'package:test/test.dart';
 import 'package:bson/bson.dart';
 import 'package:uuid/uuid.dart';
 
-import 'bson_binary_test_lib.dart';
-import 'bson_decimal_128_test_lib.dart';
-import 'bson_timestamp_test_lib.dart';
-import 'bson_uuid_test_lib.dart';
-
 final Matcher throwsArgumentError = throwsA(TypeMatcher<ArgumentError>());
 
 void main() {
@@ -1137,9 +1132,54 @@ void main() {
         expect(result['_id'], 5);
       }, skip: 'To Be developed yet');
     });
+    group('Stringify', () {
+      test('int', () {
+        var map = {
+          '_id': {type$int32: '5'},
+          'int': {type$int32: '4'},
+          'int64': {type$int64: '5'}
+        };
+        var expectedResult =
+            r'{"_id":{"$numberInt":"5"},"int":{"$numberInt":"4"},'
+            r'"int64":{"$numberLong":"5"}}';
+        var buffer = EJsonCodec.serialize(map);
+        expect(
+            buffer.hexString,
+            '26000000105f69640005000000'
+            '10696e74000400000012696e74363400050000000000000000');
+        buffer.offset = 0;
+        var root = EJsonCodec.deserialize(buffer);
+        expect(EJsonCodec.stringify(root), expectedResult);
+      });
+    });
+    group('Parse', () {
+      test('int', () {
+        var expectedResult = {
+          '_id': {type$int32: '5'},
+          'int': {type$int32: '4'},
+          'int64': {type$int64: '5'}
+        };
+        var ejsonString = r'{"_id":{"$numberInt":"5"},"int":{"$numberInt":"4"},'
+            r'"int64":{"$numberLong":"5"}}';
+
+        expect(EJsonCodec.parse(ejsonString), expectedResult);
+      });
+      test('global', () {
+        var testString = r'{"_id":{"$oid":"51c87a81a58a563d1304f4ed"},'
+            r'"int32":{"$numberInt":"78954"},"int64":{"$numberLong":"-1"},'
+            r'"date":{"$date":{"$numberLong":"1577833200000"}},'
+            r'"map":{"a":{"$numberInt":"99"},'
+            r'"subList":[{"$numberLong":"1"},{"$numberLong":"2"},'
+            r'{"$numberLong":"3"}]},"list":[{"$numberInt":"1"},'
+            r'{"$numberInt":"2"},{"$numberInt":"3"},'
+            r'{"b":{"$numberInt":"29"}}]}';
+
+        var map = EJsonCodec.parse(testString);
+        var binary = EJsonCodec.serialize(map);
+        var deserializdeMap = EJsonCodec.deserialize(binary);
+        var finalResult = EJsonCodec.stringify(deserializdeMap);
+        expect(finalResult, testString);
+      });
+    });
   });
-  runBinary();
-  runDecimal128();
-  runUuid();
-  runTimestamp();
 }
