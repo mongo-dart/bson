@@ -1,6 +1,21 @@
 import 'dart:convert';
 
 import 'package:bson/src/types/base/bson_object.dart';
+import 'package:bson/src/types/bson_array.dart';
+import 'package:bson/src/types/bson_boolean.dart';
+import 'package:bson/src/types/bson_code.dart';
+import 'package:bson/src/types/bson_date.dart';
+import 'package:bson/src/types/bson_db_ref.dart';
+import 'package:bson/src/types/bson_decimal_128.dart';
+import 'package:bson/src/types/bson_double.dart';
+import 'package:bson/src/types/bson_int.dart';
+import 'package:bson/src/types/bson_long.dart';
+import 'package:bson/src/types/bson_map.dart';
+import 'package:bson/src/types/bson_null.dart';
+import 'package:bson/src/types/bson_object_id.dart';
+import 'package:bson/src/types/bson_regexp.dart';
+import 'package:bson/src/types/bson_string.dart';
+import 'package:bson/src/types/bson_timestamp.dart';
 import 'package:bson/src/types/bson_uuid.dart';
 import 'package:decimal/decimal.dart';
 import 'package:fixnum/fixnum.dart';

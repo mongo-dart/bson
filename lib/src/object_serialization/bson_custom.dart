@@ -1,5 +1,6 @@
 import '../../bson.dart';
 import '../types/base/bson_object.dart';
+import '../types/bson_map.dart';
 
 class BsonCustom extends BsonMap {
   BsonCustom.fromBsonMapData(super._mapData) : super.fromBsonMapData();
@@ -26,6 +27,7 @@ class BsonCustom extends BsonMap {
   int get id => _id ??= mapData.metaDocument[type$customId]!.value;
 
   Map<String, dynamic>? _data;
+  @override
   Map<String, dynamic> get data =>
       _data ??= mapData.metaDocument[type$customData]!.value;
 

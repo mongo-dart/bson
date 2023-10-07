@@ -1,5 +1,7 @@
-import '../../bson.dart';
+import '../utils/types_def.dart';
 import 'base/bson_object.dart';
+import 'bson_binary.dart';
+import 'bson_string.dart';
 
 class BsonRegexp extends BsonObject {
   BsonRegexp(this.pattern,

@@ -1,11 +1,14 @@
 import 'dart:convert';
 
-import '../bson.dart';
+import 'bson_codec.dart';
+import 'types/base/serialization_parameters.dart';
+import 'types/bson_binary.dart';
+import 'types/bson_map.dart';
 
 class EJsonCodec {
   /// Serializes a ejson format document into a BSON binary object
   static BsonBinary serialize(Map<String, dynamic> eJsonMap, {int offset = 0}) {
-    var bsonMap = BsonMap(eJsonMap, ejsonSerialization);
+    var bsonMap = BsonMap(eJsonMap, parms: ejsonSerialization);
 
     var buffer = BsonBinary(bsonMap.totalByteLength + offset);
     buffer.offset = offset;

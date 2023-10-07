@@ -1,3 +1,4 @@
+import 'package:bson/src/types/bson_timestamp.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';
 

@@ -2,6 +2,8 @@ import '../../bson.dart';
 import '../object_serialization/bson_custom.dart';
 import 'base/bson_container.dart';
 import 'base/bson_object.dart';
+import 'bson_db_ref.dart';
+import 'bson_int.dart';
 
 // The structure of the "Full Buffer" is:
 // 4 bytes size (comprehending this bytes also)
@@ -13,7 +15,8 @@ import 'base/bson_object.dart';
 class BsonMap extends BsonContainer {
   BsonMap.fromBsonMapData(this._mapData);
 
-  factory BsonMap(Map<String, dynamic> data, SerializationParameters parms) =>
+  factory BsonMap(Map<String, dynamic> data,
+          {SerializationParameters parms = bsonSerialization}) =>
       BsonMap._analyzeBsonMapData(data2metaData(data, parms),
           isSerialize: true);
 
@@ -60,6 +63,8 @@ class BsonMap extends BsonContainer {
   @override
   int get contentLength => _mapData.length;
 
+  @Deprecated('use "value" instead ')
+  Map<String, dynamic> get data => value;
   @override
   dynamic get value => _metaData2Data(_mapData);
   @override

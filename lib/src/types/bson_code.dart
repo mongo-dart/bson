@@ -1,5 +1,6 @@
 import '../../bson.dart';
 import 'base/bson_object.dart';
+import 'bson_string.dart';
 
 class BsonCode extends BsonString {
   BsonCode(JsCode jsCode) : super(jsCode.code);

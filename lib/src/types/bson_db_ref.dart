@@ -12,7 +12,7 @@ class BsonDbRef extends BsonMap {
         }, bsonSerialization));
 
   factory BsonDbRef.fromEJson(Map<String, dynamic> eJsonMap) =>
-      BsonMap(eJsonMap, ejsonSerialization) as BsonDbRef;
+      BsonMap(eJsonMap, parms: ejsonSerialization) as BsonDbRef;
 
   String? _collection;
   String get collection => _collection ??= super.value[type$ref];

@@ -1,3 +1,4 @@
+import 'package:bson/src/types/bson_decimal_128.dart';
 import 'package:decimal/decimal.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';

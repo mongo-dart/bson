@@ -1,6 +1,10 @@
 import 'package:bson/src/types/base/bson_object.dart';
 
-import '../../bson.dart';
+import '../classes/object_id.dart';
+import '../utils/types_def.dart';
+import 'bson_binary.dart';
+import 'bson_object_id.dart';
+import 'bson_string.dart';
 
 @Deprecated('Use DbRef instead')
 class DBPointer extends BsonObject {
