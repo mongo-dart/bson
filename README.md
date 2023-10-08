@@ -92,15 +92,15 @@ It converts from a document in format ejson into the BSON format. Only ejson ver
 To serialize an ejson map you have to use the serialize method of the EjsonCodec class.
 Serialization accept relaxed values, if present.
 Ex. `var bsonBinary = EJsonCodec.serialize(ejsonMap)`;
-You can see a [serialization example here](https://github.com/mongo-dart/bson/tree/main\example\ejson\ejson_serialize.dart)
+You can see a [serialization example here](https://github.com/mongo-dart/bson/tree/main/example/ejson/ejson_serialize.dart)
 
 To deserialize an ejson map you have to use the deserialize method of the EjsonCodec class.
 Ex. `var result = EJsonCodec.deserialize(bsonBinary)`;
-You can see a [deserialization example here](https://github.com/mongo-dart/bson/tree/main/example\ejson\ejson_deserialize.dart)  
+You can see a [deserialization example here](https://github.com/mongo-dart/bson/tree/main/example/ejson/ejson_deserialize.dart)  
 To extract the ejson in "relaxed" format you have to set the relaxed parameter to true.
 Ex `var result = EJsonCodec.deserialize(bsonBinary, relaxed: true)`;
 
-There are also two convenient methods that you can use to convert [from a ejson map into a Bson Map](https://github.com/mongo-dart/bson/tree/main/example\ejson\ejson_to_doc.dart) (`EJsonCodec.eJson2Doc(ejsonMap)`) and [viceversa](https://github.com/mongo-dart/bson/tree/main/example\ejson\doc_to_ejson.dart) (`EJsonCodec.doc2eJson(document)`).
+There are also two convenient methods that you can use to convert [from a ejson map into a Bson Map](https://github.com/mongo-dart/bson/tree/main/example/ejson/ejson_to_doc.dart) (`EJsonCodec.eJson2Doc(ejsonMap)`) and [viceversa](https://github.com/mongo-dart/bson/tree/main/example/ejson/doc_to_ejson.dart) (`EJsonCodec.doc2eJson(document)`).
 
 There are also two convenient method to transform an ejson map into a string (`EJsonCodec.stringify`) and vice-versa (`EJsonCodec.parse`).
 
@@ -115,8 +115,8 @@ The requirements are the following:
 
 To serialize a BsonSerializable object you have to use the serialize method of the object instance (inherithed from BsonSerializable).
 Ex. `BsonBinary result = < bsonSerializable >.serialize()`;
-You can see a [serialization example here](https://github.com/mongo-dart/bson/tree/main/example\object\object_deserialize.dart)
+You can see a [serialization example here](https://github.com/mongo-dart/bson/tree/main/example/object/object_deserialize.dart)
 
 To deserialize  BsonSerializable object you have to use the deserialize method of the ObjectCodec class.
 Ex.  `ObjectCodec.deserialize(bsonBinary)`
-You can see a [deserialization example here](https://github.com/mongo-dart/bson/tree/main/example\object\object_deserialize.dart)
+You can see a [deserialization example here](https://github.com/mongo-dart/bson/tree/main/example/object/object_deserialize.dart)
