@@ -102,6 +102,8 @@ Ex `var result = EJsonCodec.deserialize(bsonBinary, relaxed: true)`;
 
 There are also two convenient methods that you can use to convert [from a ejson map into a Bson Map](https://github.com/mongo-dart/bson/tree/main/lib\example\ejson\ejson_to_doc.dart) (`EJsonCodec.eJson2Doc(ejsonMap)`) and [viceversa](https://github.com/mongo-dart/bson/tree/main/lib\example\ejson\doc_to_ejson.dart) (`EJsonCodec.doc2eJson(document)`).
 
+There are also two convenient method to transform an ejson map into a string (`EJsonCodec.stringify`) and vice-versa (`EJsonCodec.parse`).
+
 ## Dart Object
 
 You can also convert dart objects into BSON Format.
