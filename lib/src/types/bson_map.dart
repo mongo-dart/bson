@@ -1,7 +1,11 @@
-import '../../bson.dart';
+import '../classes/dbref.dart';
 import '../object_serialization/bson_custom.dart';
+import '../utils/statics.dart';
+import '../utils/types_def.dart';
 import 'base/bson_container.dart';
 import 'base/bson_object.dart';
+import 'base/serialization_parameters.dart';
+import 'bson_binary.dart';
 import 'bson_db_ref.dart';
 import 'bson_int.dart';
 
@@ -86,48 +90,7 @@ class BsonMap extends BsonContainer {
   int get hashCode => _mapData.hashCode;
   @override
   bool operator ==(other) => other is BsonMap && _mapData == other._mapData;
-/* 
-  static BsonMapData data2buffer(
-      Map<String, dynamic> data, SerializationParameters parms) {
-    var internalBuffer = BsonBinary(_calcDataDimension(data, parms));
 
-    for (var entry in data.entries) {
-      BsonObject.from(entry.value, parms)
-          .packElement(entry.key, internalBuffer);
-    }
-
-    internalBuffer.rewind();
-    return BsonMapData(internalBuffer, 0, internalBuffer.byteList.length,
-        parms: parms);
-  }
-
-  static int _calcDataDimension(
-      Map<String, dynamic> data, SerializationParameters parms) {
-    int dim = 0;
-    for (var entry in data.entries) {
-      dim += BsonContainer.entrySize(entry.key, entry.value, parms);
-    }
-    return dim;
-  }
- */ /* 
-  static Map<String, dynamic> buffer2ejson(BsonMapData mapData,
-      {bool relaxed = false, int initialOffset = 0}) {
-    var ret = <String, dynamic>{};
-    var readBuffer = mapData.readBuffer;
-
-    var typeByte = readBuffer.readByte();
-    while (typeByte != 0) {
-      var key = readBuffer.readCString();
-      ret[key] = BsonObject.fromTypeByteAndBuffer(typeByte, readBuffer)
-          .eJson(relaxed: relaxed);
-      if (readBuffer.atEnd()) {
-        break;
-      }
-      typeByte = readBuffer.readByte();
-    }
-    return ret;
-  }
- */
   @override
   eJson({bool relaxed = false}) => _metaData2Ejson(_mapData, relaxed: relaxed);
 

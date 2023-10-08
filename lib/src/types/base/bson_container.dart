@@ -1,5 +1,6 @@
-import '../../../bson.dart';
+import '../../utils/statics.dart';
 import 'bson_object.dart';
+import 'serialization_parameters.dart';
 
 abstract class BsonContainer extends BsonObject {
   @Deprecated('use contentLength instead')

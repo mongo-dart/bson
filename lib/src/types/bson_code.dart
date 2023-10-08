@@ -1,5 +1,7 @@
-import '../../bson.dart';
+import '../classes/js_code.dart';
+import '../utils/types_def.dart';
 import 'base/bson_object.dart';
+import 'bson_binary.dart';
 import 'bson_string.dart';
 
 class BsonCode extends BsonString {

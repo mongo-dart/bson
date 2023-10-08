@@ -28,5 +28,4 @@ class BsonDbRef extends BsonMap {
   @override
   String toString() => 'BsonDbRef(collection: $collection, id: $id, '
       '${db == null ? '' : 'db: $db'})})';
-  //String toJson() => 'DbRef("$collection", ${objectId.toHexString()})';
 }

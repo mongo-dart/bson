@@ -3,8 +3,9 @@ import 'package:fixnum/fixnum.dart';
 import 'package:packages_extensions/decimal_extension.dart';
 import 'package:rational/rational.dart';
 
-import '../../bson.dart';
+import '../utils/types_def.dart';
 import 'base/bson_object.dart';
+import 'bson_binary.dart';
 
 /// mask for Sign (10000000)
 final signMask = Int64.parseHex('8000000000000000');

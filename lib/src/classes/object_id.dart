@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
-import '../../bson.dart';
+import '../types/bson_binary.dart';
+import '../utils/statics.dart';
+import 'timestamp.dart';
 
 const String _charMatcherPattern = r'^[a-fA-F0-9]{24}$';
 final RegExp charMatcherRegExp = RegExp(_charMatcherPattern);
@@ -68,6 +70,8 @@ class ObjectId {
 
   /// Returns the hexadecimall string representation of this ObjectId
   String get $oid => _id.hexString;
+
+  @Deprecated('Use \$oid getter instead')
 
   /// Same as $oid. It will be deprecated in a future release.
   String toHexString() => _id.hexString;

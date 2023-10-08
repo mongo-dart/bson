@@ -1,6 +1,7 @@
-import '../../bson.dart';
 import 'base/bson_container.dart';
 import 'base/bson_object.dart';
+import 'base/serialization_parameters.dart';
+import 'bson_binary.dart';
 
 class BsonArray extends BsonContainer {
   BsonArray.fromBsonArrayData(this._arrayData);

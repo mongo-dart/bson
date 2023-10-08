@@ -73,7 +73,7 @@ void run() {
       b = BsonBinary.fromHexString('0301ad0c1ad34f1d');
       expect(b.hexString, '0301ad0c1ad34f1d');
       var oid1 = ObjectId();
-      var oid2 = ObjectId.fromHexString(oid1.toHexString());
+      var oid2 = ObjectId.fromHexString(oid1.$oid);
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
     });
     test('test64Int', () {
@@ -128,7 +128,7 @@ void run() {
       expect(id1, isNot(id2),
           reason: 'ObjectIds must be different albeit by increment');
       id1 = ObjectId.fromSeconds(10);
-      var leading8chars = id1.toHexString().substring(0, 8);
+      var leading8chars = id1.$oid.substring(0, 8);
       expect('0000000a', leading8chars,
           reason: 'Timestamp part of ObjectId must be encoded BigEndian');
     });
@@ -140,9 +140,9 @@ void run() {
     });
     test('testBsonIdFromHexString', () {
       var oid1 = ObjectId();
-      var oid2 = ObjectId.fromHexString(oid1.toHexString());
+      var oid2 = ObjectId.fromHexString(oid1.$oid);
       expect(oid2.id.byteList, orderedEquals(oid1.id.byteList));
-      expect(ObjectId.isValidHexId(oid1.toHexString()), isTrue);
+      expect(ObjectId.isValidHexId(oid1.$oid), isTrue);
       var b1 = BsonCodec.serialize({'id': oid1});
       var b2 = BsonCodec.serialize({'id': oid2});
       b1.rewind();
@@ -152,7 +152,7 @@ void run() {
     });
     test('testBsonIdClientMode', () {
       var oid2 = ObjectId(clientMode: true);
-      expect(oid2.toHexString().length, 24);
+      expect(oid2.$oid.length, 24);
     });
     test('testBsonDbPointer', () {
       var p1 = DBPointer('Test', ObjectId());
@@ -177,19 +177,19 @@ void run() {
       var jsObj = json.encode(obj, toEncodable: toEncodable);
       var outObj = json.decode(jsObj);
       expect(outObj['intFld'], 20);
-      expect(outObj['_id'], id.toHexString());
+      expect(outObj['_id'], id.$oid);
       expect(outObj['dateFld'], date.toString());
     });
 
     test('Parsing', () {
       var wrongString = 'aaab0045564gf';
-      var correctHexId = ObjectId().toHexString();
+      var correctHexId = ObjectId().$oid;
       expect(ObjectId.isValidHexId(wrongString), isFalse);
       expect(ObjectId.tryParse(wrongString), isNull);
       expect(() => ObjectId.parse(wrongString), throwsArgumentError);
       expect(ObjectId.isValidHexId(correctHexId), isTrue);
-      expect(ObjectId.parse(correctHexId).toHexString(), correctHexId);
-      expect(ObjectId.tryParse(correctHexId)?.toHexString(), correctHexId);
+      expect(ObjectId.parse(correctHexId).$oid, correctHexId);
+      expect(ObjectId.tryParse(correctHexId)?.$oid, correctHexId);
     });
   });
 

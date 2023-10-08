@@ -1,5 +1,6 @@
-import '../../bson.dart';
+import '../utils/types_def.dart';
 import 'base/bson_object.dart';
+import 'bson_binary.dart';
 
 class BsonInt extends BsonObject {
   BsonInt(this.data);

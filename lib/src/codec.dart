@@ -1,5 +1,6 @@
-import '../bson.dart';
 import 'types/base/bson_object.dart';
+import 'types/base/serialization_parameters.dart';
+import 'types/bson_binary.dart';
 
 class Codec {
   static BsonBinary serialize(var object, SerializationParameters parms) {

@@ -1,5 +1,5 @@
-import '../../bson.dart';
 import 'base/bson_object.dart';
+import 'bson_binary.dart';
 
 class BsonBoolean extends BsonObject {
   BsonBoolean(this.data);
