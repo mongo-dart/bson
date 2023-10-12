@@ -42,4 +42,7 @@ class Statics {
     }
     return keys[key]!;
   }
+
+  static int get secondsSinceEpoch =>
+      DateTime.now().millisecondsSinceEpoch ~/ 1000;
 }

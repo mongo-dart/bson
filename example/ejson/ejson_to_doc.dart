@@ -3,7 +3,7 @@ import 'package:bson/bson.dart';
 void main() {
   var objectId = ObjectId.parse('51c87a81a58a563d1304f4ed');
   var ejsonMap = <String, dynamic>{
-    '_id': {type$objectId: objectId.$oid},
+    '_id': {type$objectId: objectId.oid},
     'int32': {type$int32: '78954'},
     'int64': {type$int64: '-1'},
     'date': {

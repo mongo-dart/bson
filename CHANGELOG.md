@@ -5,15 +5,25 @@
 This release contains many breaking changes. Here is a list of the most noticeable:
 
 - `BSON` has been deprecated in favor of `BsonCodec`
-- In general the logic is changed so that the document to be encoded should contain normal "Dart object" and the document returned will do the same. In input the system will continue to accept BsonObjects anyway, the issue can be with the returned Objects. At present the more important exceptions are BsonBinary and DbPointer.
-- To address the above logic some new classes have been created: JsCode and DbRef.
-- The DbRef values were stored as DbPointers. Now they are stored correctly as a particular type of Map (contains $ref and $id elements). Beware that, if you have stored Dbref values, now they will be returnde as DbPointers.
+- In general the logic is changed so that the document to be encoded should contain normal "Dart object" and the document returned will do the same. In input the system will continue to accept BsonObjects anyway, the issue can be with the returned Objects. At present the more important exceptions are ``BsonBinary` and `DbPointer`.
+- To address the above logic some new classes have been created: `JsCode` and `DbRef`.
+- The `DbRef` values were stored as DbPointers. Now they are stored correctly as a particular type of Map (contains $ref and $id elements). Beware that, if you have stored Dbref values, now they will be returnde as DbPointers.
 Also an optional $db value is accepted and managed from the new DbRef class.
-- The JsCode class is used to clearly separate normal Strings from Javascript code.
-- The RegExp class is used instead of the BsonRegexp one.
-- The DbPointer class is deprecated (as per Bson specifications).
-- dataSize() and byteLenght() have been deprecated in favor of contentLength and totalByteLength getters.
+- The `JsCode` class is used to clearly separate normal Strings from Javascript code.
+- The `RegExp` class is used instead of the BsonRegexp one.
+- The `DbPointer` class is deprecated (as per Bson specifications).
+- `dataSize()` and `byteLenght()` have been deprecated in favor of contentLength and totalByteLength getters.
 - the Bson classes now are intended to be used internally, so they are no more exported explicitly in the bson package.
+- `BsonBinary.setInExtended` now supports also 5 and 7 bytes aside of the already managed 3 bytes. Corrected the endian logic, now `Endian.little` is the default.
+- Class `ObjectId`:
+
+  - Removed the obscure `ClientMod`e parameter.
+  - `$oid` getter renamed as `oid`. It is more practical in string interpolation
+  - updated the random and counter parts logic. Before they were 4+4 bytes. Now, as per specifications, they are 5+3 bytes
+
+## 5.0.0-7.0.beta
+
+- Reviewed the ObjectId class
 
 ## 5.0.0-6.0.beta
 

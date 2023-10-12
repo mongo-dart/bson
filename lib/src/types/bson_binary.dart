@@ -102,9 +102,10 @@ class BsonBinary extends BsonObject {
 
   // These are initiated on-demand
   String? _hexString;
-
   int offset = 0;
 
+  /// Returns a copy of this BsonBinary.
+  /// Also the offset is set like the original.
   BsonBinary get clone =>
       BsonBinary.fromHexString(hexString, subType: _subType)..offset = offset;
 
@@ -205,7 +206,30 @@ class BsonBinary extends BsonObject {
     return localByteList;
   }
 
-  void setIntExtended(int value, int numOfBytes, Endian endianness) {
+  /// Insert the required bytes starting from offset
+  void setIntExtended(int value, int numOfBytes,
+      {Endian endianness = Endian.little}) {
+    var byteListTmp = Uint8List(8);
+    var byteArrayTmp = _getByteData(byteListTmp);
+    if (numOfBytes == 3) {
+      byteArrayTmp.setInt64(0, value, endianness);
+    } else if (numOfBytes == 5) {
+      byteArrayTmp.setInt64(0, value, endianness);
+    } else if (numOfBytes == 7) {
+      byteArrayTmp.setInt64(0, value, endianness);
+    } else {
+      throw Exception('Unsupported num of bytes: $numOfBytes');
+    }
+    if (endianness == Endian.little) {
+      byteList.setRange(offset, offset + numOfBytes, byteListTmp);
+    } else {
+      byteList.setRange(
+          offset, offset + numOfBytes, byteListTmp, 8 - numOfBytes);
+    }
+  }
+
+  // old version
+  /*  void setIntExtended(int value, int numOfBytes, Endian endianness) {
     var byteListTmp = Uint8List(4);
     var byteArrayTmp = _getByteData(byteListTmp);
     if (numOfBytes == 3) {
@@ -214,7 +238,7 @@ class BsonBinary extends BsonObject {
       throw Exception('Unsupported num of bytes: $numOfBytes');
     }
     byteList.setRange(offset, offset + numOfBytes, byteListTmp);
-  }
+  } */
 
   void reverse(int numOfBytes) {
     void swap(int x, int y) {

@@ -49,7 +49,7 @@ class BsonObjectId extends BsonObject {
   @override
   int get typeByte => bsonDataObjectId;
   @override
-  ObjectId get value => ObjectId.fromBsonBinary(id);
+  ObjectId get value => ObjectId.fromBuffer(id);
   @override
   int get totalByteLength => 12;
 

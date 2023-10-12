@@ -4,8 +4,7 @@ import 'package:bson/src/utils/statics.dart';
 
 class Timestamp {
   Timestamp([int? _seconds, int? _increment])
-      : seconds = _seconds ??=
-            (DateTime.now().millisecondsSinceEpoch ~/ 1000).toInt(),
+      : seconds = _seconds ??= Statics.secondsSinceEpoch,
         increment = _increment ?? Statics.nextIncrement;
 
   final int seconds;
