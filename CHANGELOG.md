@@ -28,7 +28,7 @@ Also an optional $db value is accepted and managed from the new DbRef class.
 ## 5.0.0-6.0.beta
 
 - General Clean-up
-- Deprecated `ObjectId.toHexString()` in favor of the `ObjectId.$oid` getter
+- Deprecated `ObjectId.toHexString()` in favor of the `ObjectId.oid` getter
 
 ## 5.0.0-5.0.beta
 

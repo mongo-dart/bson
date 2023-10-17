@@ -7,7 +7,7 @@ import 'bson_binary.dart';
 
 class BsonObjectId extends BsonObject {
   BsonObjectId(ObjectId parmId) : id = createBsonBinaryFromObjectId(parmId);
-  BsonObjectId.fromBsonBinary(this.id);
+  BsonObjectId.fromBsonBinary(BsonBinary id) : id = extractData(id);
   BsonObjectId.fromEJson(Map<String, dynamic> eJsonMap)
       : id = extractEJson(eJsonMap);
 
