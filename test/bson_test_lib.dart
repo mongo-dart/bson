@@ -137,6 +137,9 @@ void run() {
       var expected = DateTime.fromMillisecondsSinceEpoch(1372093057000);
       var actual = objectId.dateTime;
       expect(expected, actual);
+      expect(objectId.randomHex, 'a58a563d13');
+      expect(objectId.incrementHex, '04f4ed');
+      expect(objectId.incrementPart, 324845);
     });
     test('testBsonIdFromHexString', () {
       var oid1 = ObjectId();

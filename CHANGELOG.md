@@ -21,9 +21,12 @@ Also an optional $db value is accepted and managed from the new DbRef class.
   - `$oid` getter renamed as `oid`. It is more practical in string interpolation
   - updated the random and counter parts logic. Before they were 4+4 bytes. Now, as per specifications, they are 5+3 bytes
 
+- The logic for the increment part was not correct in the `Timestamp` class  
+
 ## 5.0.0-7.0.beta
 
 - Reviewed the ObjectId class
+- Reviewed the Timestamp class
 
 ## 5.0.0-6.0.beta
 

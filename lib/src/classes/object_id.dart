@@ -7,16 +7,6 @@ import '../utils/statics.dart';
 const String _charMatcherPattern = r'^[a-fA-F0-9]{24}$';
 final RegExp charMatcherRegExp = RegExp(_charMatcherPattern);
 
-final int _randomValue = (Random().nextDouble() * 0xFFFFFFFFFF).truncate();
-final String randomHex = _randomValue.toRadixString(16).padLeft(10, '0');
-
-final int _maxRandomIncrement = 0xFFFFFF;
-int _randomIncrement = Random().nextInt(_maxRandomIncrement);
-String incrementHex = _randomIncrement.toRadixString(16).padLeft(6, '0');
-int get _nextIncrement => _randomIncrement >= _maxRandomIncrement
-    ? _randomIncrement = 1
-    : _randomIncrement++;
-
 class ObjectId {
   /// Generates an ObjectId instance with the actual seconds
   ObjectId(/* {bool clientMode = false} */)
@@ -65,33 +55,26 @@ class ObjectId {
 
   /// creates a BsonBinary representation of this ObjectId with the given number
   /// of seconds sinceEpoch
-  static BsonBinary createId(int seconds /* , bool clientMode */) {
-    /*   String getOctet(int value) {
-      var res = value.toRadixString(16);
-      while (res.length < 8) {
-        res = '0$res';
-      }
-      return res;
-    } */
-
-    /*  if (clientMode) {
-      var s = '${getOctet(seconds)}${getOctet(Statics.randomId)}'
-          '${getOctet(Statics.nextIncrement)}';
-      return BsonBinary.fromHexString(s);
-    } else {
-      return BsonBinary(12)
-        ..writeInt(seconds, endianness: Endian.big)
-        ..writeInt(Statics.randomId)
-        ..writeInt(Statics.nextIncrement, endianness: Endian.big);
-    } */
-    return BsonBinary(12)
-      ..writeInt(seconds, endianness: Endian.big)
-      ..setIntExtended(_randomValue, 5)
-      ..setIntExtended(_nextIncrement, 3, endianness: Endian.big);
-  }
+  static BsonBinary createId(int seconds) => BsonBinary(12)
+    ..writeInt(seconds, endianness: Endian.big)
+    ..setIntExtended(_randomValue, 5)
+    ..setIntExtended(_nextIncrement, 3, endianness: Endian.big);
 
   final BsonBinary _id;
   BsonBinary get id => _id;
+
+  static final int _randomValue =
+      (Random().nextDouble() * 0xFFFFFFFFFF).truncate();
+  static final String classRandomHex =
+      _randomValue.toRadixString(16).padLeft(10, '0');
+
+  static final int _maxRandomIncrement = 0xFFFFFF;
+  static int _randomIncrement = Random().nextInt(_maxRandomIncrement);
+  static String classIncrementHex =
+      _randomIncrement.toRadixString(16).padLeft(6, '0');
+  static int get _nextIncrement => _randomIncrement >= _maxRandomIncrement
+      ? _randomIncrement = 1
+      : _randomIncrement++;
 
   @override
   int get hashCode => _id.hexString.hashCode;
@@ -113,7 +96,16 @@ class ObjectId {
 
   String toJson() => oid;
 
-  // Equivalent to mongo shell's "getTimestamp".
+  /// Equivalent to mongo shell's "getTimestamp".
   DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(
       int.parse(_id.hexString.substring(0, 8), radix: 16) * 1000);
+
+  /// Randox Hex part
+  String get randomHex => oid.substring(8, 18);
+
+  /// Increment Hex part
+  String get incrementHex => oid.substring(18, 24);
+
+  /// Increment int part
+  int get incrementPart => int.parse(incrementHex, radix: 16);
 }

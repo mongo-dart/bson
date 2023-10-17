@@ -13,9 +13,23 @@ void runTimestamp() {
 
       test('Regular Constructor - debug values', () {
         var timestamp = Timestamp(1, 2);
-
         expect(timestamp.seconds, 1);
         expect(timestamp.increment, 2);
+
+        timestamp = Timestamp(1);
+        expect(timestamp.seconds, 1);
+        expect(timestamp.increment, 3);
+
+        timestamp = Timestamp(1);
+        expect(timestamp.seconds, 1);
+        expect(timestamp.increment, 4);
+
+        timestamp = Timestamp(2);
+        expect(timestamp.seconds, 2);
+        expect(timestamp.increment, 1);
+
+        timestamp = Timestamp();
+        expect(timestamp.increment, 1);
       });
     });
 
