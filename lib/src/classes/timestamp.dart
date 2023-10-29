@@ -33,4 +33,6 @@ class Timestamp {
       increment == other.increment;
   @override
   String toString() => 'Timestamp($seconds, $increment)';
+
+  Map toJson() => {r'$seconds': seconds, r'$increment': increment};
 }

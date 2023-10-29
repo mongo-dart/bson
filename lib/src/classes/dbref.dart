@@ -17,4 +17,7 @@ class DbRef {
   @override
   String toString() => 'DbRef(collection: $collection, id: $id, '
       '${db == null ? '' : 'db: $db'}})';
+
+  Map toJson() =>
+      {r'$collection': collection, r'$id': id, if (db != null) r'$db': db};
 }

@@ -10,4 +10,6 @@ class JsCode {
   bool operator ==(other) => other is JsCode && code == other.code;
   @override
   String toString() => 'JsCode($code)';
+
+  String toJson() => code;
 }

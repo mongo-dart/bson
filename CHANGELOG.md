@@ -22,6 +22,7 @@ Also an optional $db value is accepted and managed from the new DbRef class.
   - updated the random and counter parts logic. Before they were 4+4 bytes. Now, as per specifications, they are 5+3 bytes
 
 - The logic for the increment part was not correct in the `Timestamp` class  
+- Added  `toJson` method to `DbRef`, `JsCode` and `Timestamp` classes
 
 ## 5.0.0-7.0.beta
 
