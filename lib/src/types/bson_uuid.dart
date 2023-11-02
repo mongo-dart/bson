@@ -15,7 +15,7 @@ class BsonUuid extends BsonBinary {
   BsonUuid.fromHexString(String hexString)
       : super.fromHexString(hexString, subType: BsonBinary.subtypeUuid);
 
-  factory BsonUuid.parse(String uuidString) => BsonUuid(UuidValue(uuidString));
+  factory BsonUuid.parse(String uuidString) => BsonUuid(UuidValue.fromString(uuidString));
 
   factory BsonUuid.fromBuffer(BsonBinary buffer) {
     var ret = BsonBinary.fromBuffer(buffer);
@@ -27,7 +27,7 @@ class BsonUuid extends BsonBinary {
   }
 
   factory BsonUuid.fromEJson(Map<String, dynamic> eJsonMap) =>
-      BsonUuid(UuidValue(extractEJson(eJsonMap)));
+      BsonUuid(UuidValue.fromString(extractEJson(eJsonMap)));
 
   static String extractEJson(Map<String, dynamic> eJsonMap) {
     var entry = eJsonMap.entries.first;
