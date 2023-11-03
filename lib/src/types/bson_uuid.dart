@@ -15,7 +15,8 @@ class BsonUuid extends BsonBinary {
   BsonUuid.fromHexString(String hexString)
       : super.fromHexString(hexString, subType: BsonBinary.subtypeUuid);
 
-  factory BsonUuid.parse(String uuidString) => BsonUuid(UuidValue.fromString(uuidString));
+  factory BsonUuid.parse(String uuidString) =>
+      BsonUuid(UuidValue.fromString(uuidString));
 
   factory BsonUuid.fromBuffer(BsonBinary buffer) {
     var ret = BsonBinary.fromBuffer(buffer);
