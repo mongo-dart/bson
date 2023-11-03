@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
 groupUuid() {
-  var uuid = UuidValue('c8edabc3-f738-4ca3-b68d-ab92a91478a3');
+  var uuid = UuidValue.fromString('c8edabc3-f738-4ca3-b68d-ab92a91478a3');
   var sourceMap = {'uuid': uuid};
   var hexBuffer =
       '200000000575756964001000000004c8edabc3f7384ca3b68dab92a91478a300';

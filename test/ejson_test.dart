@@ -368,7 +368,7 @@ void main() {
       });
     });
     group('Uuid', () {
-      var uuid = UuidValue('c8edabc3-f738-4ca3-b68d-ab92a91478a3');
+      var uuid = UuidValue.fromString('c8edabc3-f738-4ca3-b68d-ab92a91478a3');
       var sourceMap = {'uuid': uuid};
       var hexBuffer =
           '200000000575756964001000000004c8edabc3f7384ca3b68dab92a91478a300';
@@ -1134,7 +1134,7 @@ void main() {
         expect(result['_id'], 5);
       }, skip: 'To Be developed yet');
       test('Uuid', () {
-        var uuid = UuidValue('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var uuid = UuidValue.fromString('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
         var map = {'_id': 5, 'uuid': uuid};
         var buffer = EJsonCodec.serialize(map);
         expect(
