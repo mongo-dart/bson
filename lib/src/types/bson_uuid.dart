@@ -9,11 +9,10 @@ class BsonUuid extends BsonBinary {
   BsonUuid([UuidValue? uuid])
       : super.from(uuidToByteList(uuid), subType: BsonBinary.subtypeUuid);
 
-  BsonUuid.from(Iterable<int> byteList)
-      : super.from(byteList, subType: BsonBinary.subtypeUuid);
+  BsonUuid.from(super.byteList) : super.from(subType: BsonBinary.subtypeUuid);
 
-  BsonUuid.fromHexString(String hexString)
-      : super.fromHexString(hexString, subType: BsonBinary.subtypeUuid);
+  BsonUuid.fromHexString(super.hexString)
+      : super.fromHexString(subType: BsonBinary.subtypeUuid);
 
   factory BsonUuid.parse(String uuidString) =>
       BsonUuid(UuidValue.fromString(uuidString));

@@ -1,6 +1,6 @@
-part of bson;
+/*part of bson;
 
-/* class MinKey extends BsonObject {
+ class MinKey extends BsonObject {
   @override
   void packValue(BsonBinary buffer) {
     throw UnimplementedError();
