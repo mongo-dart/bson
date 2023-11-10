@@ -135,11 +135,14 @@ class BsonArrayData {
     return internalBuffer..rewind();
   }
 
-  /// This methods creatse the metadata (a List with intermediate status
+  /// This method creates the metadata (a List with intermediate status
   /// BsonObjects) starting from a buffer
   List<BsonObject> get _buffer2metaData {
     var ret = <BsonObject>[];
     var locReadBuffer = readBuffer;
+    if (locReadBuffer.byteList.isEmpty) {
+      return ret;
+    }
     var typeByte = locReadBuffer.readByte();
     while (typeByte != 0) {
       // Consume the name (for arrays it is the index)

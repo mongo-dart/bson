@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.1
+
+- Fixed issue while decoding a bson binary containing an empty List
+
 ## 5.0.0
 
 This release contains many breaking changes. Here is a list of the most noticeable:
