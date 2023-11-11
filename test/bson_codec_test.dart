@@ -11,5 +11,19 @@ void main() {
       final map = BsonCodec.deserialize(bson);
       expect(map, simpleMap);
     });
+    test('Empty Map', () {
+      final simpleMap = {'emptyMap': {}};
+
+      final bson = BsonCodec.serialize(simpleMap);
+      final map = BsonCodec.deserialize(bson);
+      expect(map, simpleMap);
+    });
+    test('Empty Container in List', () {
+      final simpleList = [[], {}];
+
+      final bson = BsonCodec.serialize(simpleList);
+      final list = BsonCodec.deserialize(bson);
+      expect(list, {'0': [], '1': {}});
+    });
   });
 }

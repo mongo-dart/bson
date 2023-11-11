@@ -183,6 +183,9 @@ class BsonMapData {
   Map<String, BsonObject> get _buffer2metaData {
     var ret = <String, BsonObject>{};
     var locReadBuffer = readBuffer;
+    if (locReadBuffer.byteList.isEmpty) {
+      return ret;
+    }
     var typeByte = locReadBuffer.readByte();
     while (typeByte != 0) {
       var key = locReadBuffer.readCString();

@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.2
+
+- Fixed issue while decoding a bson binary containing an empty Map
+
 ## 5.0.1
 
 - Fixed issue while decoding a bson binary containing an empty List
