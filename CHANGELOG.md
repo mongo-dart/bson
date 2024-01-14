@@ -1,5 +1,16 @@
 # Changelog
 
+## 5.0.3
+
+Fixed some inconsistencies with dart2js
+
+- `double.NaN` is stored in a different way in VM and JS, forced the VM way.
+- `double.infinity` and `double.negativeInfinity` in JS were considered as int, forced to be considered as `double`.
+- Fixed "Unsupported operation: Int64 accessor not supported by dart2js"
+
+It has not been found a way to let the system detect correctly `double` variabls when the values has no decimals. JS in this case considers the field as an int.
+The only way to solve this, is to send the `double` fields wrapped into a `BsonDobule` object.
+
 ## 5.0.2
 
 - Fixed issue while decoding a bson binary containing an empty Map
