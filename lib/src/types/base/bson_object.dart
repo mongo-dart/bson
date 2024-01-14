@@ -157,6 +157,15 @@ abstract class BsonObject {
       return BsonInt(value.toInt());
     }
     if (value is int) {
+      // Infinity and .Infinity in a web env are of type int (!?!?)
+      if (value.isInfinite) {
+        if (value.isNegative) {
+          return BsonDouble(double.negativeInfinity);
+        } else {
+          return BsonDouble(double.infinity);
+        }
+      }
+
       return value.bitLength > 31 ? BsonLong(Int64(value)) : BsonInt(value);
     }
     if (value is double) {

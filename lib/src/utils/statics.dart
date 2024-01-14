@@ -45,4 +45,12 @@ class Statics {
 
   static int get secondsSinceEpoch =>
       DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+  static final bool isWebInt = _getWebInt();
+
+  static bool _getWebInt() {
+    var n = 9007199254740992;
+    var newInt = n + 1;
+    return newInt.toString() == n.toString();
+  }
 }

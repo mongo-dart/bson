@@ -1,4 +1,5 @@
 import 'package:bson/bson.dart';
+import 'package:bson/src/types/bson_double.dart';
 import 'package:test/test.dart';
 
 // Example on how to use BSON to serialize-deserialize
@@ -16,8 +17,10 @@ void main() {
     var note1 = SBNNote([page1]);
 
     test('Point', () {
-      String hexCheck =
-          '4e0000001024637573746f6d496400010000000324637573746f6d44617461002d000000017072657373757265009a9999999999b93f017800000000000000000001790000000000000000000000';
+      String hexCheck = '4e0000001024637573746f6d49640001000000032463757374'
+          '6f6d44617461002d000000017072657373757265009a999999'
+          '9999b93f017800000000000000000001790000000000000000'
+          '000000';
 
       BsonBinary result = point1.serialize();
       expect(result.hexString, hexCheck);
@@ -84,7 +87,11 @@ class Point with BsonSerializable {
       ObjectCodec.deserialize(bsonBinary) as Point;
 
   @override
-  Map<String, dynamic> get toBson => {'pressure': pressure, 'x': x, 'y': y};
+  Map<String, dynamic> get toBson => {
+        'pressure': BsonDouble(pressure),
+        'x': BsonDouble(x),
+        'y': BsonDouble(y)
+      };
 
   @override
   int get hashCode => '$pressure-$x-$y'.hashCode;
@@ -152,7 +159,8 @@ class Page with BsonSerializable {
       ObjectCodec.deserialize(bsonBinary) as Page;
 
   @override
-  Map<String, dynamic> get toBson => {'w': w, 'h': h, 'strokes': strokes};
+  Map<String, dynamic> get toBson =>
+      {'w': BsonDouble(w), 'h': BsonDouble(h), 'strokes': strokes};
 }
 
 class SBNNote with BsonSerializable {

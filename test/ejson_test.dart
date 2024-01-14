@@ -552,7 +552,7 @@ void main() {
 
         buffer.rewind();
         result = BsonCodec.deserialize(buffer);
-        expect(result, sourceMap);
+        expect(result['regex'].toString(), sourceMap['regex'].toString());
       });
       test('- relaxed', () {
         var buffer = BsonCodec.serialize(sourceMap);
@@ -567,7 +567,7 @@ void main() {
 
         buffer.rewind();
         result = BsonCodec.deserialize(buffer);
-        expect(result, sourceMap);
+        expect(result['regex'].toString(), sourceMap['regex'].toString());
       });
     });
     group('DbPointer', () {

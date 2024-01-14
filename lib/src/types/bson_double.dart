@@ -1,3 +1,6 @@
+import 'package:fixnum/fixnum.dart';
+
+import '../utils/statics.dart';
 import '../utils/types_def.dart';
 import 'base/bson_object.dart';
 import 'bson_binary.dart';
@@ -43,7 +46,17 @@ class BsonDouble extends BsonObject {
   @override
   int get typeByte => bsonDataNumber;
   @override
-  void packValue(BsonBinary buffer) => buffer.writeDouble(data);
+  void packValue(BsonBinary buffer) {
+    // This is needed because the JS Nan is `0x7ff8000000000000`
+    // instead of `0xfff8000000000000'.
+    // This way encodings in VM and JS will be equal.
+    if (data.isNaN && Statics.isWebInt) {
+      var nan = Int64(0xfff8000000000000);
+      buffer.writeFixInt64(nan);
+    } else {
+      buffer.writeDouble(data);
+    }
+  }
 
   @override
   eJson({bool relaxed = false}) {

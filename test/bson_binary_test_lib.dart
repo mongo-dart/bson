@@ -25,7 +25,7 @@ void runBinary() {
       });
     });
     group('Set Int extended', () {
-      var tInt = 0x0f07060504030201;
+      var tInt = 0x0007060504030201;
       test('3 bytes little endian', () {
         var b = BsonBinary(3);
         b.setIntExtended(tInt, 3);

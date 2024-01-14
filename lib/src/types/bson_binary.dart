@@ -209,22 +209,31 @@ class BsonBinary extends BsonObject {
   /// Insert the required bytes starting from offset
   void setIntExtended(int value, int numOfBytes,
       {Endian endianness = Endian.little}) {
-    var byteListTmp = Uint8List(8);
-    var byteArrayTmp = _getByteData(byteListTmp);
-    if (numOfBytes == 3) {
-      byteArrayTmp.setInt64(0, value, endianness);
-    } else if (numOfBytes == 5) {
-      byteArrayTmp.setInt64(0, value, endianness);
-    } else if (numOfBytes == 7) {
-      byteArrayTmp.setInt64(0, value, endianness);
+    if (useFixnum) {
+      var subList = Int64(value).toBytes().sublist(0, numOfBytes);
+      if (endianness == Endian.little) {
+        byteList.setRange(offset, offset + numOfBytes, subList);
+      } else {
+        byteList.setRange(offset, offset + numOfBytes, subList.reversed);
+      }
     } else {
-      throw Exception('Unsupported num of bytes: $numOfBytes');
-    }
-    if (endianness == Endian.little) {
-      byteList.setRange(offset, offset + numOfBytes, byteListTmp);
-    } else {
-      byteList.setRange(
-          offset, offset + numOfBytes, byteListTmp, 8 - numOfBytes);
+      var byteListTmp = Uint8List(8);
+      var byteArrayTmp = _getByteData(byteListTmp);
+      if (numOfBytes == 3) {
+        byteArrayTmp.setInt64(0, value, endianness);
+      } else if (numOfBytes == 5) {
+        byteArrayTmp.setInt64(0, value, endianness);
+      } else if (numOfBytes == 7) {
+        byteArrayTmp.setInt64(0, value, endianness);
+      } else {
+        throw Exception('Unsupported num of bytes: $numOfBytes');
+      }
+      if (endianness == Endian.little) {
+        byteList.setRange(offset, offset + numOfBytes, byteListTmp);
+      } else {
+        byteList.setRange(
+            offset, offset + numOfBytes, byteListTmp, 8 - numOfBytes);
+      }
     }
   }
 
@@ -296,6 +305,7 @@ class BsonBinary extends BsonObject {
   }
 
   /// Write an Int64 field
+  /// Endian used is `little`
   void writeFixInt64(Int64 value) {
     byteList.setRange(offset, offset + 8, value.toBytes());
     offset += 8;

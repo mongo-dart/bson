@@ -1,4 +1,4 @@
-@TestOn('browser')
+@TestOn('chrome')
 import 'bson_test_lib.dart';
 import 'package:test/test.dart';
 

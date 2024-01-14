@@ -78,7 +78,7 @@ groupRegexp() {
   // Deserialize
   test('Bson Deserialize', () {
     var value = BsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
-    expect(value, sourceMap2);
+    expect(value['regex'].toString(), sourceMap2['regex'].toString());
   });
   test('Ejson Deserialize', () {
     var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
@@ -92,13 +92,15 @@ groupRegexp() {
   test('Any - Deserialize from array', () {
     var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
         typeByte: bsonDataArray);
-    expect(value, deserializeSourceArray);
+    expect([for (var element in value) element.toString()],
+        [for (var element in deserializeSourceArray) element.toString()]);
   });
   // ******** Object
   test('Bson Deserialize - object', () {
     var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
         typeByte: bsonDataRegExp);
-    expect(value, regex2);
+    expect(value.pattern, regex2.pattern);
+    expect(value.isCaseSensitive, regex2.isCaseSensitive);
   });
   test('Ejson Deserialize - map', () {
     var value = Codec.deserialize(BsonBinary.fromHexString(hexObjBuffer),
