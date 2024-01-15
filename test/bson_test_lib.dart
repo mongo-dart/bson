@@ -158,6 +158,7 @@ void run() {
       expect(oid2.oid.length, 24);
     });
     test('testBsonDbPointer', () {
+      // ignore: deprecated_member_use_from_same_package
       var p1 = DBPointer('Test', ObjectId());
       var b = BsonCodec.serialize({'p1': p1});
       b.rewind();

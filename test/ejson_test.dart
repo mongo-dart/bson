@@ -572,6 +572,7 @@ void main() {
     });
     group('DbPointer', () {
       var oid = ObjectId.parse('57e193d7a9cc81b4027498b5');
+      // ignore: deprecated_member_use_from_same_package
       var regex = DBPointer('Collection', oid);
       var sourceMap = {'dbPointer': regex};
       var hexBuffer =
@@ -946,6 +947,7 @@ void main() {
               type$ref: 'collection',
               type$id: {type$objectId: '57e193d7a9cc81b4027498b5'}
             }
+            // ignore: deprecated_member_use_from_same_package
           }, ejsonSerialization) is DBPointer,
           isTrue);
       expect(
@@ -978,6 +980,7 @@ void main() {
   });
   group('Misc:', () {
     test('testBsonDbPointer', () {
+      // ignore: deprecated_member_use_from_same_package
       var p1 = DBPointer('Test', ObjectId());
       var b = BsonCodec.serialize({'p1': p1});
       b.rewind();

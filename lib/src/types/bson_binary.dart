@@ -3,13 +3,12 @@ import 'dart:typed_data';
 
 import 'package:fixnum/fixnum.dart';
 
+import '../utils/statics.dart';
 import '../utils/types_def.dart';
 import 'base/bson_object.dart';
 import 'bson_uuid.dart';
 
 class BsonBinary extends BsonObject {
-  static final bool useFixnum = _isIntWorkaroundNeeded();
-
   static const bufferSize = 256;
 
   static const subtypeBinary = 0;
@@ -209,7 +208,7 @@ class BsonBinary extends BsonObject {
   /// Insert the required bytes starting from offset
   void setIntExtended(int value, int numOfBytes,
       {Endian endianness = Endian.little}) {
-    if (useFixnum) {
+    if (Statics.isWebInt) {
       var subList = Int64(value).toBytes().sublist(0, numOfBytes);
       if (endianness == Endian.little) {
         byteList.setRange(offset, offset + numOfBytes, subList);
@@ -295,7 +294,7 @@ class BsonBinary extends BsonObject {
   }
 
   void writeInt64(int value) {
-    if (useFixnum) {
+    if (Statics.isWebInt) {
       var d64 = Int64(value);
       byteList.setRange(offset, offset + 8, d64.toBytes());
     } else {
@@ -320,7 +319,7 @@ class BsonBinary extends BsonObject {
 
   int readInt64() {
     offset += 8;
-    if (useFixnum) {
+    if (Statics.isWebInt) {
       offset -= 8;
       var i1 = readInt32();
       var i2 = readInt32();
@@ -390,12 +389,6 @@ class BsonBinary extends BsonObject {
           'subType': subType.toRadixString(16)
         }
       };
-}
-
-bool _isIntWorkaroundNeeded() {
-  var n = 9007199254740992;
-  var newInt = n + 1;
-  return newInt.toString() == n.toString();
 }
 
 class BsonBinaryData {

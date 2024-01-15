@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.4
+
+- Code clean-up
+
 ## 5.0.3
 
 Fixed some inconsistencies with dart2js
