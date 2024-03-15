@@ -6,6 +6,7 @@ import 'package:fixnum/fixnum.dart';
 import '../utils/statics.dart';
 import '../utils/types_def.dart';
 import 'base/bson_object.dart';
+import 'bson_legacy_uuid.dart';
 import 'bson_uuid.dart';
 
 class BsonBinary extends BsonObject {
@@ -18,6 +19,9 @@ class BsonBinary extends BsonObject {
   static const subtypeBinaryOld = 2;
   @Deprecated('Not used in Bson package')
   static const subtypeUuidOld = 3;
+  // Starting using for old databases
+  static const subtypeLegacyUuid = 3;
+  // Uuid
   static const subtypeUuid = 4;
   @Deprecated('Not used in Bson package')
   static const subtypeMd5 = 5;
@@ -88,6 +92,8 @@ class BsonBinary extends BsonObject {
   factory BsonBinary._fromBsonBinaryData(BsonBinaryData binData) {
     if (binData.subType == subtypeUuid) {
       return BsonUuid.from(binData.byteList);
+    } else if (binData.subType == subtypeLegacyUuid) {
+      return BsonLegacyUuid.from(binData.byteList);
     } else if (binData.subType != subtypeBinary) {
       throw ArgumentError(
           'Binary subtype "${binData.subType}" is not yet managed');

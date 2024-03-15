@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bson/src/classes/legacy_uuid.dart';
 import 'package:bson/src/types/base/bson_object.dart';
 import 'package:bson/src/types/bson_array.dart';
 import 'package:bson/src/types/bson_boolean.dart';
@@ -1149,6 +1150,33 @@ void main() {
         expect(result['uuid'], uuid);
         expect(result['_id'], 5);
       }, skip: 'To Be developed yet');
+      test('Legacy Uuid', () {
+        var legacyUuid =
+            LegacyUuid.fromHexString('6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var map = {
+          '_id': 5,
+          'Legacy Uuid': {
+            type$binary: {
+              'base64': base64.encode(legacyUuid.content),
+              'subType': '3'
+            }
+          }
+        };
+        var buffer = EJsonCodec.serialize(map);
+        expect(
+            buffer.hexString,
+            '30000000105f69640005000000054c656761637920557569'
+            '640010000000036ba7b8119dad11d180b400c04fd430c800');
+        buffer.offset = 0;
+        Map result = EJsonCodec.deserialize(buffer);
+        expect(result['Legacy Uuid'], {
+          type$binary: {
+            'base64': base64.encode(legacyUuid.content),
+            'subType': '3'
+          }
+        });
+        expect(result['_id'], {r'$numberInt': '5'});
+      });
     });
     group('Stringify', () {
       test('int', () {

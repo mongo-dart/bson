@@ -13,10 +13,11 @@ import 'package:bson/bson.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
-import 'bson_binary_test_lib.dart';
-import 'bson_decimal_128_test_lib.dart';
-import 'bson_timestamp_test_lib.dart';
-import 'bson_uuid_test_lib.dart';
+import 'test_libs/bson_binary_test_lib.dart';
+import 'test_libs/bson_decimal_128_test_lib.dart';
+import 'test_libs/bson_legacy_uuid_test_lib.dart';
+import 'test_libs/bson_timestamp_test_lib.dart';
+import 'test_libs/bson_uuid_test_lib.dart';
 
 final Matcher throwsArgumentError = throwsA(TypeMatcher<ArgumentError>());
 
@@ -330,5 +331,6 @@ void run() {
   runBinary();
   runDecimal128();
   runUuid();
+  runLegacyUuid();
   runTimestamp();
 }

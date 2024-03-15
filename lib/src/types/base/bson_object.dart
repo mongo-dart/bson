@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../classes/dbref.dart';
 import '../../classes/js_code.dart';
+import '../../classes/legacy_uuid.dart';
 import '../../classes/object_id.dart';
 import '../../classes/timestamp.dart';
 import '../../object_serialization/bson_custom.dart';
@@ -20,6 +21,7 @@ import '../bson_db_ref.dart';
 import '../bson_decimal_128.dart';
 import '../bson_double.dart';
 import '../bson_int.dart';
+import '../bson_legacy_uuid.dart';
 import '../bson_long.dart';
 import '../bson_map.dart';
 import '../bson_null.dart';
@@ -199,6 +201,9 @@ abstract class BsonObject {
       }
       if (value is UuidValue) {
         return BsonUuid(value);
+      }
+      if (value is LegacyUuid) {
+        return BsonLegacyUuid(value);
       }
       if (value is Timestamp) {
         return BsonTimestamp(value);
