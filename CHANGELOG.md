@@ -3,6 +3,7 @@
 ## 5.0.4
 
 - Code clean-up
+- LegacyUuid class. It allows to manage Binary Subtype 3 Bson types (Uuid Old). The class holds the value in the storing format, some helpers are available for converting back an forth this value based on the known algorithms: java Legacy, C# legacy and Python.
 
 ## 5.0.3
 

@@ -1,4 +1,3 @@
-import 'package:bson/src/classes/legacy_uuid.dart';
 import 'package:bson/src/types/bson_legacy_uuid.dart';
 import 'package:test/test.dart';
 import 'package:bson/bson.dart';

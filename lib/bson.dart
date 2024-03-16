@@ -4,6 +4,7 @@ export 'src/classes/dbref.dart';
 export 'src/classes/js_code.dart';
 export 'src/classes/object_id.dart';
 export 'src/classes/timestamp.dart';
+export 'src/classes/legacy_uuid.dart';
 
 export 'src/types/dbpointer.dart';
 export 'src/types/base/serialization_parameters.dart';

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bson/bson.dart';
-import 'package:bson/src/classes/legacy_uuid.dart';
 import 'package:bson/src/types/base/bson_object.dart';
 import 'package:test/test.dart';
 

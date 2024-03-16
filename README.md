@@ -26,6 +26,7 @@ This is the most important converter. It converts from a document of objects int
 | Map | BsonMap | 3 / 0x03 | BsonMap | Map ||
 | DbRef | BsonDbRef | Map convention | BsonDbRef | DbRef | Map containing keys "$id" and "$ref" |
 | List | BsonArray | 4 / 0x04 | BsonArray | List ||
+| LegacyUuid | BsonLegacyUuid | 5 / 0x05 | BsonLegacyUuid | LegacyUuid | Sub Type 3 / 0x03 |
 | UuidValue | BsonUuid | 5 / 0x05 | BsonUuid | UuidValue | Sub Type 4 / 0x04 |
 | ObjectId | BsonObjectId | 7 / 0x07 | BsonObjectId | ObjectId ||
 | bool | BsonBoolean | 8 / 0x08 | BsonBoolean | bool ||
@@ -46,6 +47,7 @@ Most of the types expected are from the Dart language itself, with these excepti
 | Class | Package |
 | :-: | :-: |
 | DbRef | Bson |
+| LegacyUuid | Bson |
 | UuidValue | Uuid |
 | ObjectId | Bson |
 | DBPointer | Bson |
@@ -74,6 +76,7 @@ It converts from a document in format ejson into the BSON format. Only ejson ver
 | "$ref" -  "$id"| BsonDbRef | Map convention | BsonDbRef | "$ref" -  "$id" | Map containing keys "$id" and "$ref" |
 | List | BsonArray | 4 / 0x04 | BsonArray | List ||
 | "$binary" | BsonBinary | 5 / 0x05 | BsonBinary | "$binary" | Sub Type 0 / 0x00 |
+| "$binary" | BsonLegacyUuid | 5 / 0x05 | BsonLegacyUuid | "$binary" | Sub Type 3 / 0x03 |
 | "$binary" | BsonUuid | 5 / 0x05 | BsonUuid | "$binary" | Sub Type 4 / 0x04 |
 | "$oid" | BsonObjectId | 7 / 0x07 | BsonObjectId | "$oid" ||
 | bool | BsonBoolean | 8 / 0x08 | BsonBoolean | bool ||

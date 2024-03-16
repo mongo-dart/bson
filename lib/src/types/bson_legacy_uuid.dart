@@ -33,19 +33,8 @@ class BsonLegacyUuid extends BsonBinary {
     if (bsonBinary is! BsonLegacyUuid) {
       throw ArgumentError('This is not a valid Legacy Uuid representation');
     }
-    return BsonLegacyUuid.fromBuffer(bsonBinary);
+    return bsonBinary;
   }
-
-  /* static String extractEJson(Map<String, dynamic> eJsonMap) {
-    var entry = eJsonMap.entries.first;
-
-    if (entry.key == type$uuid && entry.value is String) {
-      return entry.value;
-    }
-
-    throw ArgumentError(
-        'The received Map is not a valid EJson Legacy Uuid representation');
-  } */
 
   static Uint8List uuidToByteList(UuidValue? uuid) =>
       Uint8List.fromList((uuid ??= Uuid().v4obj()).toBytes());
@@ -58,8 +47,4 @@ class BsonLegacyUuid extends BsonBinary {
   LegacyUuid get value => LegacyUuid(byteList);
 
   String toJson() => value.toString();
-
-  // using super
-  /*  @override
-  eJson({bool relaxed = false}) => {type$uuid: value.toString()}; */
 }

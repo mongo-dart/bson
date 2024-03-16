@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bson/src/classes/legacy_uuid.dart';
 import 'package:bson/src/types/base/bson_object.dart';
 import 'package:bson/src/types/bson_array.dart';
 import 'package:bson/src/types/bson_boolean.dart';
@@ -10,6 +9,7 @@ import 'package:bson/src/types/bson_db_ref.dart';
 import 'package:bson/src/types/bson_decimal_128.dart';
 import 'package:bson/src/types/bson_double.dart';
 import 'package:bson/src/types/bson_int.dart';
+import 'package:bson/src/types/bson_legacy_uuid.dart';
 import 'package:bson/src/types/bson_long.dart';
 import 'package:bson/src/types/bson_map.dart';
 import 'package:bson/src/types/bson_null.dart';
@@ -1176,6 +1176,120 @@ void main() {
           }
         });
         expect(result['_id'], {r'$numberInt': '5'});
+      });
+      test('Legacy Uuid - Java Flavour', () {
+        var hexString = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+        var legacyUuid = LegacyUuid.fromHexStringToJavaLegacy(
+            '6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var map = {
+          '_id': 5,
+          'Legacy Uuid': {
+            type$binary: {
+              'base64': base64.encode(legacyUuid.content),
+              'subType': '3'
+            }
+          }
+        };
+        var buffer = EJsonCodec.serialize(map);
+        expect(
+            buffer.hexString,
+            '30000000105f69640005000000054c65676163792055756964001000000003'
+            'd111ad9d11b8a76bc830d44fc000b48000');
+        buffer.offset = 0;
+        Map<String, dynamic> result = EJsonCodec.deserialize(buffer);
+        expect(result['Legacy Uuid'], {
+          type$binary: {
+            'base64': base64.encode(legacyUuid.content),
+            'subType': '3'
+          }
+        });
+        expect(result['_id'], {r'$numberInt': '5'});
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid']).value, legacyUuid);
+        expect(BsonLegacyUuid.fromEJson(result['Legacy Uuid']).value.javaLegacy,
+            UuidValue.fromString(hexString));
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid'])
+                .value
+                .javaLegacyUuid,
+            hexString);
+      });
+      test('Legacy Uuid - C# Flavour', () {
+        var hexString = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+        var legacyUuid = LegacyUuid.fromHexStringTocSharpLegacy(
+            '6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var map = {
+          '_id': 5,
+          'Legacy Uuid': {
+            type$binary: {
+              'base64': base64.encode(legacyUuid.content),
+              'subType': '3'
+            }
+          }
+        };
+        var buffer = EJsonCodec.serialize(map);
+        expect(
+            buffer.hexString,
+            '30000000105f69640005000000054c6567616379205575696400100000000311'
+            'b8a76bad9dd11180b400c04fd430c800');
+        buffer.offset = 0;
+        Map<String, dynamic> result = EJsonCodec.deserialize(buffer);
+        expect(result['Legacy Uuid'], {
+          type$binary: {
+            'base64': base64.encode(legacyUuid.content),
+            'subType': '3'
+          }
+        });
+        expect(result['_id'], {r'$numberInt': '5'});
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid']).value, legacyUuid);
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid']).value.cSharpLegacy,
+            UuidValue.fromString(hexString));
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid'])
+                .value
+                .cSharpLegacy
+                .uuid,
+            hexString);
+      });
+      test('Legacy Uuid - Python Flavour', () {
+        var hexString = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+        var legacyUuid = LegacyUuid.fromHexStringToPhytonLegacy(
+            '6BA7B811-9DAD-11D1-80B4-00C04FD430C8');
+        var map = {
+          '_id': 5,
+          'Legacy Uuid': {
+            type$binary: {
+              'base64': base64.encode(legacyUuid.content),
+              'subType': '3'
+            }
+          }
+        };
+        var buffer = EJsonCodec.serialize(map);
+        expect(
+            buffer.hexString,
+            '30000000105f69640005000000054c656761637920557569'
+            '640010000000036ba7b8119dad11d180b400c04fd430c800');
+        buffer.offset = 0;
+        Map<String, dynamic> result = EJsonCodec.deserialize(buffer);
+        expect(result['Legacy Uuid'], {
+          type$binary: {
+            'base64': base64.encode(legacyUuid.content),
+            'subType': '3'
+          }
+        });
+        expect(result['_id'], {r'$numberInt': '5'});
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid']).value, legacyUuid);
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid']).value.pythonLegacy,
+            UuidValue.fromString(hexString));
+        expect(
+            BsonLegacyUuid.fromEJson(result['Legacy Uuid'])
+                .value
+                .pythonLegacyUuid,
+            hexString);
       });
     });
     group('Stringify', () {
