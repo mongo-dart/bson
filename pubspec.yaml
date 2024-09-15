@@ -1,5 +1,5 @@
 name: bson
-version: 5.0.4
+version: 5.0.5
 
 description: Bson library for Dart. BSON is a binary-encoded serialization of JSON-like documents. The package allows also eJson and object serialization/deserialization.
 homepage: https://github.com/mongo-dart/bson
@@ -7,11 +7,11 @@ funding:
   - https://www.paypal.com/donate?hosted_button_id=YRUNF9YWKX2NW
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
 dependencies:
   fixnum: ^1.1.0
-  decimal: ^2.3.3
+  decimal: ^3.0.0
   rational: ^2.2.2
   uuid: ^4.1.0
   packages_extensions: ^0.1.0
@@ -20,5 +20,5 @@ dependencies:
 
 dev_dependencies:
   test: ^1.24.6
-  lints: ^3.0.0
+  lints: ^4.0.0
 

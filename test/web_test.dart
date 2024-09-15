@@ -1,4 +1,6 @@
 @TestOn('chrome')
+library;
+
 import 'dart:typed_data';
 
 import 'package:bson/bson.dart';
