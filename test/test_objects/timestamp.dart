@@ -98,4 +98,9 @@ groupTimestamp() {
       type$timestamp: {'t': 129984774, 'i': 2}
     });
   });
+  test('Ejson Deserializes After Serialization', () {
+    final ejsonString = EJsonCodec.stringify(EJsonCodec.doc2eJson(sourceMap));
+    final timestampDoc = EJsonCodec.eJson2Doc(EJsonCodec.parse(ejsonString));
+    expect(timestampDoc, sourceMap);
+  });
 }
