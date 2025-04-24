@@ -30,7 +30,7 @@ class BsonTimestamp extends BsonObject {
       throw ArgumentError(
           'The received Map is not a valid EJson Timestamp representation');
     }
-    var content = entry.value as Map<String, Object>;
+    var content = (entry.value as Map).cast<String, Object>();
     if (content.containsKey('t') && content.containsKey('i')) {
       int seconds = content['t'] as int;
       int increment = content['i'] as int;
