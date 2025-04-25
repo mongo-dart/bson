@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.6
+
+- Fix Timestamp cast - PR #44
+
 ## 5.0.5
 
 - Update dpendencies

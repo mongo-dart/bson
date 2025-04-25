@@ -23,7 +23,7 @@ class Person with BsonSerializable {
   static int get uniqueId => 1;
 
   /// This method is usde to create the object instance starting from
-  /// a map with the structure <field Name> : <value>.
+  /// a map with the structure -field Name- : -value-.
   /// It does the reverse job of what we do in the toBson() method
   /// The name fromBson can be changed, if needed.
   Person.fromBson(Map<String, dynamic> dataMap)
@@ -37,7 +37,7 @@ class Person with BsonSerializable {
       ObjectCodec.deserialize(bsonBinary) as Person;
 
   /// This is the method of the BsonSerializable mixin to be overridden
-  /// It creates a map with the pairs <field Name> : <value>.
+  /// It creates a map with the pairs -field Name- : -value-.
   /// The values must be types managed by the Bson standard or objects
   /// that are using the BsonSerializable mixin.
   @override

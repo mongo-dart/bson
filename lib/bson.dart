@@ -1,4 +1,4 @@
-library bson;
+library;
 
 export 'src/classes/dbref.dart';
 export 'src/classes/js_code.dart';
