@@ -9,6 +9,7 @@ export 'src/classes/legacy_uuid.dart';
 export 'src/types/dbpointer.dart';
 export 'src/types/base/serialization_parameters.dart';
 export 'src/types/bson_binary.dart';
+export 'src/types/bson_long.dart';
 
 export 'src/bson_codec.dart';
 export 'src/codec.dart';

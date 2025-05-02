@@ -10,7 +10,6 @@ import 'package:bson/src/types/bson_decimal_128.dart';
 import 'package:bson/src/types/bson_double.dart';
 import 'package:bson/src/types/bson_int.dart';
 import 'package:bson/src/types/bson_legacy_uuid.dart';
-import 'package:bson/src/types/bson_long.dart';
 import 'package:bson/src/types/bson_map.dart';
 import 'package:bson/src/types/bson_null.dart';
 import 'package:bson/src/types/bson_object_id.dart';

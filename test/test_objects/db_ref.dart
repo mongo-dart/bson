@@ -1,6 +1,5 @@
 import 'package:bson/bson.dart';
 import 'package:bson/src/types/base/bson_object.dart';
-import 'package:bson/src/types/bson_long.dart';
 import 'package:bson/src/types/bson_object_id.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:test/test.dart';

@@ -75,6 +75,11 @@ groupBinary() {
         relaxed: true);
     expect(value, eJsonSource);
   });
+  test('Ejson Deserializes from json', () {
+    final ejsonString = EJsonCodec.stringify(EJsonCodec.doc2eJson(sourceMap));
+    final value = EJsonCodec.eJson2Doc(EJsonCodec.parse(ejsonString));
+    expect(value, sourceMap);
+  });
   test('Any - Deserialize from array', () {
     var value = Codec.deserialize(BsonBinary.fromHexString(arrayBuffer),
         typeByte: bsonDataArray);

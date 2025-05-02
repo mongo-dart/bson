@@ -67,7 +67,7 @@ class BsonRegexp extends BsonObject {
       throw ArgumentError(
           'The received Map is not a valid EJson Regex representation');
     }
-    var content = entry.value as Map<String, Object>;
+    var content = (entry.value as Map).cast<String, Object>();
     if (content.containsKey('pattern') && content.containsKey('options')) {
       String locPattern = content['pattern'] as String;
       String locOptions = content['options'] as String;

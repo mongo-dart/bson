@@ -44,8 +44,8 @@ class DBPointer extends BsonObject {
     var content = entry.value;
     if (content.containsKey(type$ref) && content.containsKey(type$id)) {
       String locCollection = content[type$ref] as String;
-      var locBsonObjectId =
-          BsonObjectId.fromEJson(content[type$id] as Map<String, Object>);
+      var locBsonObjectId = BsonObjectId.fromEJson(
+          (content[type$id] as Map).cast<String, Object>());
 
       return DBPointerData(
           locCollection, locBsonObjectId, BsonString(locCollection));
