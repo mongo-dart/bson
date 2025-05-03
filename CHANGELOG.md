@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.7
+
+- Fix more casts - PR #45
+
 ## 5.0.6
 
 - Fix Timestamp cast - PR #44
