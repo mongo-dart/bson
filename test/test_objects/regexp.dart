@@ -84,6 +84,11 @@ groupRegexp() {
     var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer));
     expect(value, eJsonSource);
   });
+  test('Ejson Deserializes from json', () {
+    final ejsonString = EJsonCodec.stringify(EJsonCodec.doc2eJson(sourceMap));
+    final value = EJsonCodec.eJson2Doc(EJsonCodec.parse(ejsonString));
+    expect(value, sourceMap2);
+  });
   test('Ejson Deserialize Rx', () {
     var value = EJsonCodec.deserialize(BsonBinary.fromHexString(hexBuffer),
         relaxed: true);

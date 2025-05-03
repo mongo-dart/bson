@@ -133,7 +133,7 @@ class BsonBinary extends BsonObject {
       throw ArgumentError(
           'The received Map is not a valid EJson Binary representation');
     }
-    var content = entry.value as Map<String, Object>;
+    var content = (entry.value as Map).cast<String, Object>();
     if (content.containsKey('base64') && content.containsKey('subType')) {
       String key = content['base64'] as String;
       String type = content['subType'] as String;
