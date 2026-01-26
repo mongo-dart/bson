@@ -196,6 +196,48 @@ void run() {
       expect(ObjectId.parse(correctHexId).oid, correctHexId);
       expect(ObjectId.tryParse(correctHexId)?.oid, correctHexId);
     });
+
+    test('ObjectId structure - random bytes constant, counter increments', () {
+      // According to MongoDB ObjectId spec:
+      // - Bytes 0-3: timestamp (4 bytes)
+      // - Bytes 4-8: random value per process (5 bytes) - should be CONSTANT
+      // - Bytes 9-11: counter (3 bytes) - should INCREMENT
+      var id1 = ObjectId();
+      var id2 = ObjectId();
+      var id3 = ObjectId();
+
+      // The 5-byte random portion (bytes 4-8, hex chars 8-17) should be constant
+      expect(id1.randomHex, id2.randomHex,
+          reason: 'Random bytes should be constant across ObjectIds');
+      expect(id2.randomHex, id3.randomHex,
+          reason: 'Random bytes should be constant across ObjectIds');
+
+      // The random hex should be 10 characters (5 bytes)
+      expect(id1.randomHex.length, 10,
+          reason: 'Random hex should be 10 characters (5 bytes)');
+
+      // The 3-byte counter (bytes 9-11, hex chars 18-23) should increment
+      var counter1 = id1.incrementPart;
+      var counter2 = id2.incrementPart;
+      var counter3 = id3.incrementPart;
+
+      expect(counter2, counter1 + 1,
+          reason: 'Counter should increment by 1');
+      expect(counter3, counter2 + 1,
+          reason: 'Counter should increment by 1');
+    });
+
+    test('ObjectId counter bytes are non-zero (randomly initialized)', () {
+      // The counter should be randomly initialized, so it should not always be 0
+      // We check that the class increment is not starting from 0
+      // (statistically, random init should very rarely produce exactly 0)
+      var id = ObjectId();
+      // At minimum, after one ObjectId creation, counter should be > 0
+      // since it's randomly initialized and incremented
+      expect(id.incrementHex, isNot('000000'),
+          reason:
+              'Counter should not be 000000 - it should be randomly initialized and incremented');
+    });
   });
 
   group('BsonSerialization:', () {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.8
+
+- Fix ObjectId generation producing duplicate IDs across process restarts. The `setIntExtended` method was not advancing the buffer offset after writing, causing the counter bytes to overwrite the random value bytes instead of being written to the correct position.
+
 ## 5.0.7
 
 - Fix more casts - PR #45
