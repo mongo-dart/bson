@@ -211,7 +211,7 @@ class BsonBinary extends BsonObject {
     return localByteList;
   }
 
-  /// Insert the required bytes starting from offset
+  /// Insert the required bytes starting from offset and advance offset
   void setIntExtended(int value, int numOfBytes,
       {Endian endianness = Endian.little}) {
     if (Statics.isWebInt) {
@@ -240,6 +240,7 @@ class BsonBinary extends BsonObject {
             offset, offset + numOfBytes, byteListTmp, 8 - numOfBytes);
       }
     }
+    offset += numOfBytes;
   }
 
   // old version
